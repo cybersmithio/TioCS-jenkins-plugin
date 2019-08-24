@@ -7,7 +7,7 @@ import jenkins.model.RunAction2;
 public class TioCSAction implements RunAction2 {
 
     private transient Run run;
-    private String TioRepo
+    private String TioRepo;
     private String name;
 
     @Override
