@@ -1,17 +1,5 @@
 package io.jenkins.plugins.TioCS;
 
-import com.tenable.io.api.TenableIoClient;
-import com.tenable.io.api.TestBase;
-import com.tenable.io.api.folders.FolderRef;
-import com.tenable.io.api.scans.ScanActivity;
-import com.tenable.io.api.scans.ScanRef;
-import com.tenable.io.api.scans.interfaces.RunnableScan;
-import com.tenable.io.api.scans.interfaces.ScanBaseOp;
-import com.tenable.io.api.scans.models.*;
-import com.tenable.io.api.workbenches.models.FilterAssetField;
-import com.tenable.io.core.exceptions.TenableIoErrorCode;
-import com.tenable.io.core.exceptions.TenableIoException;
-
 import hudson.Launcher;
 import hudson.Extension;
 import hudson.FilePath;
@@ -35,15 +23,19 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
     private final String name;
     private String TioRepo;
     private boolean useOnPrem;
+    private String TioUsername;
+    private String TioPassword;
     private String TioAccessKey;
     private String TioSecretKey;
 
     @DataBoundConstructor
-    public TioCSBuilder(String name, String TioRepo, String TioAccessKey, String TioSecretKey) {
+    public TioCSBuilder(String name, String TioRepo, String TioAccessKey, String TioSecretKey,String TioUsername, String TioPassword) {
         this.name = name;
         this.TioRepo = TioRepo;
         this.TioAccessKey = TioAccessKey;
         this.TioSecretKey = TioSecretKey;
+        this.TioUsername = TioUsername;
+        this.TioPassword = TioPassword;
     }
 
     public String getName() {
@@ -52,6 +44,14 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
 
     public String getTioRepo() {
         return TioRepo;
+    }
+
+    public String getTioUsername() {
+        return TioUsername;
+    }
+
+    public String getTioPassword() {
+        return TioPassword;
     }
 
     public String getTioAccessKey() {
@@ -75,6 +75,14 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
         this.TioRepo = TioRepo;
     }
 
+    public void setTioAccessKey(String TioUsername) {
+        this.TioUsername = TioUsername;
+    }
+
+    public void setTioAccessKey(String TioPassword) {
+        this.TioPassword = TioPassword;
+    }
+
     public void setTioAccessKey(String TioAccessKey) {
         this.TioAccessKey = TioAccessKey;
     }
@@ -85,12 +93,12 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
 
     @Override
     public void perform(Run<?, ?> run, FilePath workspace, Launcher launcher, TaskListener listener) throws InterruptedException, IOException {
-        run.addAction(new TioCSAction(name,TioRepo,TioAccessKey,TioSecretKey));
+        run.addAction(new TioCSAction(name,TioRepo,TioUsername, TioPassword, TioAccessKey,TioSecretKey));
         if (useOnPrem) {
             listener.getLogger().println("Testing image " + name + " with on-premise inspector.  Results will go into Tenable.io repository "+TioRepo);
         } else {
             listener.getLogger().println("Testing image " + name + " by uploading directly to Tenable.io cloud.  Results will go into Tenable.io repository "+TioRepo);
-            TenableIoClient client = new TenableIoClient( TioAccessKey, TioSecretKey );
+            listener.getLogger().println("Logging into registry.cloud.tenable.com with username " + TioUsername );
         }
     }
 
@@ -99,12 +107,16 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
     public static final class DescriptorImpl extends BuildStepDescriptor<Builder> {
 
 
-        public FormValidation doCheckName(@QueryParameter String value, @QueryParameter String TioRepo, @QueryParameter String TioAccessKey, @QueryParameter String TioSecretKey, @QueryParameter boolean useOnPrem)
+        public FormValidation doCheckName(@QueryParameter String value, @QueryParameter String TioRepo, @QueryParameter String TioUsername, @QueryParameter String TioPassword, @QueryParameter String TioAccessKey, @QueryParameter String TioSecretKey, @QueryParameter boolean useOnPrem)
                 throws IOException, ServletException {
             if (value.length() == 0)
                 return FormValidation.error(Messages.TioCSBuilder_DescriptorImpl_errors_missingName());
             if (TioRepo.length() == 0)
                 return FormValidation.error(Messages.TioCSBuilder_DescriptorImpl_errors_missingTioRepo());
+            if (TioUsername.length() == 0)
+                return FormValidation.error(Messages.TioCSBuilder_DescriptorImpl_errors_missingTioUsername());
+            if (TioPassword.length() == 0)
+                return FormValidation.error(Messages.TioCSBuilder_DescriptorImpl_errors_missingTioPassword());
             if (TioAccessKey.length() == 0)
                 return FormValidation.error(Messages.TioCSBuilder_DescriptorImpl_errors_missingTioAccessKey());
             if (TioSecretKey.length() == 0)

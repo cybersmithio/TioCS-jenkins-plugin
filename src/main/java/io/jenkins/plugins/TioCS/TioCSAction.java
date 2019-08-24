@@ -24,7 +24,7 @@ public class TioCSAction implements RunAction2 {
         return run;
     }
 
-    public TioCSAction(String name, String TioRepo, String TioAccessKey, String TioSecretKey) {
+    public TioCSAction(String name, String TioRepo, String TioUsername, String TioPassword, String TioAccessKey, String TioSecretKey) {
         this.name = name;
         this.TioRepo = TioRepo;
     }
