@@ -7,3 +7,7 @@ August 24, 2019 10:40am
 August 24, 2019 10:54am
 * The form is now able to show field names with spaces, now that the config.properties file was added.
 * Still need to get the data to save.
+
+August 24, 2019 11:01am
+* Help messages are now displaying on the form when the help button is clicked for each field.
+* Still need to get the data to save.

@@ -32,12 +32,12 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
         return imagename;
     }
 
-    public boolean useOnPrem() {
+    public boolean isUseOnPrem() {
         return useOnPrem;
     }
 
     @DataBoundSetter
-    public void useOnPrem(boolean useOnPrem) {
+    public void setUseOnPrem(boolean useOnPrem) {
         this.useOnPrem = useOnPrem;
     }
 

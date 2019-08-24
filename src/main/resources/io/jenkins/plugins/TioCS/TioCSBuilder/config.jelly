@@ -4,8 +4,7 @@
         <f:textbox />
     </f:entry>
     <f:advanced>
-        <f:entry title="${%OnPremInspector}" field="useOnPrem"
-                 description="${%OnPremInspectorDescr}">
+        <f:entry title="${%OnPremInspector}" field="useOnPrem" description="${%OnPremInspectorDescr}">
             <f:checkbox />
         </f:entry>
     </f:advanced>
