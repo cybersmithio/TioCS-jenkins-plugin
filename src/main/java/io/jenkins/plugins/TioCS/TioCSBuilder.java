@@ -7,8 +7,7 @@ import javax.net.ssl.HttpsURLConnection;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import org.json.simple.JSONObject;
-import org.json.simple.JSONArray;
+import javax.json;
 
 import hudson.Launcher;
 import hudson.Extension;
@@ -194,8 +193,6 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
 
                 br.close();
 
-                JSONObject responsejson = new JSONObject(jsonstring);
-                listener.getLogger().println("JSON received:"+responsejson.toString());
 
             } catch (Exception e) {
                 listener.getLogger().println("Error getting image report");
