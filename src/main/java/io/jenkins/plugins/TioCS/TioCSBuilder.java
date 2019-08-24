@@ -171,18 +171,25 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
                 listener.getLogger().println("Interrupted Exception running external command");
             }
 
+            listener.getLogger().println("Retrieving report of image " + name + " from Tenable.io API");
             try {
-                OkHttpClient client = new OkHttpClient();
+                URL myUrl = new URL("https://cloud.tenable.com/container-security/api/v2/reports/"+TioRepo+"/"+name+"/latest");
+                HttpsURLConnection conn = (HttpsURLConnection)myUrl.openConnection();
+                conn.setRequestProperty("x-apikeys","accessKey="+TioAccessKey+";secretKey="+TioSecretKey);
+                conn.setRequestProperty("accept","application/json");
 
-                Request request = new Request.Builder()
-                  .url("https://cloud.tenable.com/container-security/api/v2/reports/"+TioRepo+"/"+name+"/latest")
-                  .get()
-                  .addHeader("accept", "application/json")
-                  .addHeader("x-apikeys", "accessKey=7437dd5d7495eac5f7477cda2915c7bc9c8582634a1e71b8a874b404c36d1fdf;secretKey=6fc4101757d13f8c2510fd5250257a14ad376d93300170f675c66ae25cfd13cc")
-                  .build();
+                InputStream is = conn.getInputStream();
+                InputStreamReader isr = new InputStreamReader(is);
+                BufferedReader br = new BufferedReader(isr);
 
-                Response response = client.newCall(request).execute();
-                listener.getLogger().println("Response from image report:"+response);
+                String inputLine;
+
+                while ((inputLine = br.readLine()) != null) {
+                    listener.getLogger().println(inputLine);
+                }
+
+                br.close();
+
             } catch (Exception e) {
                 listener.getLogger().println("Error getting image report");
             }
