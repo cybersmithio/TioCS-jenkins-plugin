@@ -1,3 +1,3 @@
-# Tenable.io Container Security plguin for Jenkins
+# Tenable.io Container Security plugin for Jenkins
 
 
