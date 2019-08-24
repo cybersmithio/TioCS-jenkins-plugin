@@ -1,11 +1,11 @@
 <?jelly escape-by-default='true'?>
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form">
-    <f:entry title="${%Name}" field="name">
+    <f:entry title="${%ImageName}" field="imagename">
         <f:textbox />
     </f:entry>
     <f:advanced>
-        <f:entry title="${%French}" field="useFrench"
-                 description="${%FrenchDescr}">
+        <f:entry title="${On-Prem Inspector}" field="useOnPrem"
+                 description="${%Use the Tenable.io on-premise Container Security inspector instead of uploading to the cloud.}">
             <f:checkbox />
         </f:entry>
     </f:advanced>
