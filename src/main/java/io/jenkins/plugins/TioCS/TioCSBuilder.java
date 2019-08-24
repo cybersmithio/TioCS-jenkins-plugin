@@ -75,11 +75,11 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
         this.TioRepo = TioRepo;
     }
 
-    public void setTioAccessKey(String TioUsername) {
+    public void setTioUsername(String TioUsername) {
         this.TioUsername = TioUsername;
     }
 
-    public void setTioAccessKey(String TioPassword) {
+    public void setTioPassword(String TioPassword) {
         this.TioPassword = TioPassword;
     }
 

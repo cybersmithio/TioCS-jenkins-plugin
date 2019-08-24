@@ -9,6 +9,10 @@ public class TioCSAction implements RunAction2 {
     private transient Run run;
     private String TioRepo;
     private String name;
+    private String TioUsername;
+    private String TioPassword;
+    private String TioAccessKey;
+    private String TioSecretKey;
 
     @Override
     public void onAttached(Run<?, ?> run) {
@@ -27,6 +31,11 @@ public class TioCSAction implements RunAction2 {
     public TioCSAction(String name, String TioRepo, String TioUsername, String TioPassword, String TioAccessKey, String TioSecretKey) {
         this.name = name;
         this.TioRepo = TioRepo;
+        this.TioAccessKey = TioAccessKey;
+        this.TioSecretKey = TioSecretKey;
+        this.TioUsername = TioUsername;
+        this.TioPassword = TioPassword;
+
     }
 
     public String getName() {
@@ -36,6 +45,24 @@ public class TioCSAction implements RunAction2 {
     public String getTioRepo() {
         return TioRepo;
     }
+
+    public String getTioUsername() {
+        return TioUsername;
+    }
+
+    public String getTioPassword() {
+        return TioPassword;
+    }
+
+    public String getTioAccessKey() {
+        return TioAccessKey;
+    }
+
+    public String getTioSecretKey() {
+        return TioSecretKey;
+    }
+
+
 
     @Override
     public String getIconFileName() {
