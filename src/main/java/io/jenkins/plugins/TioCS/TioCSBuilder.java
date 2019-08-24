@@ -1,5 +1,17 @@
 package io.jenkins.plugins.TioCS;
 
+import com.tenable.io.api.TenableIoClient;
+import com.tenable.io.api.TestBase;
+import com.tenable.io.api.folders.FolderRef;
+import com.tenable.io.api.scans.ScanActivity;
+import com.tenable.io.api.scans.ScanRef;
+import com.tenable.io.api.scans.interfaces.RunnableScan;
+import com.tenable.io.api.scans.interfaces.ScanBaseOp;
+import com.tenable.io.api.scans.models.*;
+import com.tenable.io.api.workbenches.models.FilterAssetField;
+import com.tenable.io.core.exceptions.TenableIoErrorCode;
+import com.tenable.io.core.exceptions.TenableIoException;
+
 import hudson.Launcher;
 import hudson.Extension;
 import hudson.FilePath;
@@ -78,6 +90,7 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
             listener.getLogger().println("Testing image " + name + " with on-premise inspector.  Results will go into Tenable.io repository "+TioRepo);
         } else {
             listener.getLogger().println("Testing image " + name + " by uploading directly to Tenable.io cloud.  Results will go into Tenable.io repository "+TioRepo);
+            TenableIoClient client = new TenableIoClient( TioAccessKey, TioSecretKey );
         }
     }
 
