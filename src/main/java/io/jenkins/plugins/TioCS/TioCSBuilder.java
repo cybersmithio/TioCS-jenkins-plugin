@@ -20,34 +20,34 @@ import org.kohsuke.stapler.DataBoundSetter;
 
 public class TioCSBuilder extends Builder implements SimpleBuildStep {
 
-    private final String name;
-    private boolean useFrench;
+    private final String imagename;
+    private boolean useOnPrem;
 
     @DataBoundConstructor
-    public TioCSBuilder(String name) {
-        this.name = name;
+    public TioCSBuilder(String imagename) {
+        this.imagename = imagename;
     }
 
-    public String getName() {
-        return name;
+    public String getImageName() {
+        return imagename;
     }
 
-    public boolean isUseFrench() {
-        return useFrench;
+    public boolean useOnPrem() {
+        return useOnPrem;
     }
 
     @DataBoundSetter
-    public void setUseFrench(boolean useFrench) {
-        this.useFrench = useFrench;
+    public void useOnPrem(boolean useOnPrem) {
+        this.useOnPrem = useOnPrem;
     }
 
     @Override
     public void perform(Run<?, ?> run, FilePath workspace, Launcher launcher, TaskListener listener) throws InterruptedException, IOException {
-        run.addAction(new TioCSAction(name));
-        if (useFrench) {
-            listener.getLogger().println("Bonjour, " + name + "!");
+        run.addAction(new TioCSAction(imagename));
+        if (useOnPrem) {
+            listener.getLogger().println("Testing image " + imagename + " with on-premise inspector.");
         } else {
-            listener.getLogger().println("Hello, " + name + "!");
+            listener.getLogger().println("Testing image " + imagename + " by uploading directly to Tenable.io cloud.");
         }
     }
 
@@ -55,15 +55,10 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
     @Extension
     public static final class DescriptorImpl extends BuildStepDescriptor<Builder> {
 
-        public FormValidation doCheckName(@QueryParameter String value, @QueryParameter boolean useFrench)
+        public FormValidation doCheckName(@QueryParameter String value, @QueryParameter boolean useOnPrem)
                 throws IOException, ServletException {
             if (value.length() == 0)
-                return FormValidation.error(Messages.TioCSBuilder_DescriptorImpl_errors_missingName());
-            if (value.length() < 4)
-                return FormValidation.warning(Messages.TioCSBuilder_DescriptorImpl_warnings_tooShort());
-            if (!useFrench && value.matches(".*[éáàç].*")) {
-                return FormValidation.warning(Messages.TioCSBuilder_DescriptorImpl_warnings_reallyFrench());
-            }
+                return FormValidation.error(Messages.TioCSBuilder_DescriptorImpl_errors_missingImageName());
             return FormValidation.ok();
         }
 
