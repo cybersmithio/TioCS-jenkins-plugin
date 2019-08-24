@@ -48,3 +48,7 @@ August 24, 2019 1:01pm
 
 August 24, 2019 3:29pm
 * Successfully compiled with function to call external program.  Just testing for now, using the ls command.  Will use docker commands in future.
+
+August 24, 2019 3:49pm
+*** Plugin is now able to upload an image to Tenable.io CS.  Next steps are to get the report downloaded.  May use something other than CSUP so we don't need
+      another external program.
