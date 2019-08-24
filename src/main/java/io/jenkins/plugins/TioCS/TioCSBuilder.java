@@ -21,7 +21,7 @@ import org.kohsuke.stapler.DataBoundSetter;
 public class TioCSBuilder extends Builder implements SimpleBuildStep {
 
     private final String name;
-    private final String tiorepo;
+    private String tiorepo;
     private boolean useOnPrem;
 
     @DataBoundConstructor

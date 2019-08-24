@@ -24,3 +24,8 @@ August 24, 2019 12:07pm
 
 August 24, 2019 12:18pm
 * Added new field TioRepo (tiorepo) but it is not serializing
+
+
+August 24, 2019 12:23pm
+* Got the compilation error: ""/home/jsmith/TioCS-plugin/src/main/java/io/jenkins/plugins/TioCS/TioCSBuilder.java:[51,13] cannot assign a value to final variable tiorepo"
+   which indicates the "final" keyword should not be used in the class definition for tiorepo.
