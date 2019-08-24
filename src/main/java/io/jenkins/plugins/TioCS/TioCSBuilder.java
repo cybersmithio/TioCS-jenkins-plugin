@@ -140,9 +140,9 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
                 }
                 int exitVal = process.waitFor();
                 if (exitVal == 0) {
-                    listener.getLogger().println("Success running external command:"+output);
+                    listener.getLogger().println("Success running external command: docker tag");
                 } else {
-                    listener.getLogger().println("Error running external command:"+output);
+                    listener.getLogger().println("Error running external command: docker tag");
                 }
             } catch (IOException e) {
                 listener.getLogger().println("IO Exception running external command");
@@ -171,20 +171,19 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
                 listener.getLogger().println("Interrupted Exception running external command");
             }
 
-            listener.getLogger().println("Retrieving report of image " + name + " from Tenable.io API");
-            URL myUrl = new URL("https://cloud.tenable.com/container-security/api/v2/reports/repository/image/tag");
-            HttpsURLConnection conn = (HttpsURLConnection)myUrl.openConnection();
-            InputStream is = conn.getInputStream();
-            InputStreamReader isr = new InputStreamReader(is);
-            BufferedReader br = new BufferedReader(isr);
+            try {
+                OkHttpClient client = new OkHttpClient();
 
-            String inputLine;
+                Request request = new Request.Builder()
+                  .url("https://cloud.tenable.com/container-security/api/v2/reports/"+TioRepo+"/"+name+"/latest")
+                  .get()
+                  .addHeader("accept", "application/json")
+                  .addHeader("x-apikeys", "accessKey=7437dd5d7495eac5f7477cda2915c7bc9c8582634a1e71b8a874b404c36d1fdf;secretKey=6fc4101757d13f8c2510fd5250257a14ad376d93300170f675c66ae25cfd13cc")
+                  .build();
 
-            while ((inputLine = br.readLine()) != null) {
-                listener.getLogger().println(inputLine);
+                Response response = client.newCall(request).execute();
+                listener.getLogger().println("Response from image report:"+response;
             }
-
-            br.close();
         }
     }
 

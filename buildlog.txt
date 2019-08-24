@@ -52,3 +52,6 @@ August 24, 2019 3:29pm
 August 24, 2019 3:49pm
 *** Plugin is now able to upload an image to Tenable.io CS.  Next steps are to get the report downloaded.  May use something other than CSUP so we don't need
       another external program.
+
+August 24, 2019 4:07pm
+* Compiled test code to get report from Tenable.io.  It makes the request but of course gets a 401 unauthorized for now.
