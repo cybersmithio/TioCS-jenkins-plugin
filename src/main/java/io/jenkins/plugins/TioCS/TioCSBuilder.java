@@ -190,7 +190,7 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
 
                 while ((inputLine = br.readLine()) != null) {
                     listener.getLogger().println(c+ ">>>"+inputLine);
-                    jsonstring.concat(inputLine);
+                    jsonstring=jsonstring+inputLine;
                     c = c + 1;
                 }
 
