@@ -86,7 +86,7 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
     public static final class DescriptorImpl extends BuildStepDescriptor<Builder> {
 
 
-        public FormValidation doCheckName(@QueryParameter String value, @QueryParameter String TioRepo, @QueryParameter boolean useOnPrem)
+        public FormValidation doCheckName(@QueryParameter String value, @QueryParameter String TioRepo, @QueryParameter String TioAccessKey, @QueryParameter String TioSecretKey, @QueryParameter boolean useOnPrem)
                 throws IOException, ServletException {
             if (value.length() == 0)
                 return FormValidation.error(Messages.TioCSBuilder_DescriptorImpl_errors_missingName());
