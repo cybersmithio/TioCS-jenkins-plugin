@@ -1,5 +1,9 @@
 package io.jenkins.plugins.TioCS;
 
+import java.net.URL;
+import java.io.*;
+import javax.net.ssl.HttpsURLConnection;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -167,8 +171,20 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
                 listener.getLogger().println("Interrupted Exception running external command");
             }
 
+            listener.getLogger().println("Retrieving report of image " + name + " from Tenable.io API");
+            URL myUrl = new URL("https://cloud.tenable.com/container-security/api/v2/reports/repository/image/tag");
+            HttpsURLConnection conn = (HttpsURLConnection)myUrl.openConnection();
+            InputStream is = conn.getInputStream();
+            InputStreamReader isr = new InputStreamReader(is);
+            BufferedReader br = new BufferedReader(isr);
 
+            String inputLine;
 
+            while ((inputLine = br.readLine()) != null) {
+                listener.getLogger().println(inputLine);
+            }
+
+            br.close();
         }
     }
 
