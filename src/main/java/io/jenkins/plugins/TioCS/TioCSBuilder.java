@@ -27,7 +27,7 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
     @DataBoundConstructor
     public TioCSBuilder(String name, String tiorepo) {
         this.name = name;
-        this.tiorepo
+        this.tiorepo = tiorepo;
     }
 
     public String getName() {
