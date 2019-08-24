@@ -99,6 +99,27 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
         } else {
             listener.getLogger().println("Testing image " + name + " by uploading directly to Tenable.io cloud.  Results will go into Tenable.io repository "+TioRepo);
             listener.getLogger().println("Logging into registry.cloud.tenable.com with username " + TioUsername );
+            ProcessBuilder processBuilder = new ProcessBuilder();
+            try {
+                Process process=processBuilder.start()
+                processBuilder.command("bash", "-c", "ls");
+                StringBuilder output = new StringBuilder();
+                BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    output.append(line + "\n");
+                }
+                int exitVal = process.waitFor();
+                if (exitVal == 0) {
+                    listener.getLogger().println("Success running external command:"+output);
+                } else {
+                    listener.getLogger().println("Error running external command:"+output);
+                }
+            } catch (IOException e) {
+                listener.getLogger().println("IO Exception running external command");
+            } catch (InterruptedException e) {
+                listener.getLogger().println("Interrupted Exception running external command");
+            }
         }
     }
 
