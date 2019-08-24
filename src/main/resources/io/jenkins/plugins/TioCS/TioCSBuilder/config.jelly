@@ -3,7 +3,7 @@
     <f:entry title="${%Name}" field="name">
         <f:textbox />
     </f:entry>
-    <f:entry title="${%TioRepo}" field="tiorepo">
+    <f:entry title="${%TioRepo}" field="TioRepo">
         <f:textbox />
     </f:entry>
     <f:advanced>

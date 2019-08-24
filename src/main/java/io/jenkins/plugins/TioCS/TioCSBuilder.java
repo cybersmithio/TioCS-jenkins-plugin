@@ -21,13 +21,13 @@ import org.kohsuke.stapler.DataBoundSetter;
 public class TioCSBuilder extends Builder implements SimpleBuildStep {
 
     private final String name;
-    private String tiorepo;
+    private String TioRepo;
     private boolean useOnPrem;
 
     @DataBoundConstructor
-    public TioCSBuilder(String name, String tiorepo) {
+    public TioCSBuilder(String name, String TioRepo) {
         this.name = name;
-        this.tiorepo = tiorepo;
+        this.TioRepo = TioRepo;
     }
 
     public String getName() {
@@ -35,7 +35,7 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
     }
 
     public String getTioRepo() {
-        return tiorepo;
+        return TioRepo;
     }
 
     public boolean isUseOnPrem() {
@@ -47,17 +47,17 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
         this.useOnPrem = useOnPrem;
     }
 
-    public void setTioRepo(String tiorepo) {
-        this.tiorepo = tiorepo;
+    public void setTioRepo(String TioRepo) {
+        this.TioRepo = TioRepo;
     }
 
     @Override
     public void perform(Run<?, ?> run, FilePath workspace, Launcher launcher, TaskListener listener) throws InterruptedException, IOException {
         run.addAction(new TioCSAction(name));
         if (useOnPrem) {
-            listener.getLogger().println("Testing image " + name + " with on-premise inspector.  Results will go into Tenable.io repository "+tiorepo);
+            listener.getLogger().println("Testing image " + name + " with on-premise inspector.  Results will go into Tenable.io repository "+TioRepo);
         } else {
-            listener.getLogger().println("Testing image " + name + " by uploading directly to Tenable.io cloud.  Results will go into Tenable.io repository "+tiorepo);
+            listener.getLogger().println("Testing image " + name + " by uploading directly to Tenable.io cloud.  Results will go into Tenable.io repository "+TioRepo);
         }
     }
 
@@ -66,11 +66,11 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
     public static final class DescriptorImpl extends BuildStepDescriptor<Builder> {
 
 
-        public FormValidation doCheckName(@QueryParameter String value, @QueryParameter String tiorepo, @QueryParameter boolean useOnPrem)
+        public FormValidation doCheckName(@QueryParameter String value, @QueryParameter String TioRepo, @QueryParameter boolean useOnPrem)
                 throws IOException, ServletException {
             if (value.length() == 0)
                 return FormValidation.error(Messages.TioCSBuilder_DescriptorImpl_errors_missingName());
-            if (tiorepo.length() == 0)
+            if (TioRepo.length() == 0)
                 return FormValidation.error(Messages.TioCSBuilder_DescriptorImpl_errors_missingTioRepo());
             return FormValidation.ok();
         }
