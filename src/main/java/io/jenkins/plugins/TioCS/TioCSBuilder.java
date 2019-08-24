@@ -7,7 +7,8 @@ import javax.net.ssl.HttpsURLConnection;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import javax.json;
+import org.json.JSONObject;
+import org.json.JSONArray;
 
 import hudson.Launcher;
 import hudson.Extension;
