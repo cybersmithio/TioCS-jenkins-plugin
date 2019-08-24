@@ -7,6 +7,7 @@ import jenkins.model.RunAction2;
 public class TioCSAction implements RunAction2 {
 
     private transient Run run;
+    private String TioRepo
     private String name;
 
     @Override
@@ -23,12 +24,17 @@ public class TioCSAction implements RunAction2 {
         return run;
     }
 
-    public TioCSAction(String name) {
+    public TioCSAction(String name, String TioRepo) {
         this.name = name;
+        this.TioRepo = TioRepo;
     }
 
     public String getName() {
         return name;
+    }
+
+    public String getTioRepo() {
+        return TioRepo;
     }
 
     @Override
@@ -38,11 +44,11 @@ public class TioCSAction implements RunAction2 {
 
     @Override
     public String getDisplayName() {
-        return "Greeting";
+        return "Tenable.io Container Security";
     }
 
     @Override
     public String getUrlName() {
-        return "greeting";
+        return "tiocs";
     }
 }

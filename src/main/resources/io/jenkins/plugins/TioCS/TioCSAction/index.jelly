@@ -1,6 +1,6 @@
 <?jelly escape-by-default='true'?>
 <j:jelly xmlns:j="jelly:core" xmlns:l="/lib/layout" xmlns:st="jelly:stapler">
-    <l:layout title="Greeting">
+    <l:layout title="Tenable.io Container Security">
         <l:side-panel>
             <st:include page="sidepanel.jelly" it="${it.run}" optional="true" />
         </l:side-panel>
@@ -8,6 +8,9 @@
             <h1>
                 Name: ${it.name}
             </h1>
+            <p>
+               Repository: ${it.TioRepo}
+            </p>
         </l:main-panel>
     </l:layout>
 </j:jelly>

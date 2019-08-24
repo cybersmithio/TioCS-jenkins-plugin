@@ -38,3 +38,7 @@ August 24, 2019 12:38pm
 * So the tiorepo value seem to be stored, because it appeared in the build logs.  Now we just need to figure out why it isn't loaded into the
    form again if we go to edit it.  This is likely the same problem with the imagename variable.  Realized the useOnPrem variable
    is only ever used in the same case, and that is not the same as the tiorepo. Going to change that and see if that fixes it.
+
+August 24, 2019 12:50pm
+* The case change (making all cases uniform) worked, and now the repo is saving and restoring in the Configure section.
+* Next to change the plugin section of the build output.
