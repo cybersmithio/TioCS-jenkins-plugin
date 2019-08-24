@@ -204,9 +204,9 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
             listener.getLogger().println("Findings:"+responsejson.get("findings"));
             JSONArray findings=responsejson.getJSONArray("findings");
             //JSONObject vulns=responsejson.getJSONArray("findings");
-            //for ( int i =0; i < vulns.length(); ++i) {
-            //    listener.getLogger().println("Vuln: "+vulns.getJSONObject(i).toString());
-            //}
+            for ( int i =0; i    < findings.length(); i++ ) {
+                listener.getLogger().println("Vuln: "+findings.getJSONObject(i).toString());
+            }
 
         }
     }
