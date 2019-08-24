@@ -55,7 +55,7 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
     @Extension
     public static final class DescriptorImpl extends BuildStepDescriptor<Builder> {
 
-        public FormValidation doCheckName(@QueryParameter String value, @QueryParameter boolean useOnPrem)
+        public FormValidation doCheckImageName(@QueryParameter String value, @QueryParameter boolean useOnPrem)
                 throws IOException, ServletException {
             if (value.length() == 0)
                 return FormValidation.error(Messages.TioCSBuilder_DescriptorImpl_errors_missingImageName());

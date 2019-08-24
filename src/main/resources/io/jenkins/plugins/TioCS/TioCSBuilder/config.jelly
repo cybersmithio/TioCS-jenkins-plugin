@@ -5,7 +5,7 @@
     </f:entry>
     <f:advanced>
         <f:entry title="${%OnPremInspector}" field="useOnPrem"
-                 description="${%Use the Tenable.io on-premise Container Security inspector instead of uploading to the cloud.}">
+                 description="${%OnPremInspectorDescr}">
             <f:checkbox />
         </f:entry>
     </f:advanced>
