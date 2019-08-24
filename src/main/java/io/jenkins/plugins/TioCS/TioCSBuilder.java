@@ -25,8 +25,9 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
     private boolean useOnPrem;
 
     @DataBoundConstructor
-    public TioCSBuilder(String name) {
+    public TioCSBuilder(String name, String tiorepo) {
         this.name = name;
+        this.tiorepo
     }
 
     public String getName() {
@@ -59,6 +60,7 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
     @Symbol("greet")
     @Extension
     public static final class DescriptorImpl extends BuildStepDescriptor<Builder> {
+
 
         public FormValidation doCheckName(@QueryParameter String value, @QueryParameter boolean useOnPrem)
                 throws IOException, ServletException {
