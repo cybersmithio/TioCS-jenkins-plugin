@@ -23,11 +23,15 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
     private final String name;
     private String TioRepo;
     private boolean useOnPrem;
+    private String TioAccessKey;
+    private String TioSecretKey;
 
     @DataBoundConstructor
-    public TioCSBuilder(String name, String TioRepo) {
+    public TioCSBuilder(String name, String TioRepo, String TioAccessKey, String TioSecretKey) {
         this.name = name;
         this.TioRepo = TioRepo;
+        this.TioAccessKey = TioAccessKey;
+        this.TioSecretKey = TioSecretKey;
     }
 
     public String getName() {
@@ -36,6 +40,14 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
 
     public String getTioRepo() {
         return TioRepo;
+    }
+
+    public String getTioAccessKey() {
+        return TioAccessKey;
+    }
+
+    public String getTioSecretKey() {
+        return TioSecretKey;
     }
 
     public boolean isUseOnPrem() {
@@ -51,9 +63,17 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
         this.TioRepo = TioRepo;
     }
 
+    public void setTioAccessKey(String TioAccessKey) {
+        this.TioAccessKey = TioAccessKey;
+    }
+
+    public void setTioSecretKey(String TioSecretKey) {
+        this.TioSecretKey = TioSecretKey;
+    }
+
     @Override
     public void perform(Run<?, ?> run, FilePath workspace, Launcher launcher, TaskListener listener) throws InterruptedException, IOException {
-        run.addAction(new TioCSAction(name,TioRepo));
+        run.addAction(new TioCSAction(name,TioRepo,TioAccessKey,TioSecretKey));
         if (useOnPrem) {
             listener.getLogger().println("Testing image " + name + " with on-premise inspector.  Results will go into Tenable.io repository "+TioRepo);
         } else {
@@ -72,6 +92,10 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
                 return FormValidation.error(Messages.TioCSBuilder_DescriptorImpl_errors_missingName());
             if (TioRepo.length() == 0)
                 return FormValidation.error(Messages.TioCSBuilder_DescriptorImpl_errors_missingTioRepo());
+            if (TioAccessKey.length() == 0)
+                return FormValidation.error(Messages.TioCSBuilder_DescriptorImpl_errors_missingTioAccessKey());
+            if (TioSecretKey.length() == 0)
+                return FormValidation.error(Messages.TioCSBuilder_DescriptorImpl_errors_missingTioSecretKey());
             return FormValidation.ok();
         }
 

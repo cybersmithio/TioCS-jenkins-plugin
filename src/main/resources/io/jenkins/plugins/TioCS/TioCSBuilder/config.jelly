@@ -6,6 +6,12 @@
     <f:entry title="${%TioRepo}" field="TioRepo">
         <f:textbox />
     </f:entry>
+    <f:entry title="${%TioAccessKey}" field="TioAccessKey">
+        <f:textbox />
+    </f:entry>
+    <f:entry title="${%TioSecretKey}" field="TioSecretKey">
+        <f:textbox />
+    </f:entry>
     <f:advanced>
         <f:entry title="${%OnPremInspector}" field="useOnPrem" description="${%OnPremInspectorDescr}">
             <f:checkbox />
