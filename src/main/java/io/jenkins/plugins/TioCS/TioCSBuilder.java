@@ -53,7 +53,7 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
 
     @Override
     public void perform(Run<?, ?> run, FilePath workspace, Launcher launcher, TaskListener listener) throws InterruptedException, IOException {
-        run.addAction(new TioCSAction(name));
+        run.addAction(new TioCSAction(name,TioRepo));
         if (useOnPrem) {
             listener.getLogger().println("Testing image " + name + " with on-premise inspector.  Results will go into Tenable.io repository "+TioRepo);
         } else {
