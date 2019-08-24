@@ -4,3 +4,6 @@ August 24, 2019 10:40am
 * Information like the image name is still not saving between form reloads.
 
 
+August 24, 2019 10:54am
+* The form is now able to show field names with spaces, now that the config.properties file was added.
+* Still need to get the data to save.
