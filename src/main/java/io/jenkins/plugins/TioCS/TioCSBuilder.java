@@ -21,6 +21,7 @@ import org.kohsuke.stapler.DataBoundSetter;
 public class TioCSBuilder extends Builder implements SimpleBuildStep {
 
     private final String name;
+    private final String tiorepo;
     private boolean useOnPrem;
 
     @DataBoundConstructor
@@ -30,6 +31,10 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
 
     public String getName() {
         return name;
+    }
+
+    public String getTioRepo() {
+        return tiorepo;
     }
 
     public boolean isUseOnPrem() {
