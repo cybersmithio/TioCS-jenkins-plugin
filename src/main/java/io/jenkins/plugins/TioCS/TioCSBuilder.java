@@ -47,6 +47,10 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
         this.useOnPrem = useOnPrem;
     }
 
+    public void setTioRepo(String tiorepo) {
+        this.tiorepo = tiorepo;
+    }
+
     @Override
     public void perform(Run<?, ?> run, FilePath workspace, Launcher launcher, TaskListener listener) throws InterruptedException, IOException {
         run.addAction(new TioCSAction(name));

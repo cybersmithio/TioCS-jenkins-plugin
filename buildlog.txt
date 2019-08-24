@@ -16,7 +16,11 @@ August 24, 2019 11:20am
 * The On-premise checkbox is now saving.  Not able to have the imagename yet.
 * Realized that the form validation is allowing for a blank name, which shouldn't be
 
-August 24, 2019 12:07am
+August 24, 2019 12:07pm
 * Switching everything from imagename back to name allowed for things to be saved.  I wonder if this has something to
    do with things being left over in the work or target directories.
 * Next, let's add another value to save, just as the Tenable.io repo to save the results in.
+
+
+August 24, 2019 12:18pm
+* Added new field TioRepo (tiorepo) but it is not serializing
