@@ -7,7 +7,7 @@ import jenkins.model.RunAction2;
 public class TioCSAction implements RunAction2 {
 
     private transient Run run;
-    private String imagename;
+    private String name;
 
     @Override
     public void onAttached(Run<?, ?> run) {
@@ -23,12 +23,12 @@ public class TioCSAction implements RunAction2 {
         return run;
     }
 
-    public TioCSAction(String imagename) {
-        this.imagename = imagename;
+    public TioCSAction(String name) {
+        this.name = name;
     }
 
-    public String getImageName() {
-        return imagename;
+    public String getName() {
+        return name;
     }
 
     @Override

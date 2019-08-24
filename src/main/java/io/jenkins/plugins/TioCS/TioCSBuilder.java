@@ -20,16 +20,16 @@ import org.kohsuke.stapler.DataBoundSetter;
 
 public class TioCSBuilder extends Builder implements SimpleBuildStep {
 
-    private final String imagename;
+    private final String name;
     private boolean useOnPrem;
 
     @DataBoundConstructor
-    public TioCSBuilder(String imagename) {
-        this.imagename = imagename;
+    public TioCSBuilder(String name) {
+        this.name = name;
     }
 
-    public String getImageName() {
-        return imagename;
+    public String getName() {
+        return name;
     }
 
     public boolean isUseOnPrem() {
@@ -43,11 +43,11 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
 
     @Override
     public void perform(Run<?, ?> run, FilePath workspace, Launcher launcher, TaskListener listener) throws InterruptedException, IOException {
-        run.addAction(new TioCSAction(imagename));
+        run.addAction(new TioCSAction(name));
         if (useOnPrem) {
-            listener.getLogger().println("Testing image " + imagename + " with on-premise inspector.");
+            listener.getLogger().println("Testing image " + name + " with on-premise inspector.");
         } else {
-            listener.getLogger().println("Testing image " + imagename + " by uploading directly to Tenable.io cloud.");
+            listener.getLogger().println("Testing image " + name + " by uploading directly to Tenable.io cloud.");
         }
     }
 
@@ -55,10 +55,10 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
     @Extension
     public static final class DescriptorImpl extends BuildStepDescriptor<Builder> {
 
-        public FormValidation doCheckImageName(@QueryParameter String value, @QueryParameter boolean useOnPrem)
+        public FormValidation doCheckName(@QueryParameter String value, @QueryParameter boolean useOnPrem)
                 throws IOException, ServletException {
             if (value.length() == 0)
-                return FormValidation.error(Messages.TioCSBuilder_DescriptorImpl_errors_missingImageName());
+                return FormValidation.error(Messages.TioCSBuilder_DescriptorImpl_errors_missingName());
             return FormValidation.ok();
         }
 

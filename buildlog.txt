@@ -14,3 +14,4 @@ August 24, 2019 11:01am
 
 August 24, 2019 11:20am
 * The On-premise checkbox is now saving.  Not able to have the imagename yet.
+* Realized that the form validation is allowing for a blank name, which shouldn't be
