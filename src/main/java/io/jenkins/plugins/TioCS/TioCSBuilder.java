@@ -182,7 +182,9 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
                   .build();
 
                 Response response = client.newCall(request).execute();
-                listener.getLogger().println("Response from image report:"+response;
+                listener.getLogger().println("Response from image report:"+response);
+            } catch (Exception e) {
+                listener.getLogger().println("Error getting image report");
             }
         }
     }
