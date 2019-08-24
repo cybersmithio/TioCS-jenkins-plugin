@@ -29,3 +29,7 @@ August 24, 2019 12:18pm
 August 24, 2019 12:23pm
 * Got the compilation error: ""/home/jsmith/TioCS-plugin/src/main/java/io/jenkins/plugins/TioCS/TioCSBuilder.java:[51,13] cannot assign a value to final variable tiorepo"
    which indicates the "final" keyword should not be used in the class definition for tiorepo.
+
+August 24, 2019 12:28pm
+* Form validation for repo name is working, although it is displayed above the field name and overlapping with the image name validation message.
+* Tried a build to see what is displayed in the output, and we're getting the image name and on-prem values being put into output.

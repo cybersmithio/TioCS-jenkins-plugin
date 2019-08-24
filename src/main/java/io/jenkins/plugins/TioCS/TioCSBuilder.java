@@ -55,9 +55,9 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
     public void perform(Run<?, ?> run, FilePath workspace, Launcher launcher, TaskListener listener) throws InterruptedException, IOException {
         run.addAction(new TioCSAction(name));
         if (useOnPrem) {
-            listener.getLogger().println("Testing image " + name + " with on-premise inspector.");
+            listener.getLogger().println("Testing image " + name + " with on-premise inspector.  Results will go into Tenable.io repository "+tiorepo);
         } else {
-            listener.getLogger().println("Testing image " + name + " by uploading directly to Tenable.io cloud.");
+            listener.getLogger().println("Testing image " + name + " by uploading directly to Tenable.io cloud.  Results will go into Tenable.io repository "+tiorepo);
         }
     }
 
