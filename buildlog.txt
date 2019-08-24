@@ -42,3 +42,6 @@ August 24, 2019 12:38pm
 August 24, 2019 12:50pm
 * The case change (making all cases uniform) worked, and now the repo is saving and restoring in the Configure section.
 * Next to change the plugin section of the build output.
+
+August 24, 2019 1:01pm
+* The build log now has a section for Tenable.io CS that will display information about the build settings for TioCS in a nice format!!!
