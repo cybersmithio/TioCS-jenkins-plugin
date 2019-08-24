@@ -58,3 +58,6 @@ August 24, 2019 4:07pm
 
 August 24, 2019 4:25pm
 * Image report is downloading successfully now.  Need to parse the JSON.
+
+August 24, 2019 5:03pm
+* Figured out how to import the JSON library through Maven central.  Now to get it parsing stuff.

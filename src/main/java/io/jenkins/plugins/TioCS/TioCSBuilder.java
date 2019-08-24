@@ -193,8 +193,8 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
                 }
 
                 br.close();
-
-
+                JSONObject responsejson = new JSONObject(jsonstring);
+                listener.getLogger().println("JSON received:"+responsejson.toString());
             } catch (Exception e) {
                 listener.getLogger().println("Error getting image report");
             }
