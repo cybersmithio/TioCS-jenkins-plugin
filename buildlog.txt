@@ -55,3 +55,6 @@ August 24, 2019 3:49pm
 
 August 24, 2019 4:07pm
 * Compiled test code to get report from Tenable.io.  It makes the request but of course gets a 401 unauthorized for now.
+
+August 24, 2019 4:25pm
+* Image report is downloading successfully now.  Need to parse the JSON.

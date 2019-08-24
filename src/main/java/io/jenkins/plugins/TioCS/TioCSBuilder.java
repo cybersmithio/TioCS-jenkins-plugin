@@ -181,14 +181,19 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
                 InputStream is = conn.getInputStream();
                 InputStreamReader isr = new InputStreamReader(is);
                 BufferedReader br = new BufferedReader(isr);
+                String jsonstring="";
 
                 String inputLine;
 
                 while ((inputLine = br.readLine()) != null) {
+                    jsonstring.concat(inputLine);
                     listener.getLogger().println(inputLine);
                 }
 
                 br.close();
+
+                JSONObject responsejson = new JSONObject(jsonstring);
+                listener.getLogger().println("JSON received:"+responsejson.toString());
 
             } catch (Exception e) {
                 listener.getLogger().println("Error getting image report");
