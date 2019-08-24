@@ -175,7 +175,7 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
 
             listener.getLogger().println("Retrieving report of image " + name + " from Tenable.io API");
             String jsonstring="";
-            Int c=0;
+            int c=0;
             try {
                 URL myUrl = new URL("https://cloud.tenable.com/container-security/api/v2/reports/"+TioRepo+"/"+name+"/latest");
                 HttpsURLConnection conn = (HttpsURLConnection)myUrl.openConnection();
