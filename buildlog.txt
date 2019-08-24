@@ -45,3 +45,6 @@ August 24, 2019 12:50pm
 
 August 24, 2019 1:01pm
 * The build log now has a section for Tenable.io CS that will display information about the build settings for TioCS in a nice format!!!
+
+August 24, 2019 3:29pm
+* Successfully compiled with function to call external program.  Just testing for now, using the ls command.  Will use docker commands in future.

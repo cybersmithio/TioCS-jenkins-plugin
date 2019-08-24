@@ -105,8 +105,8 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
             listener.getLogger().println("Logging into registry.cloud.tenable.com with username " + TioUsername );
             ProcessBuilder processBuilder = new ProcessBuilder();
             try {
-                Process process=processBuilder.start();
-                processBuilder.command("bash", "-c", "ls");
+                Process process=new ProcessBuilder.("bash", "-c", "ls").start();
+
                 StringBuilder output = new StringBuilder();
                 BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
                 String line;
