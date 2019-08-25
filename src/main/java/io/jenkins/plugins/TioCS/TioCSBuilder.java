@@ -197,7 +197,7 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
                 listener.getLogger().println("Error getting image report");
             }
 
-            Double highcvss=0.0
+            Double highcvss=0.0;
             listener.getLogger().println("Attempting to parse JSON string into JSON object");
             JSONObject responsejson = new JSONObject(jsonstring);
             //listener.getLogger().println("JSON received:"+responsejson.toString());
@@ -216,7 +216,7 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
                     Double cvssscorevalue=nvdfinding.getDouble("cvss_score");
                     listener.getLogger().println("CVSSv2 Score: "+cvssscorevalue);
                     if ( Double.compare(cvssscorevalue,highcvss) > 0 ) {
-                        highcvss=cvssscorevalue
+                        highcvss=cvssscorevalue;
                     }
                 }
             }
