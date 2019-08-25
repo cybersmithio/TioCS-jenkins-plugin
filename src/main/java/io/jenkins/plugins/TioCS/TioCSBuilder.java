@@ -1,5 +1,9 @@
 package io.jenkins.plugins.TioCS;
 
+//Needed for Map class, when looking for all environment variables.
+import java.util.HashMap;
+import java.util.Map;
+
 import java.net.URL;
 import java.io.*;
 import javax.net.ssl.HttpsURLConnection;
