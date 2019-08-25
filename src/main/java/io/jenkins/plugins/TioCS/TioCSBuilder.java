@@ -225,7 +225,7 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
                     reportReady = false;
                 } catch (Exception e) {
                     reportReady = true;
-                    listener.getLogger().println("No report status, so should be complete",e);
+                    listener.getLogger().println("No report status, so should be complete",e.toString());
                 }
                 Thread.sleep(10000);
             }
