@@ -209,7 +209,8 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
                 listener.getLogger().println("Vulnerability finding: "+ifinding);
                 JSONObject nvdfinding = ifinding.getJSONObject("nvdFinding");
                 listener.getLogger().println("Vuln NVD info: "+nvdfinding);
-                listener.getLogger().println("CVSSv2 Score: "+nvdfinding.getInt("cvss_score"));
+                String cvssscorestring=nvdfinding.getString("cvss_score")
+                listener.getLogger().println("CVSSv2 Score: "+cvssscorestring);
             }
 
         }
