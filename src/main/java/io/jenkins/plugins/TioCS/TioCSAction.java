@@ -21,6 +21,7 @@ public class TioCSAction implements RunAction2 {
     private Double HighCVSS;
     private Integer NumOfVulns;
     private boolean malwareDetected;
+    private boolean DebugInfo;
 
 
     @Override
