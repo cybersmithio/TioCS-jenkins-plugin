@@ -194,6 +194,7 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
             listener.getLogger().println("Logging into registry.cloud.tenable.com with username " + TioUsername );
             ProcessBuilder processBuilder = new ProcessBuilder();
             try {
+                listener.getLogger().println("docker login -u "+TioUsername+" -p "+TioPassword+" registry.cloud.tenable.com");
                 Process process=new ProcessBuilder("docker", "login","-u", TioUsername,"-p", TioPassword,"registry.cloud.tenable.com").start();
                 StringBuilder output = new StringBuilder();
                 BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
@@ -215,6 +216,7 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
 
             listener.getLogger().println("Tagging image " + name + " for registry.cloud.tenable.com");
             try {
+                listener.getLogger().println("docker tag "+name+":"+imagetagstring+ " registry.cloud.tenable.com/"+TioRepo+"/"+name+":"+imagetagstring);
                 Process process=new ProcessBuilder("docker", "tag",name+":"+imagetagstring , "registry.cloud.tenable.com/"+TioRepo+"/"+name+":"+imagetagstring).start();
                 StringBuilder output = new StringBuilder();
                 BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
@@ -236,6 +238,7 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
 
             listener.getLogger().println("Pushing image " + name + " to registry.cloud.tenable.com");
             try {
+                listener.getLogger().println("docker push registry.cloud.tenable.com/"+TioRepo+"/"+name+":"+imagetagstring);
                 Process process=new ProcessBuilder("docker", "push", "registry.cloud.tenable.com/"+TioRepo+"/"+name+":"+imagetagstring).start();
                 StringBuilder output = new StringBuilder();
                 BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
