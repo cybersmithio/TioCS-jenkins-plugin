@@ -220,14 +220,14 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
                 listener.getLogger().println("DEBUG: JSON received:"+responsejson.toString());
 
                 try {
-                    JSONObject message = responsejson.getJSONObject("message");
-                    listener.getLogger().println("Report status:"+message.toString());
+                    JSONObject reportmessage = responsejson.getJSONObject("message");
+                    listener.getLogger().println("Report status:"+reportmessage);
                     reportReady = false;
-                    Thread.sleep(10000);
                 } catch (Exception e) {
                     reportReady = true;
-                    listener.getLogger().println("No report status, so should be complete");
+                    listener.getLogger().println("No report status, so should be complete",e);
                 }
+                Thread.sleep(10000);
             }
 
             Double highcvss=0.0;
