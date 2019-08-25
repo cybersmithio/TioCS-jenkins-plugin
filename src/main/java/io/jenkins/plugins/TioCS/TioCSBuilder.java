@@ -37,15 +37,17 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
     private String TioPassword;
     private String TioAccessKey;
     private String TioSecretKey;
+    private Double FailCVSS;        // If there is a vulnerability with this CVSS or higher, fail the build.
 
     @DataBoundConstructor
-    public TioCSBuilder(String name, String TioRepo, String TioAccessKey, String TioSecretKey,String TioUsername, String TioPassword) {
+    public TioCSBuilder(String name, String TioRepo, String TioAccessKey, String TioSecretKey,String TioUsername, String TioPassword, Double FailCVSS) {
         this.name = name;
         this.TioRepo = TioRepo;
         this.TioAccessKey = TioAccessKey;
         this.TioSecretKey = TioSecretKey;
         this.TioUsername = TioUsername;
         this.TioPassword = TioPassword;
+        this.FailCVSS = FailCVSS;
     }
 
     public String getName() {
@@ -70,6 +72,10 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
 
     public String getTioSecretKey() {
         return TioSecretKey;
+    }
+
+    public Double getFailCVSS() {
+        return FailCVSS;
     }
 
     public boolean isUseOnPrem() {
@@ -101,13 +107,21 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
         this.TioSecretKey = TioSecretKey;
     }
 
+    public void setFailCVSS(Double FailCVSS) {
+        this.FailCVSS = FailCVSS;
+    }
+
     @Override
     public void perform(Run<?, ?> run, FilePath workspace, Launcher launcher, TaskListener listener) throws InterruptedException, IOException {
-        run.addAction(new TioCSAction(name,TioRepo,TioUsername, TioPassword, TioAccessKey,TioSecretKey));
+        run.addAction(new TioCSAction(name,TioRepo,TioUsername, TioPassword, TioAccessKey,TioSecretKey,FailCVSS));
         if (useOnPrem) {
             listener.getLogger().println("Testing image " + name + " with on-premise inspector.  Results will go into Tenable.io repository "+TioRepo);
+            listener.getLogger().println("Any vulnerability with a CVSS of "+FailCVSS+ " or higher will be considered a failed build." );
+            listener.getLogger().println("Still need to implement on-prem scanning with Jenkins plugin" );
+
         } else {
             listener.getLogger().println("Testing image " + name + " by uploading directly to Tenable.io cloud.  Results will go into Tenable.io repository "+TioRepo);
+            listener.getLogger().println("Any vulnerability with a CVSS of "+FailCVSS+ " or higher will be considered a failed build." );
 
             listener.getLogger().println("Logging into registry.cloud.tenable.com with username " + TioUsername );
             ProcessBuilder processBuilder = new ProcessBuilder();
@@ -222,6 +236,8 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
             }
             listener.getLogger().println("Highest CVSS Score: "+highcvss);
 
+
+
         }
     }
 
@@ -230,7 +246,10 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
     public static final class DescriptorImpl extends BuildStepDescriptor<Builder> {
 
 
-        public FormValidation doCheckName(@QueryParameter String value, @QueryParameter String TioRepo, @QueryParameter String TioUsername, @QueryParameter String TioPassword, @QueryParameter String TioAccessKey, @QueryParameter String TioSecretKey, @QueryParameter boolean useOnPrem)
+        public FormValidation doCheckName(@QueryParameter String value, @QueryParameter String TioRepo,
+            @QueryParameter String TioUsername, @QueryParameter String TioPassword, @QueryParameter String TioAccessKey,
+            @QueryParameter String TioSecretKey, @QueryParameter boolean useOnPrem, @QueryParameter Double FailCVSS)
+
                 throws IOException, ServletException {
             if (value.length() == 0)
                 return FormValidation.error(Messages.TioCSBuilder_DescriptorImpl_errors_missingName());
@@ -244,6 +263,9 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
                 return FormValidation.error(Messages.TioCSBuilder_DescriptorImpl_errors_missingTioAccessKey());
             if (TioSecretKey.length() == 0)
                 return FormValidation.error(Messages.TioCSBuilder_DescriptorImpl_errors_missingTioSecretKey());
+            if (TioSecretKey.length() == 0)
+                return FormValidation.error(Messages.TioCSBuilder_DescriptorImpl_errors_missingTioSecretKey());
+
             return FormValidation.ok();
         }
 

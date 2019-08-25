@@ -18,6 +18,9 @@
     <f:entry title="${%TioSecretKey}" field="TioSecretKey">
         <f:textbox />
     </f:entry>
+    <f:entry title="${%FailCVSS}" field="FailCVSS">
+        <f:textbox />
+    </f:entry>
     <f:advanced>
         <f:entry title="${%OnPremInspector}" field="useOnPrem" description="${%OnPremInspectorDescr}">
             <f:checkbox />
