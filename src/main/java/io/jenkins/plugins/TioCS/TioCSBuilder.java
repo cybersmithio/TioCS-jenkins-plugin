@@ -206,11 +206,14 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
             //JSONObject vulns=responsejson.getJSONArray("findings");
             for ( int i =0; i    < findings.length(); i++ ) {
                 JSONObject ifinding = findings.getJSONObject(i);
-                listener.getLogger().println("Vulnerability finding: "+ifinding);
+                //listener.getLogger().println("Vulnerability finding: "+ifinding);
                 JSONObject nvdfinding = ifinding.getJSONObject("nvdFinding");
-                listener.getLogger().println("Vuln NVD info: "+nvdfinding);
+                //listener.getLogger().println("Vuln NVD info: "+nvdfinding);
                 String cvssscorestring=nvdfinding.getString("cvss_score");
-                listener.getLogger().println("CVSSv2 Score: "+cvssscorestring);
+                if ( cvssscorestring != "" ) {
+                    Double cvssscorevalue=nvdfinding.getDouble("cvss_score");
+                    listener.getLogger().println("CVSSv2 Score: "+cvssscorevalue);
+                }
             }
 
         }
