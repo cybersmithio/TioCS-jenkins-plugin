@@ -394,9 +394,7 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
         public FormValidation doCheckName(@QueryParameter String value, @QueryParameter String TioRepo,
             @QueryParameter String TioUsername, @QueryParameter String TioPassword, @QueryParameter String TioAccessKey,
             @QueryParameter String TioSecretKey, @QueryParameter boolean useOnPrem, @QueryParameter Double FailCVSS,
-            @QueryParameter boolean FailMalware,@QueryParameter boolean DebugInfo,)
-
-                throws IOException, ServletException {
+            @QueryParameter boolean FailMalware, @QueryParameter boolean DebugInfo) throws IOException, ServletException {
             if (value.length() == 0)
                 return FormValidation.error(Messages.TioCSBuilder_DescriptorImpl_errors_missingName());
             if (TioRepo.length() == 0)
