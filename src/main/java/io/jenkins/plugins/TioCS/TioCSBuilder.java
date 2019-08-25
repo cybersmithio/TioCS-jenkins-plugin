@@ -214,7 +214,7 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
             Double highcvss=0.0;
             listener.getLogger().println("Attempting to parse JSON string into JSON object");
             JSONObject responsejson = new JSONObject(jsonstring);
-            //listener.getLogger().println("JSON received:"+responsejson.toString());
+            listener.getLogger().println("DEBUG: JSON received:"+responsejson.toString());
             //listener.getLogger().println("Risk Score:"+responsejson.get("risk_score"));
             //listener.getLogger().println("Findings:"+responsejson.get("findings"));
             JSONArray findings=responsejson.getJSONArray("findings");
@@ -228,7 +228,7 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
                 //listener.getLogger().println("CVSSv2 Score: "+cvssscorestring);
                 if ( !(cvssscorestring.equals("")) ) {
                     Double cvssscorevalue=nvdfinding.getDouble("cvss_score");
-                    listener.getLogger().println("CVSSv2 Score: "+cvssscorevalue);
+                    listener.getLogger().println("Found vulnerability with CVSSv2 score "+cvssscorevalue);
                     if ( Double.compare(cvssscorevalue,highcvss) > 0 ) {
                         highcvss=cvssscorevalue;
                     }
