@@ -215,7 +215,7 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
                     listener.getLogger().println("Error getting image report");
                 }
 
-                listener.getLogger().println("Attempting to parse JSON string into JSON object");
+                listener.getLogger().println("Attempting to parse JSON string into JSON object:"+jsonstring);
                 responsejson = new JSONObject(jsonstring);
                 listener.getLogger().println("DEBUG: JSON received:"+responsejson.toString());
 
