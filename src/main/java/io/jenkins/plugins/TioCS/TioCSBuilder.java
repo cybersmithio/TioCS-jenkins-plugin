@@ -200,8 +200,8 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
             listener.getLogger().println("Attempting to parse JSON string into JSON object");
             JSONObject responsejson = new JSONObject(jsonstring);
             //listener.getLogger().println("JSON received:"+responsejson.toString());
-            listener.getLogger().println("Risk Score:"+responsejson.get("risk_score"));
-            listener.getLogger().println("Findings:"+responsejson.get("findings"));
+            //listener.getLogger().println("Risk Score:"+responsejson.get("risk_score"));
+            //listener.getLogger().println("Findings:"+responsejson.get("findings"));
             JSONArray findings=responsejson.getJSONArray("findings");
             //JSONObject vulns=responsejson.getJSONArray("findings");
             for ( int i =0; i    < findings.length(); i++ ) {
@@ -210,6 +210,7 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
                 JSONObject nvdfinding = ifinding.getJSONObject("nvdFinding");
                 //listener.getLogger().println("Vuln NVD info: "+nvdfinding);
                 String cvssscorestring=nvdfinding.getString("cvss_score");
+                listener.getLogger().println("CVSSv2 Score: "+cvssscorestring);
                 if ( cvssscorestring != "" ) {
                     Double cvssscorevalue=nvdfinding.getDouble("cvss_score");
                     listener.getLogger().println("CVSSv2 Score: "+cvssscorevalue);
