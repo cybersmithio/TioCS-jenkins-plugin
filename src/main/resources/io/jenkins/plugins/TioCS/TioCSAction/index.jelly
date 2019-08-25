@@ -6,10 +6,19 @@
         </l:side-panel>
         <l:main-panel>
             <h1>
-                Name: ${it.name}
+                Image Name: ${it.name}
             </h1>
             <p>
                Repository: ${it.TioRepo}
+            </p>
+            <p>
+               Tenable.io Username: ${it.TioUsername}
+            </p>
+            <p>
+               Tenable.io API Access Key: ${it.TioAccessKey}
+            </p>
+            <p>
+               On-Premise Inspection: ${it.useOnPrem}
             </p>
         </l:main-panel>
     </l:layout>
