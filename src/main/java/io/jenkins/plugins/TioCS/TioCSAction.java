@@ -15,6 +15,8 @@ public class TioCSAction implements RunAction2 {
     private String TioSecretKey;
     private Double FailCVSS;
     private boolean useOnPrem;
+    private Double HighxCVSS;
+    private Int NumOfVulns;
 
 
     @Override
@@ -31,7 +33,8 @@ public class TioCSAction implements RunAction2 {
         return run;
     }
 
-    public TioCSAction(String name, String TioRepo, String TioUsername, String TioPassword, String TioAccessKey, String TioSecretKey, Double FailCVSS, boolean useOnPrem) {
+    public TioCSAction(String name, String TioRepo, String TioUsername, String TioPassword, String TioAccessKey,
+        String TioSecretKey, Double FailCVSS,Double HighCVSS, boolean useOnPrem, Int NumOfVulns) {
         this.name = name;
         this.TioRepo = TioRepo;
         this.TioAccessKey = TioAccessKey;
@@ -39,7 +42,9 @@ public class TioCSAction implements RunAction2 {
         this.TioUsername = TioUsername;
         this.TioPassword = TioPassword;
         this.FailCVSS = FailCVSS;
+        this.FailCVSS = HighCVSS;
         this.useOnPrem = useOnPrem;
+        this.NumOfVulns = NumOfVulns
 
     }
 
@@ -69,6 +74,14 @@ public class TioCSAction implements RunAction2 {
 
     public Double getFailCVSS() {
         return FailCVSS;
+    }
+
+    public Double getHighCVSS() {
+        return HighCVSS;
+    }
+
+    public Double getNumOfVulns() {
+        return NumOfVulns;
     }
 
     public boolean getuseOnPrem() {

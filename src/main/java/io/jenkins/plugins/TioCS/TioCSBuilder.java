@@ -114,7 +114,10 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
 
     @Override
     public void perform(Run<?, ?> run, FilePath workspace, Launcher launcher, TaskListener listener) throws InterruptedException, IOException {
-        run.addAction(new TioCSAction(name,TioRepo,TioUsername, TioPassword, TioAccessKey,TioSecretKey,FailCVSS, useOnPrem));
+        //run.addAction(new TioCSAction(name,TioRepo,TioUsername, TioPassword, TioAccessKey,TioSecretKey,FailCVSS, useOnPrem));
+        Double highcvss=0.0;
+        Int NumOfVulns=0;
+
         if (useOnPrem) {
             listener.getLogger().println("Testing image " + name + " with on-premise inspector.  Results will go into Tenable.io repository "+TioRepo);
             listener.getLogger().println("Any vulnerability with a CVSS of "+FailCVSS+ " or higher will be considered a failed build." );
@@ -260,7 +263,6 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
             }
         }
 
-        Double highcvss=0.0;
 
         //listener.getLogger().println("Risk Score:"+responsejson.get("risk_score"));
         //listener.getLogger().println("Findings:"+responsejson.get("findings"));
@@ -274,6 +276,7 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
             String cvssscorestring=nvdfinding.getString("cvss_score");
             //listener.getLogger().println("CVSSv2 Score: "+cvssscorestring);
             if ( !(cvssscorestring.equals("")) ) {
+                NumOfVulns++;
                 Double cvssscorevalue=nvdfinding.getDouble("cvss_score");
                 listener.getLogger().println("Found vulnerability with CVSSv2 score "+cvssscorevalue);
                 if ( Double.compare(cvssscorevalue,highcvss) > 0 ) {
@@ -285,11 +288,14 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
         if (Double.compare(highcvss,FailCVSS) >= 0 ) {
             listener.getLogger().println("ERROR: There are vulnerabilities equal to or higher than "+FailCVSS);
             listener.getLogger().println("ERROR: Failing this build!");
+            run.addAction(new TioCSAction(name,TioRepo,TioUsername, TioPassword, TioAccessKey,TioSecretKey,FailCVSS, highcvss, useOnPrem, NumOfVulns));
             throw new SecurityException();
-            //System.exit(1);
         } else {
             listener.getLogger().println("Vulnerabilities are below threshold of "+FailCVSS);
         }
+
+        run.addAction(new TioCSAction(name,TioRepo,TioUsername, TioPassword, TioAccessKey,TioSecretKey,FailCVSS, highcvss, useOnPrem, NumOfVulns));
+
 
     }
 

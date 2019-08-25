@@ -23,6 +23,12 @@
             <p>
                Failure when vulnerability CVSS is equal to or higher than: ${it.FailCVSS}
             </p>
+            <p>
+               Highest CVSS found in image: ${it.HighCVSS}
+            </p>
+            <p>
+               Number of vulnerabilities found in image: ${it.NumOfVulns}
+            </p>
         </l:main-panel>
     </l:layout>
 </j:jelly>
