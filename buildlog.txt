@@ -61,3 +61,11 @@ August 24, 2019 4:25pm
 
 August 24, 2019 5:03pm
 * Figured out how to import the JSON library through Maven central.  Now to get it parsing stuff.
+
+August 25, 2019 12:37am
+* Cloud testing and reporting is working.
+* On-prem inspection and reporting in the cloud is working.
+* MVP reached, but need to do more:
+* Get the Tenable.io credential fields being populated from Jenkins credentials.
+* Add a tag field for the images being tested and the reports being stored in IO
+* Add a flag to fail if malware is discovered.
