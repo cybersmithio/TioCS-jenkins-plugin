@@ -13,6 +13,7 @@ public class TioCSAction implements RunAction2 {
     private String TioPassword;
     private String TioAccessKey;
     private String TioSecretKey;
+    private Double FailCVSS;
 
     @Override
     public void onAttached(Run<?, ?> run) {
@@ -28,13 +29,14 @@ public class TioCSAction implements RunAction2 {
         return run;
     }
 
-    public TioCSAction(String name, String TioRepo, String TioUsername, String TioPassword, String TioAccessKey, String TioSecretKey) {
+    public TioCSAction(String name, String TioRepo, String TioUsername, String TioPassword, String TioAccessKey, String TioSecretKey, Double FailCVSS) {
         this.name = name;
         this.TioRepo = TioRepo;
         this.TioAccessKey = TioAccessKey;
         this.TioSecretKey = TioSecretKey;
         this.TioUsername = TioUsername;
         this.TioPassword = TioPassword;
+        this.FailCVSS = FailCVSS;
 
     }
 
@@ -60,6 +62,10 @@ public class TioCSAction implements RunAction2 {
 
     public String getTioSecretKey() {
         return TioSecretKey;
+    }
+
+    public Double getFailCVSS() {
+        return FailCVSS;
     }
 
 
