@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import org.json.JSONObject;
 import org.json.JSONArray;
+import org.json.JSONException;
 
 import hudson.Launcher;
 import hudson.Extension;
