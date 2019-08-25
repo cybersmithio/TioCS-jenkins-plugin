@@ -206,9 +206,9 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
             //JSONObject vulns=responsejson.getJSONArray("findings");
             for ( int i =0; i    < findings.length(); i++ ) {
                 JSONObject ifinding = findings.getJSONObject(i);
+                listener.getLogger().println("Vulnerability finding: "+ifindings);
                 JSONObject nvdfinding = ifinding.getJSONObject("nvdFinding");
-                //listener.getLogger().println("Vuln: "+findings.getJSONObject(i).toString());
-                //listener.getLogger().println("Vuln NVD info: "+nvdinfo);
+                listener.getLogger().println("Vuln NVD info: "+nvdfinding);
                 listener.getLogger().println("CVSSv2 Score: "+nvdfinding.getInt("cvss_score"));
             }
 
