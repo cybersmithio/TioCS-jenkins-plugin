@@ -123,7 +123,9 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
             listener.getLogger().println("Piping image into on-premise Tenable.io CS inspector ");
             ProcessBuilder processBuilder = new ProcessBuilder();
             try {
-                Process process=new ProcessBuilder("sh", "-c","docker save "+name+":latest" | docker run -e TENABLE_ACCESS_KEY="+TioAccessKey+" -e TENABLE_SECRET_KEY="+TioSecretKey+" -e IMPORT_REPO_NAME="+TioRepo+" -i tenableio-docker-consec-local.jfrog.io/cs-scanner:latest inspect-image "+name+":latest").start();
+                Process process=new ProcessBuilder("sh", "-c","docker save "+name+":latest | docker run -e TENABLE_ACCESS_KEY="
+                    +TioAccessKey+" -e TENABLE_SECRET_KEY="+TioSecretKey+" -e IMPORT_REPO_NAME="+TioRepo
+                    +" -i tenableio-docker-consec-local.jfrog.io/cs-scanner:latest inspect-image "+name+":latest").start();
                 StringBuilder output = new StringBuilder();
                 BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
                 String line;
