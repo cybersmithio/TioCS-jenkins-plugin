@@ -211,7 +211,7 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
                 //listener.getLogger().println("Vuln NVD info: "+nvdfinding);
                 String cvssscorestring=nvdfinding.getString("cvss_score");
                 listener.getLogger().println("CVSSv2 Score: "+cvssscorestring);
-                if ( cvssscorestring != "" ) {
+                if ( !(cvssscorestring.equals("")) ) {
                     Double cvssscorevalue=nvdfinding.getDouble("cvss_score");
                     listener.getLogger().println("CVSSv2 Score: "+cvssscorevalue);
                 }
