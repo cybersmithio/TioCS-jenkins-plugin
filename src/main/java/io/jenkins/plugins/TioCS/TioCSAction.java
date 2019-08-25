@@ -9,6 +9,8 @@ public class TioCSAction implements RunAction2 {
     private transient Run run;
     private String TioRepo;
     private String name;
+    private String ImageTag;
+
     private String TioUsername;
     private String TioPassword;
     private String TioAccessKey;
@@ -35,10 +37,11 @@ public class TioCSAction implements RunAction2 {
         return run;
     }
 
-    public TioCSAction(String name, String TioRepo, String TioUsername, String TioPassword, String TioAccessKey,
+    public TioCSAction(String name, String ImageTag, String TioRepo, String TioUsername, String TioPassword, String TioAccessKey,
         String TioSecretKey, Double FailCVSS,Double HighCVSS, boolean useOnPrem, Integer NumOfVulns, boolean FailMalware,
         boolean malwareDetected) {
         this.name = name;
+        this.ImageTag = ImageTag;
         this.TioRepo = TioRepo;
         this.TioAccessKey = TioAccessKey;
         this.TioSecretKey = TioSecretKey;
@@ -54,6 +57,10 @@ public class TioCSAction implements RunAction2 {
 
     public String getName() {
         return name;
+    }
+
+    public String getImageTag() {
+        return ImageTag;
     }
 
     public String getTioRepo() {

@@ -3,6 +3,9 @@
     <f:entry title="${%Name}" field="name">
         <f:textbox />
     </f:entry>
+    <f:entry title="${%ImageTag}" field="ImageTag">
+        <f:textbox />
+    </f:entry>
     <f:entry title="${%TioRepo}" field="TioRepo">
         <f:textbox />
     </f:entry>
@@ -25,7 +28,7 @@
         <f:checkbox />
     </f:entry>
     <f:advanced>
-        <f:entry title="${%OnPremInspector}" field="useOnPrem" description="${%OnPremInspectorDescr}">
+        <f:entry title="${%OnPremInspector}" field="useOnPrem">
             <f:checkbox />
         </f:entry>
     </f:advanced>
