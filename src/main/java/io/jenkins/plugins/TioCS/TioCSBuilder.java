@@ -217,7 +217,7 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
 
                 listener.getLogger().println("Attempting to parse JSON string into JSON object");
                 responsejson = new JSONObject(jsonstring);
-                //listener.getLogger().println("DEBUG: JSON received:"+responsejson.toString());
+                listener.getLogger().println("DEBUG: JSON received:"+responsejson.toString());
 
                 try {
                     JSONObject message = responsejson.getJSONObject("message");
