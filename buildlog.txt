@@ -69,3 +69,6 @@ August 25, 2019 12:37am
 * Get the Tenable.io credential fields being populated from Jenkins credentials.
 * Add a tag field for the images being tested and the reports being stored in IO
 * Add a flag to fail if malware is discovered.
+
+August 25, 2019 9:39am
+* Additional information added into plugin output.

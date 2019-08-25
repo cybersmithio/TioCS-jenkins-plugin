@@ -20,6 +20,9 @@
             <p>
                On-Premise Inspection: ${it.useOnPrem}
             </p>
+            <p>
+               Failure when vulnerability CVSS is equal to or higher than: ${it.FailCVSS}
+            </p>
         </l:main-panel>
     </l:layout>
 </j:jelly>
