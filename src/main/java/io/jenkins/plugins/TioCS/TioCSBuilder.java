@@ -187,34 +187,49 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
                 listener.getLogger().println("Interrupted Exception running external command");
             }
 
-            listener.getLogger().println("Retrieving report of image " + name + " from Tenable.io API");
-            String jsonstring="";
-            try {
-                URL myUrl = new URL("https://cloud.tenable.com/container-security/api/v2/reports/"+TioRepo+"/"+name+"/latest");
-                HttpsURLConnection conn = (HttpsURLConnection)myUrl.openConnection();
-                conn.setRequestProperty("x-apikeys","accessKey="+TioAccessKey+";secretKey="+TioSecretKey);
-                conn.setRequestProperty("accept","application/json");
+            boolean reportReady = false;
 
-                InputStream is = conn.getInputStream();
-                InputStreamReader isr = new InputStreamReader(is);
-                BufferedReader br = new BufferedReader(isr);
+            while ( ) {
+                listener.getLogger().println("Retrieving report of image " + name + " from Tenable.io API");
+                String jsonstring="";
+                try {
+                    URL myUrl = new URL("https://cloud.tenable.com/container-security/api/v2/reports/"+TioRepo+"/"+name+"/latest");
+                    HttpsURLConnection conn = (HttpsURLConnection)myUrl.openConnection();
+                    conn.setRequestProperty("x-apikeys","accessKey="+TioAccessKey+";secretKey="+TioSecretKey);
+                    conn.setRequestProperty("accept","application/json");
 
-                String inputLine;
+                    InputStream is = conn.getInputStream();
+                    InputStreamReader isr = new InputStreamReader(is);
+                    BufferedReader br = new BufferedReader(isr);
 
-                while ((inputLine = br.readLine()) != null) {
-                    jsonstring=jsonstring+inputLine;
+                    String inputLine;
+
+                    while ((inputLine = br.readLine()) != null) {
+                        jsonstring=jsonstring+inputLine;
+                    }
+
+                    br.close();
+
+                } catch (Exception e) {
+                    listener.getLogger().println("Error getting image report");
                 }
 
-                br.close();
+                Double highcvss=0.0;
+                listener.getLogger().println("Attempting to parse JSON string into JSON object");
+                JSONObject responsejson = new JSONObject(jsonstring);
+                //listener.getLogger().println("DEBUG: JSON received:"+responsejson.toString());
 
-            } catch (Exception e) {
-                listener.getLogger().println("Error getting image report");
+                try {
+                    JSONObject message = responsejson.getJSONObject("message");
+                    listener.getLogger().println("Report status:"+message.toString());
+                    reportReady = false;
+                    Thread.sleep(10000);
+                } catch (Exception e) {
+                    reportReady = true;
+                    listener.getLogger().println("No report status, so should be complete");
+                }
             }
 
-            Double highcvss=0.0;
-            listener.getLogger().println("Attempting to parse JSON string into JSON object");
-            JSONObject responsejson = new JSONObject(jsonstring);
-            listener.getLogger().println("DEBUG: JSON received:"+responsejson.toString());
             //listener.getLogger().println("Risk Score:"+responsejson.get("risk_score"));
             //listener.getLogger().println("Findings:"+responsejson.get("findings"));
             JSONArray findings=responsejson.getJSONArray("findings");
@@ -243,8 +258,6 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
             } else {
                 listener.getLogger().println("Vulnerabilities are below threshold of "+FailCVSS);
             }
-
-
         }
     }
 
