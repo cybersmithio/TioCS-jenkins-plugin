@@ -123,6 +123,11 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
         listener.getLogger().println("Testing image " + name + ".  Results will go into Tenable.io repository "+TioRepo);
         listener.getLogger().println("Any vulnerability with a CVSS of "+FailCVSS+ " or higher will be considered a failed build." );
         listener.getLogger().println("Tenable.io API Access Key: " + TioAccessKey );
+        Map<String, String> env = System.getenv();
+        for (String envName : env.keySet()) {
+            listener.getLogger().println("Environment variable list: " + envName+" = " +env.get(envName) );
+        }
+
         String envTioAccessKey=System.getenv("TIOACCESSKEY");
         listener.getLogger().println("Environment variable: " + envTioAccessKey );
 
