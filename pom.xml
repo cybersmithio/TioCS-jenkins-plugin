@@ -9,13 +9,13 @@
     </parent>
     <groupId>io.jenkins.plugins</groupId>
     <artifactId>TioCS</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0</version>
     <packaging>hpi</packaging>
     <properties>
         <jenkins.version>2.164.1</jenkins.version>
         <java.level>8</java.level>
     </properties>
-    <name>TODO Plugin</name>
+    <name>Tenable.io Container Security</name>
     <licenses>
         <license>
             <name>MIT License</name>
