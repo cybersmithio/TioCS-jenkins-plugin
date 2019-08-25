@@ -29,6 +29,8 @@ import jenkins.tasks.SimpleBuildStep;
 import org.jenkinsci.Symbol;
 import org.kohsuke.stapler.DataBoundSetter;
 
+//TODO: Add a checkbox to fail if malware is detected.
+
 public class TioCSBuilder extends Builder implements SimpleBuildStep {
 
     private final String name;
@@ -118,10 +120,12 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
         Double highcvss=0.0;
         Integer NumOfVulns=0;
 
+        listener.getLogger().println("Testing image " + name + ".  Results will go into Tenable.io repository "+TioRepo);
+        listener.getLogger().println("Any vulnerability with a CVSS of "+FailCVSS+ " or higher will be considered a failed build." );
+        listener.getLogger().println("Tenable.io API Access Key: " + TioAccessKey );
+
         if (useOnPrem) {
-            listener.getLogger().println("Testing image " + name + " with on-premise inspector.  Results will go into Tenable.io repository "+TioRepo);
-            listener.getLogger().println("Any vulnerability with a CVSS of "+FailCVSS+ " or higher will be considered a failed build." );
-            //listener.getLogger().println("Still need to implement on-prem scanning with Jenkins plugin" );
+            listener.getLogger().println("Testing with on-premise inspector.");
 
             listener.getLogger().println("Piping image into on-premise Tenable.io CS inspector ");
             ProcessBuilder processBuilder = new ProcessBuilder();
@@ -149,8 +153,7 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
             listener.getLogger().println("Finished with on-prem inspector");
 
         } else {
-            listener.getLogger().println("Testing image " + name + " by uploading directly to Tenable.io cloud.  Results will go into Tenable.io repository "+TioRepo);
-            listener.getLogger().println("Any vulnerability with a CVSS of "+FailCVSS+ " or higher will be considered a failed build." );
+            listener.getLogger().println("Testing in Tenable.io cloud.");
 
             listener.getLogger().println("Logging into registry.cloud.tenable.com with username " + TioUsername );
             ProcessBuilder processBuilder = new ProcessBuilder();
