@@ -33,8 +33,6 @@ import jenkins.tasks.SimpleBuildStep;
 import org.jenkinsci.Symbol;
 import org.kohsuke.stapler.DataBoundSetter;
 
-//TODO: Add a checkbox to fail if malware is detected.
-
 public class TioCSBuilder extends Builder implements SimpleBuildStep {
 
     private final String name;

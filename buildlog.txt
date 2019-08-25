@@ -75,3 +75,6 @@ August 25, 2019 9:39am
 
 August 25, 2019 9:41am
 * Sensitive data now converted to password fields to data is not visible.
+
+August 25, 2019 11:36am
+* Added failure for malware, and the results are being reported into the Tenable.io Action in Jenkins.
