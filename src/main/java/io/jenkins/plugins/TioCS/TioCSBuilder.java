@@ -194,7 +194,7 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
             listener.getLogger().println("Logging into registry.cloud.tenable.com with username " + TioUsername );
             ProcessBuilder processBuilder = new ProcessBuilder();
             try {
-                listener.getLogger().println("docker login -u "+TioUsername+" -p "+TioPassword+" registry.cloud.tenable.com");
+                listener.getLogger().println("docker login -u "+TioUsername+" -p ********* registry.cloud.tenable.com");
                 Process process=new ProcessBuilder("docker", "login","-u", TioUsername,"-p", TioPassword,"registry.cloud.tenable.com").start();
                 StringBuilder output = new StringBuilder();
                 BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
@@ -206,7 +206,7 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
                 if (exitVal == 0) {
                     listener.getLogger().println("Success running external command:"+output);
                 } else {
-                    listener.getLogger().println("Error running external command:"+output);
+                    listener.getLogger().println("Error ("+exitVal+") running external command:"+output);
                 }
             } catch (IOException e) {
                 listener.getLogger().println("IO Exception running external command");
