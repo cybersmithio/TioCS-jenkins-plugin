@@ -207,6 +207,7 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
             for ( int i =0; i    < findings.length(); i++ ) {
                 listener.getLogger().println("Vuln: "+findings.getJSONObject(i).toString());
                 listener.getLogger().println("Vuln NVD info: "+findings.getJSONObject(i).get("nvdFinding"));
+                listener.getLogger().println("CVSSv2 Score: "+findings.getJSONObject(i).get("nvdFinding").get("cvss_score"));
             }
 
         }
