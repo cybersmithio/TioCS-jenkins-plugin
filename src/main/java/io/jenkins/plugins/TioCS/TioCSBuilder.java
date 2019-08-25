@@ -224,9 +224,12 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
                     String reportmessage = responsejson.getString("message");
                     listener.getLogger().println("Report status:"+reportmessage);
                     reportReady = false;
-                } catch (Exception e) {
+                } catch (JSONException e) {
                     reportReady = true;
-                    listener.getLogger().println("No report status, so report should be complete"+e.toString());
+                    listener.getLogger().println("No report status, so report should be complete: "+e.toString());
+                } catch (Exception e) {
+                    reportReady = false;
+                    listener.getLogger().println("Some other unknown exception: "+e.toString());
                 }
             }
 
