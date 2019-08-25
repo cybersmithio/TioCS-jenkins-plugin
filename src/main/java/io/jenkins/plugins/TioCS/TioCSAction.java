@@ -49,7 +49,7 @@ public class TioCSAction implements RunAction2 {
         this.useOnPrem = useOnPrem;
         this.NumOfVulns = NumOfVulns;
         this.FailMalware = FailMalware;
-        tile.malwareDetected = malwareDetected;
+        this.malwareDetected = malwareDetected;
     }
 
     public String getName() {
