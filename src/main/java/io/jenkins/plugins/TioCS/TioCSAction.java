@@ -15,8 +15,10 @@ public class TioCSAction implements RunAction2 {
     private String TioSecretKey;
     private Double FailCVSS;
     private boolean useOnPrem;
+    private boolean FailMalware;
     private Double HighCVSS;
     private Integer NumOfVulns;
+    private boolean malwareDetected;
 
 
     @Override
@@ -34,7 +36,8 @@ public class TioCSAction implements RunAction2 {
     }
 
     public TioCSAction(String name, String TioRepo, String TioUsername, String TioPassword, String TioAccessKey,
-        String TioSecretKey, Double FailCVSS,Double HighCVSS, boolean useOnPrem, Integer NumOfVulns) {
+        String TioSecretKey, Double FailCVSS,Double HighCVSS, boolean useOnPrem, Integer NumOfVulns, boolean FailMalware,
+        boolean malwareDetected) {
         this.name = name;
         this.TioRepo = TioRepo;
         this.TioAccessKey = TioAccessKey;
@@ -45,7 +48,8 @@ public class TioCSAction implements RunAction2 {
         this.HighCVSS = HighCVSS;
         this.useOnPrem = useOnPrem;
         this.NumOfVulns = NumOfVulns;
-
+        this.FailMalware = FailMalware;
+        tile.malwareDetected = malwareDetected;
     }
 
     public String getName() {
@@ -84,8 +88,16 @@ public class TioCSAction implements RunAction2 {
         return NumOfVulns;
     }
 
+    public boolean getFailMalware() {
+        return FailMalware;
+    }
+
     public boolean getuseOnPrem() {
         return useOnPrem;
+    }
+
+    public boolean getmalwareDetected() {
+        return malwareDetected;
     }
 
 

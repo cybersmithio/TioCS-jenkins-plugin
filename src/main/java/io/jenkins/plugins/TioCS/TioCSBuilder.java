@@ -45,9 +45,11 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
     private String TioAccessKey;
     private String TioSecretKey;
     private Double FailCVSS;        // If there is a vulnerability with this CVSS or higher, fail the build.
+    private boolean FailMalware;
 
     @DataBoundConstructor
-    public TioCSBuilder(String name, String TioRepo, String TioAccessKey, String TioSecretKey,String TioUsername, String TioPassword, Double FailCVSS) {
+    public TioCSBuilder(String name, String TioRepo, String TioAccessKey, String TioSecretKey,String TioUsername,
+        String TioPassword, Double FailCVSS, boolean FailMalware) {
         this.name = name;
         this.TioRepo = TioRepo;
         this.TioAccessKey = TioAccessKey;
@@ -55,6 +57,7 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
         this.TioUsername = TioUsername;
         this.TioPassword = TioPassword;
         this.FailCVSS = FailCVSS;
+        this.FailMalware = FailMalware;
     }
 
     public String getName() {
@@ -83,6 +86,10 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
 
     public Double getFailCVSS() {
         return FailCVSS;
+    }
+
+    public boolean getFailMalware() {
+        return FailMalware;
     }
 
     public boolean isUseOnPrem() {
@@ -118,22 +125,28 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
         this.FailCVSS = FailCVSS;
     }
 
+    public void setFailMalware(Double FailMalware) {
+        this.FailMalware = FailMalware;
+    }
+
     @Override
     public void perform(Run<?, ?> run, FilePath workspace, Launcher launcher, TaskListener listener) throws InterruptedException, IOException {
         //run.addAction(new TioCSAction(name,TioRepo,TioUsername, TioPassword, TioAccessKey,TioSecretKey,FailCVSS, useOnPrem));
         Double highcvss=0.0;
         Integer NumOfVulns=0;
+        boolean malwareDetected=false;
 
         listener.getLogger().println("Testing image " + name + ".  Results will go into Tenable.io repository "+TioRepo);
         listener.getLogger().println("Any vulnerability with a CVSS of "+FailCVSS+ " or higher will be considered a failed build." );
+        listener.getLogger().println("Fail build if malware detected: "+FailMalware );
         listener.getLogger().println("Tenable.io API Access Key: " + TioAccessKey );
         Map<String, String> env = System.getenv();
         for (String envName : env.keySet()) {
             listener.getLogger().println("Environment variable list: " + envName+" = " +env.get(envName) );
         }
 
-        String envTioAccessKey=System.getenv("TIOACCESSKEY");
-        listener.getLogger().println("Environment variable: " + envTioAccessKey );
+        //String envTioAccessKey=System.getenv("TIOACCESSKEY");
+        //listener.getLogger().println("Environment variable: " + envTioAccessKey );
 
         if (useOnPrem) {
             listener.getLogger().println("Testing with on-premise inspector.");
@@ -231,6 +244,7 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
             }
         }
 
+        //Get report and parse
         boolean reportReady = false;
         JSONObject responsejson = new JSONObject("{}");
 
@@ -281,6 +295,20 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
         //listener.getLogger().println("Risk Score:"+responsejson.get("risk_score"));
         //listener.getLogger().println("Findings:"+responsejson.get("findings"));
         JSONArray findings=responsejson.getJSONArray("findings");
+        JSONArray malware=responsejson.getJSONArray("malware");
+        listener.getLogger().println("Number of malware items found: "+malware.length());
+
+        if ( FailMalware ) {
+            listener.getLogger().println("If malware is detected, this build is set to fail.");
+            if ( Integer.compare(malware.length,0) > 0 ) {
+                listener.getLogger().println("Malware detected, so failing the build.");
+                malwareDetected=true;
+                run.addAction(new TioCSAction(name,TioRepo,TioUsername, TioPassword, TioAccessKey,TioSecretKey,FailCVSS, highcvss, useOnPrem, NumOfVulns, FailMalware,malwareDetected));
+            } else {
+                listener.getLogger().println("Malware not detected. Continue with build.");
+            }
+        }
+
         //JSONObject vulns=responsejson.getJSONArray("findings");
         for ( int i =0; i    < findings.length(); i++ ) {
             JSONObject ifinding = findings.getJSONObject(i);
@@ -302,13 +330,13 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
         if (Double.compare(highcvss,FailCVSS) >= 0 ) {
             listener.getLogger().println("ERROR: There are vulnerabilities equal to or higher than "+FailCVSS);
             listener.getLogger().println("ERROR: Failing this build!");
-            run.addAction(new TioCSAction(name,TioRepo,TioUsername, TioPassword, TioAccessKey,TioSecretKey,FailCVSS, highcvss, useOnPrem, NumOfVulns));
+            run.addAction(new TioCSAction(name,TioRepo,TioUsername, TioPassword, TioAccessKey,TioSecretKey,FailCVSS, highcvss, useOnPrem, NumOfVulns, FailMalware, malwareDetected));
             throw new SecurityException();
         } else {
             listener.getLogger().println("Vulnerabilities are below threshold of "+FailCVSS);
         }
 
-        run.addAction(new TioCSAction(name,TioRepo,TioUsername, TioPassword, TioAccessKey,TioSecretKey,FailCVSS, highcvss, useOnPrem, NumOfVulns));
+        run.addAction(new TioCSAction(name,TioRepo,TioUsername, TioPassword, TioAccessKey,TioSecretKey,FailCVSS, highcvss, useOnPrem, NumOfVulns, FailMalware, malwareDetected));
 
 
     }
@@ -320,7 +348,8 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
 
         public FormValidation doCheckName(@QueryParameter String value, @QueryParameter String TioRepo,
             @QueryParameter String TioUsername, @QueryParameter String TioPassword, @QueryParameter String TioAccessKey,
-            @QueryParameter String TioSecretKey, @QueryParameter boolean useOnPrem, @QueryParameter Double FailCVSS)
+            @QueryParameter String TioSecretKey, @QueryParameter boolean useOnPrem, @QueryParameter Double FailCVSS,
+            @QueryParameter boolean FailMalware)
 
                 throws IOException, ServletException {
             if (value.length() == 0)

@@ -24,6 +24,12 @@
                Failure when vulnerability CVSS is equal to or higher than: ${it.FailCVSS}
             </p>
             <p>
+               Failure when malware is present in image: ${it.FailMalware}
+            </p>
+            <p>
+               Malware detected: ${it.malwareDetected}
+            </p>
+            <p>
                Highest CVSS found in image: ${it.HighCVSS}
             </p>
             <p>
