@@ -189,7 +189,7 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
 
             boolean reportReady = false;
 
-            while ( ) {
+            while ( ! reportReady  ) {
                 listener.getLogger().println("Retrieving report of image " + name + " from Tenable.io API");
                 String jsonstring="";
                 try {
