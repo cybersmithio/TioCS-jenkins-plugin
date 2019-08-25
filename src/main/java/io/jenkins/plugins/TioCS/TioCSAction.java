@@ -44,7 +44,7 @@ public class TioCSAction implements RunAction2 {
         this.FailCVSS = FailCVSS;
         this.FailCVSS = HighCVSS;
         this.useOnPrem = useOnPrem;
-        this.NumOfVulns = NumOfVulns
+        this.NumOfVulns = NumOfVulns;
 
     }
 
