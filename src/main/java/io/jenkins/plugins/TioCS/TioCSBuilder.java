@@ -191,6 +191,7 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
             JSONObject responsejson = new JSONObject("{}");
 
             while ( ! reportReady  ) {
+                Thread.sleep(10000);
                 listener.getLogger().println("Retrieving report of image " + name + " from Tenable.io API");
                 String jsonstring="";
                 try {
@@ -215,9 +216,9 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
                     listener.getLogger().println("Error getting image report");
                 }
 
-                listener.getLogger().println("Attempting to parse JSON string into JSON object:"+jsonstring);
+                //listener.getLogger().println("Attempting to parse JSON string into JSON object:"+jsonstring);
                 responsejson = new JSONObject(jsonstring);
-                listener.getLogger().println("DEBUG: JSON received:"+responsejson.toString());
+                //listener.getLogger().println("DEBUG: JSON received:"+responsejson.toString());
 
                 try {
                     String reportmessage = responsejson.getString("message");
@@ -225,9 +226,8 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
                     reportReady = false;
                 } catch (Exception e) {
                     reportReady = true;
-                    listener.getLogger().println("No report status, so should be complete"+e.toString());
+                    listener.getLogger().println("No report status, so report should be complete"+e.toString());
                 }
-                Thread.sleep(10000);
             }
 
             Double highcvss=0.0;
