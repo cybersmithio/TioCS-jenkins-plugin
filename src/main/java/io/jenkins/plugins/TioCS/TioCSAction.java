@@ -39,7 +39,7 @@ public class TioCSAction implements RunAction2 {
 
     public TioCSAction(String name, String ImageTag, String TioRepo, String TioUsername, String TioPassword, String TioAccessKey,
         String TioSecretKey, Double FailCVSS,Double HighCVSS, boolean useOnPrem, Integer NumOfVulns, boolean FailMalware,
-        boolean malwareDetected) {
+        boolean malwareDetected, boolean DebugInfo) {
         this.name = name;
         this.ImageTag = ImageTag;
         this.TioRepo = TioRepo;
@@ -53,6 +53,7 @@ public class TioCSAction implements RunAction2 {
         this.NumOfVulns = NumOfVulns;
         this.FailMalware = FailMalware;
         this.malwareDetected = malwareDetected;
+        this.DebugInfo = DebugInfo;
     }
 
     public String getName() {
@@ -107,7 +108,9 @@ public class TioCSAction implements RunAction2 {
         return malwareDetected;
     }
 
-
+    public boolean getDebugInfo() {
+        return DebugInfo;
+    }
 
     @Override
     public String getIconFileName() {

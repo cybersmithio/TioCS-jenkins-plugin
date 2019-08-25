@@ -6,10 +6,14 @@
         </l:side-panel>
         <l:main-panel>
             <h1>
-                Image Name: ${it.name}
+                Image: ${it.name}:${it.ImageTag}
             </h1>
             <p>
-               Repository: ${it.TioRepo}
+               Debugging information enabled: ${it.DebugInfo}
+            </p>
+
+            <p>
+               Tenable.io Repository: ${it.TioRepo}
             </p>
             <p>
                Tenable.io Username: ${it.TioUsername}
@@ -20,20 +24,21 @@
             <p>
                On-Premise Inspection: ${it.useOnPrem}
             </p>
+
             <p>
                Failure when vulnerability CVSS is equal to or higher than: ${it.FailCVSS}
-            </p>
-            <p>
-               Failure when malware is present in image: ${it.FailMalware}
-            </p>
-            <p>
-               Malware detected: ${it.malwareDetected}
             </p>
             <p>
                Highest CVSS found in image: ${it.HighCVSS}
             </p>
             <p>
                Number of vulnerabilities found in image: ${it.NumOfVulns}
+            </p>
+            <p>
+               Failure when malware is present in image: ${it.FailMalware}
+            </p>
+            <p>
+               Malware detected: ${it.malwareDetected}
             </p>
         </l:main-panel>
     </l:layout>
