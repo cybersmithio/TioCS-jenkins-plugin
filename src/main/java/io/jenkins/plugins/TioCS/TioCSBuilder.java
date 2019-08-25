@@ -236,12 +236,12 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
             }
             listener.getLogger().println("Highest CVSS Score: "+highcvss);
             if (Double.compare(highcvss,FailCVSS) >= 0 ) {
-                listener.getLogger().println("ERROR: There are vulnerabilities equal to or higher than "+highcvss);
+                listener.getLogger().println("ERROR: There are vulnerabilities equal to or higher than "+FailCVSS);
                 listener.getLogger().println("ERROR: Failing this build!");
                 throw new SecurityException();
                 //System.exit(1);
             } else {
-                listener.getLogger().println("Vulnerabilities are below threshold of "+highcvss);
+                listener.getLogger().println("Vulnerabilities are below threshold of "+FailCVSS);
             }
 
 
