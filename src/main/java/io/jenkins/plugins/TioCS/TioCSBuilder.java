@@ -116,7 +116,7 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
     public void perform(Run<?, ?> run, FilePath workspace, Launcher launcher, TaskListener listener) throws InterruptedException, IOException {
         //run.addAction(new TioCSAction(name,TioRepo,TioUsername, TioPassword, TioAccessKey,TioSecretKey,FailCVSS, useOnPrem));
         Double highcvss=0.0;
-        Int NumOfVulns=0;
+        Integer NumOfVulns=0;
 
         if (useOnPrem) {
             listener.getLogger().println("Testing image " + name + " with on-premise inspector.  Results will go into Tenable.io repository "+TioRepo);
