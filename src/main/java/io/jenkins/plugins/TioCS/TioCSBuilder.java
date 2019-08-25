@@ -118,7 +118,30 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
         if (useOnPrem) {
             listener.getLogger().println("Testing image " + name + " with on-premise inspector.  Results will go into Tenable.io repository "+TioRepo);
             listener.getLogger().println("Any vulnerability with a CVSS of "+FailCVSS+ " or higher will be considered a failed build." );
-            listener.getLogger().println("Still need to implement on-prem scanning with Jenkins plugin" );
+            //listener.getLogger().println("Still need to implement on-prem scanning with Jenkins plugin" );
+
+            listener.getLogger().println("Piping image into on-premise Tenable.io CS inspector ");
+            ProcessBuilder processBuilder = new ProcessBuilder();
+            try {
+                Process process=new ProcessBuilder("sh", "-c","docker save "+name+":latest" | docker run -e TENABLE_ACCESS_KEY="+TioAccessKey+" -e TENABLE_SECRET_KEY="+TioSecretKey+" -e IMPORT_REPO_NAME="+TioRepo+" -i tenableio-docker-consec-local.jfrog.io/cs-scanner:latest inspect-image "+name+":latest").start();
+                StringBuilder output = new StringBuilder();
+                BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    output.append(line + "\n");
+                }
+                int exitVal = process.waitFor();
+                if (exitVal == 0) {
+                    listener.getLogger().println("Success running external command:"+output);
+                } else {
+                    listener.getLogger().println("Error running external command:"+output);
+                }
+            } catch (IOException e) {
+                listener.getLogger().println("IO Exception running external command");
+            } catch (InterruptedException e) {
+                listener.getLogger().println("Interrupted Exception running external command");
+            }
+            listener.getLogger().println("Finished with on-prem inspector");
 
         } else {
             listener.getLogger().println("Testing image " + name + " by uploading directly to Tenable.io cloud.  Results will go into Tenable.io repository "+TioRepo);
@@ -187,84 +210,85 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
             } catch (InterruptedException e) {
                 listener.getLogger().println("Interrupted Exception running external command");
             }
+        }
 
-            boolean reportReady = false;
-            JSONObject responsejson = new JSONObject("{}");
+        boolean reportReady = false;
+        JSONObject responsejson = new JSONObject("{}");
 
-            while ( ! reportReady  ) {
-                Thread.sleep(10000);
-                listener.getLogger().println("Retrieving report of image " + name + " from Tenable.io API");
-                String jsonstring="";
-                try {
-                    URL myUrl = new URL("https://cloud.tenable.com/container-security/api/v2/reports/"+TioRepo+"/"+name+"/latest");
-                    HttpsURLConnection conn = (HttpsURLConnection)myUrl.openConnection();
-                    conn.setRequestProperty("x-apikeys","accessKey="+TioAccessKey+";secretKey="+TioSecretKey);
-                    conn.setRequestProperty("accept","application/json");
+        while ( ! reportReady  ) {
+            Thread.sleep(10000);
+            listener.getLogger().println("Retrieving report of image " + name + " from Tenable.io API");
+            String jsonstring="";
+            try {
+                URL myUrl = new URL("https://cloud.tenable.com/container-security/api/v2/reports/"+TioRepo+"/"+name+"/latest");
+                HttpsURLConnection conn = (HttpsURLConnection)myUrl.openConnection();
+                conn.setRequestProperty("x-apikeys","accessKey="+TioAccessKey+";secretKey="+TioSecretKey);
+                conn.setRequestProperty("accept","application/json");
 
-                    InputStream is = conn.getInputStream();
-                    InputStreamReader isr = new InputStreamReader(is);
-                    BufferedReader br = new BufferedReader(isr);
+                InputStream is = conn.getInputStream();
+                InputStreamReader isr = new InputStreamReader(is);
+                BufferedReader br = new BufferedReader(isr);
 
-                    String inputLine;
+                String inputLine;
 
-                    while ((inputLine = br.readLine()) != null) {
-                        jsonstring=jsonstring+inputLine;
-                    }
-
-                    br.close();
-
-                } catch (Exception e) {
-                    listener.getLogger().println("Error getting image report");
+                while ((inputLine = br.readLine()) != null) {
+                    jsonstring=jsonstring+inputLine;
                 }
 
-                //listener.getLogger().println("Attempting to parse JSON string into JSON object:"+jsonstring);
-                responsejson = new JSONObject(jsonstring);
-                //listener.getLogger().println("DEBUG: JSON received:"+responsejson.toString());
+                br.close();
 
-                try {
-                    String reportmessage = responsejson.getString("message");
-                    listener.getLogger().println("Report status:"+reportmessage);
-                    reportReady = false;
-                } catch (JSONException e) {
-                    reportReady = true;
-                    listener.getLogger().println("No report status, so report should be complete: "+e.toString());
-                } catch (Exception e) {
-                    reportReady = false;
-                    listener.getLogger().println("Some other unknown exception: "+e.toString());
-                }
+            } catch (Exception e) {
+                listener.getLogger().println("Error getting image report");
             }
 
-            Double highcvss=0.0;
+            //listener.getLogger().println("Attempting to parse JSON string into JSON object:"+jsonstring);
+            responsejson = new JSONObject(jsonstring);
+            //listener.getLogger().println("DEBUG: JSON received:"+responsejson.toString());
 
-            //listener.getLogger().println("Risk Score:"+responsejson.get("risk_score"));
-            //listener.getLogger().println("Findings:"+responsejson.get("findings"));
-            JSONArray findings=responsejson.getJSONArray("findings");
-            //JSONObject vulns=responsejson.getJSONArray("findings");
-            for ( int i =0; i    < findings.length(); i++ ) {
-                JSONObject ifinding = findings.getJSONObject(i);
-                //listener.getLogger().println("Vulnerability finding: "+ifinding);
-                JSONObject nvdfinding = ifinding.getJSONObject("nvdFinding");
-                //listener.getLogger().println("Vuln NVD info: "+nvdfinding);
-                String cvssscorestring=nvdfinding.getString("cvss_score");
-                //listener.getLogger().println("CVSSv2 Score: "+cvssscorestring);
-                if ( !(cvssscorestring.equals("")) ) {
-                    Double cvssscorevalue=nvdfinding.getDouble("cvss_score");
-                    listener.getLogger().println("Found vulnerability with CVSSv2 score "+cvssscorevalue);
-                    if ( Double.compare(cvssscorevalue,highcvss) > 0 ) {
-                        highcvss=cvssscorevalue;
-                    }
-                }
-            }
-            listener.getLogger().println("Highest CVSS Score: "+highcvss);
-            if (Double.compare(highcvss,FailCVSS) >= 0 ) {
-                listener.getLogger().println("ERROR: There are vulnerabilities equal to or higher than "+FailCVSS);
-                listener.getLogger().println("ERROR: Failing this build!");
-                throw new SecurityException();
-                //System.exit(1);
-            } else {
-                listener.getLogger().println("Vulnerabilities are below threshold of "+FailCVSS);
+            try {
+                String reportmessage = responsejson.getString("message");
+                listener.getLogger().println("Report status:"+reportmessage);
+                reportReady = false;
+            } catch (JSONException e) {
+                reportReady = true;
+                listener.getLogger().println("No report status, so report should be complete.");
+            } catch (Exception e) {
+                reportReady = false;
+                listener.getLogger().println("Some other unknown exception: "+e.toString());
             }
         }
+
+        Double highcvss=0.0;
+
+        //listener.getLogger().println("Risk Score:"+responsejson.get("risk_score"));
+        //listener.getLogger().println("Findings:"+responsejson.get("findings"));
+        JSONArray findings=responsejson.getJSONArray("findings");
+        //JSONObject vulns=responsejson.getJSONArray("findings");
+        for ( int i =0; i    < findings.length(); i++ ) {
+            JSONObject ifinding = findings.getJSONObject(i);
+            //listener.getLogger().println("Vulnerability finding: "+ifinding);
+            JSONObject nvdfinding = ifinding.getJSONObject("nvdFinding");
+            //listener.getLogger().println("Vuln NVD info: "+nvdfinding);
+            String cvssscorestring=nvdfinding.getString("cvss_score");
+            //listener.getLogger().println("CVSSv2 Score: "+cvssscorestring);
+            if ( !(cvssscorestring.equals("")) ) {
+                Double cvssscorevalue=nvdfinding.getDouble("cvss_score");
+                listener.getLogger().println("Found vulnerability with CVSSv2 score "+cvssscorevalue);
+                if ( Double.compare(cvssscorevalue,highcvss) > 0 ) {
+                    highcvss=cvssscorevalue;
+                }
+            }
+        }
+        listener.getLogger().println("Highest CVSS Score: "+highcvss);
+        if (Double.compare(highcvss,FailCVSS) >= 0 ) {
+            listener.getLogger().println("ERROR: There are vulnerabilities equal to or higher than "+FailCVSS);
+            listener.getLogger().println("ERROR: Failing this build!");
+            throw new SecurityException();
+            //System.exit(1);
+        } else {
+            listener.getLogger().println("Vulnerabilities are below threshold of "+FailCVSS);
+        }
+
     }
 
     @Symbol("greet")
