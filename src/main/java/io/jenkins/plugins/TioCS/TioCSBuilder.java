@@ -125,7 +125,7 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
         this.FailCVSS = FailCVSS;
     }
 
-    public void setFailMalware(Double FailMalware) {
+    public void setFailMalware(boolean FailMalware) {
         this.FailMalware = FailMalware;
     }
 
@@ -300,7 +300,7 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
 
         if ( FailMalware ) {
             listener.getLogger().println("If malware is detected, this build is set to fail.");
-            if ( Integer.compare(malware.length,0) > 0 ) {
+            if ( Integer.compare(malware.length(),0) > 0 ) {
                 listener.getLogger().println("Malware detected, so failing the build.");
                 malwareDetected=true;
                 run.addAction(new TioCSAction(name,TioRepo,TioUsername, TioPassword, TioAccessKey,TioSecretKey,FailCVSS, highcvss, useOnPrem, NumOfVulns, FailMalware,malwareDetected));
