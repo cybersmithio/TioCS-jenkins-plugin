@@ -11,19 +11,20 @@
         <f:textbox />
     </f:entry>
 
-    <p>Tenable.io Credentials</p>
-    <f:entry title="${%TioUsername}" field="TioUsername">
-        <f:textbox />
-    </f:entry>
-    <f:entry title="${%TioPassword}" field="TioPassword">
-        <f:password />
-    </f:entry>
-    <f:entry title="${%TioAccessKey}" field="TioAccessKey">
-        <f:textbox />
-    </f:entry>
-    <f:entry title="${%TioSecretKey}" field="TioSecretKey">
-        <f:password />
-    </f:entry>
+    <f:section title="Tenable.io Credentials">
+        <f:entry title="${%TioUsername}" field="TioUsername">
+            <f:textbox />
+        </f:entry>
+        <f:entry title="${%TioPassword}" field="TioPassword">
+            <f:password />
+        </f:entry>
+        <f:entry title="${%TioAccessKey}" field="TioAccessKey">
+            <f:textbox />
+        </f:entry>
+        <f:entry title="${%TioSecretKey}" field="TioSecretKey">
+            <f:password />
+        </f:entry>
+    </f:section>
 
     <p>Image testing workflow</p>
     <f:entry name="Workflow" title="${%Workflow}" field="Workflow">
