@@ -185,7 +185,7 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
         }
 
         if ( Workflow.equals("TestEvaluate") || Workflow.equals("Test") ) {
-            listener.getLogger().println(Image will be tested.  "Results will go into Tenable.io repository "+TioRepo);
+            listener.getLogger().println("Image will be tested.  Results will go into Tenable.io repository "+TioRepo);
             listener.getLogger().println("Tenable.io API Access Key: " + TioAccessKey );
 
             if (useOnPrem) {
