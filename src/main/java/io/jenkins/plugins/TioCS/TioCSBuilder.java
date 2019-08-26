@@ -355,7 +355,11 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
                 listener.getLogger().println("Pushing image " + name + " to registry.cloud.tenable.com");
                 try {
                     listener.getLogger().println("docker push registry.cloud.tenable.com/"+TioRepo+"/"+name+":"+imagetagstring);
-                    Process process=new ProcessBuilder("docker", "push", "registry.cloud.tenable.com/"+TioRepo+"/"+name+":"+imagetagstring).start();
+
+                    ProcessBuilder processBuilder=new ProcessBuilder("docker", "push", "registry.cloud.tenable.com/"+TioRepo+"/"+name+":"+imagetagstring);
+                    processBuilder.redirectErrorStream(true);
+                    Process process=processBuilder.start();
+
                     StringBuilder output = new StringBuilder();
                     BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
                     String line;
