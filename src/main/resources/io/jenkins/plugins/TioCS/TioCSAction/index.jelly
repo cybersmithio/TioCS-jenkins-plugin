@@ -8,7 +8,7 @@
             <h1>
                 Image: ${it.name}
             </h1>
-            <table border=1>
+            <table border="1">
             <tr><td>Image name</td><td>${it.name}:${it.ImageTag}</td></tr>
             <tr><td>Image size</td><td>${it.ImageSize}</td></tr>
             </table>
@@ -20,35 +20,22 @@
                Workflow: ${it.Workflow}
             </p>
 
+            <table border="1">
+            <tr><td>Tenable.io Repository</td><td>${it.TioRepo}</td></tr>
+            <tr><td>Tenable.io Username</td><td>${it.TioUsername}</td></tr>
+            <tr><td>Tenable.io API Access Key</td><td>${it.TioAccessKey}</td></tr>
+            </table>
 
-            <p>
-               Tenable.io Repository: ${it.TioRepo}
-            </p>
-            <p>
-               Tenable.io Username: ${it.TioUsername}
-            </p>
-            <p>
-               Tenable.io API Access Key: ${it.TioAccessKey}
-            </p>
-            <p>
-               On-Premise Inspection: ${it.useOnPrem}
-            </p>
+            <table border="1">
+            <tr><td>Fail build when vulnerabilities with CVSS equal to or higher than</td><td>${it.FailCVSS}</td></tr>
+            <tr><td>Fail build when malware is present in image</td><td>${it.FailMalware}</td></tr>
+            <tr><td>On-Premise Inspection</td><td>${it.useOnPrem}</td></tr>
+            <tr><td>Number of vulnerabilities found</td><td>${it.NumOfVulns}</td></tr>
+            <tr><td>Highest CVSS found in image</td><td>${it.HighCVSS}</td></tr>
+            <tr><td>Malware detected</td><td>${it.malwareDetected}</td></tr>
+            <tr><td></td><td></td></tr>
+            </table>
 
-            <p>
-               Failure when vulnerability CVSS is equal to or higher than: ${it.FailCVSS}
-            </p>
-            <p>
-               Highest CVSS found in image: ${it.HighCVSS}
-            </p>
-            <p>
-               Number of vulnerabilities found in image: ${it.NumOfVulns}
-            </p>
-            <p>
-               Failure when malware is present in image: ${it.FailMalware}
-            </p>
-            <p>
-               Malware detected: ${it.malwareDetected}
-            </p>
         </l:main-panel>
     </l:layout>
 </j:jelly>
