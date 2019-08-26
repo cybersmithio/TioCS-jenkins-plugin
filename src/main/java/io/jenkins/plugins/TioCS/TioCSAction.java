@@ -50,6 +50,7 @@ public class TioCSAction implements RunAction2 {
         this.TioUsername = TioUsername;
         this.TioPassword = TioPassword;
         this.FailCVSS = FailCVSS;
+        this.HighCVSS = HighCVSS;
         this.useOnPrem = useOnPrem;
         this.NumOfVulns = NumOfVulns;
         this.FailMalware = FailMalware;
