@@ -4,6 +4,9 @@ package io.jenkins.plugins.TioCS;
 import java.util.HashMap;
 import java.util.Map;
 
+//Needed for dynamic HTML form list boxes
+import hudson.util.ListBoxModel
+
 import java.net.URL;
 import java.io.*;
 import javax.net.ssl.HttpsURLConnection;
