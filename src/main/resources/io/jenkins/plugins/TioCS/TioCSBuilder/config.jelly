@@ -10,28 +10,39 @@
         <f:textbox />
     </f:entry>
 
-    <f:entry title="${%TestImage}" field="TestImage">
-        <f:checkbox />
-    </f:entry>
+    <f:block>
+        <table>
+            <f:optionalBlock name="dynamic" title="${%TestImage}">
+                <f:entry title="${%TioUsername}" field="TioUsername">
+                    <f:textbox />
+                </f:entry>
+                <f:entry title="${%TioPassword}" field="TioPassword">
+                    <f:password />
+                </f:entry>
+            </f:optionalBlock>
+        </table>
+    </f:block>
 
-    <f:entry title="${%TioUsername}" field="TioUsername">
-        <f:textbox />
-    </f:entry>
-    <f:entry title="${%TioPassword}" field="TioPassword">
-        <f:password />
-    </f:entry>
-    <f:entry title="${%TioAccessKey}" field="TioAccessKey">
-        <f:textbox />
-    </f:entry>
-    <f:entry title="${%TioSecretKey}" field="TioSecretKey">
-        <f:password />
-    </f:entry>
-    <f:entry title="${%FailCVSS}" field="FailCVSS">
-        <f:textbox />
-    </f:entry>
-    <f:entry title="${%FailMalware}" field="FailMalware">
-        <f:checkbox />
-    </f:entry>
+    <f:block>
+        <table>
+            <f:optionalBlock name="dynamic" title="${%ReportImage}">
+                <f:entry title="${%TioAccessKey}" field="TioAccessKey">
+                    <f:textbox />
+                </f:entry>
+                <f:entry title="${%TioSecretKey}" field="TioSecretKey">
+                    <f:password />
+                </f:entry>
+                <f:entry title="${%FailCVSS}" field="FailCVSS">
+                    <f:textbox />
+                </f:entry>
+                <f:entry title="${%FailMalware}" field="FailMalware">
+                    <f:checkbox />
+                </f:entry>
+            </f:optionalBlock>
+        </table>
+    </f:block>
+
+
     <f:advanced>
         <f:entry title="${%OnPremInspector}" field="useOnPrem">
             <f:checkbox />
