@@ -208,7 +208,7 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
             ProcessBuilder processBuilder = new ProcessBuilder();
             try {
                 listener.getLogger().println("docker images -q "+name+":"+imagetagstring);
-                Process process=new ProcessBuilder("docker", "images","-q",name+":"+imagetagstring+").start();
+                Process process=new ProcessBuilder("docker", "images","-q",name+":"+imagetagstring).start();
                 StringBuilder output = new StringBuilder();
                 BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
                 String line;
