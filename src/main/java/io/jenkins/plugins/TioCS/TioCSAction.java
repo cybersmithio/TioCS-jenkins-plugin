@@ -41,7 +41,7 @@ public class TioCSAction implements RunAction2 {
 
     public TioCSAction(String name, String ImageTag, String TioRepo, String TioUsername, String TioPassword, String TioAccessKey,
         String TioSecretKey, Double FailCVSS,Double HighCVSS, boolean useOnPrem, Integer NumOfVulns, boolean FailMalware,
-        boolean malwareDetected, boolean DebugInfo, string Workflow) {
+        boolean malwareDetected, boolean DebugInfo, String Workflow) {
         this.name = name;
         this.ImageTag = ImageTag;
         this.TioRepo = TioRepo;
