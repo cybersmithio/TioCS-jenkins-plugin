@@ -226,6 +226,7 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
                         listener.getLogger().println("Success running external command:"+output);
                     } else {
                         listener.getLogger().println("ERROR: Error running external command:"+output);
+                        throw new SecurityException();
                         return;
                     }
                 } catch (IOException e) {
