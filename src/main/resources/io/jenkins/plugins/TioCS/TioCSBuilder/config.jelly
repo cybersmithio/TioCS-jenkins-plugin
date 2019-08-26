@@ -16,9 +16,6 @@
     <f:entry title="${%ImageTag}" field="ImageTag">
         <f:textbox />
     </f:entry>
-    <f:entry title="${%TioRepo}" field="TioRepo">
-        <f:textbox />
-    </f:entry>
 
     <f:advanced>
         <f:entry title="${%OnPremInspector}" field="useOnPrem">
@@ -30,7 +27,10 @@
     </f:advanced>
 
 
-    <f:section title="Tenable.io Credentials">
+    <f:section title="Tenable.io">
+        <f:entry title="${%TioRepo}" field="TioRepo">
+            <f:textbox />
+        </f:entry>
         <f:entry title="${%TioUsername}" field="TioUsername">
             <f:textbox />
         </f:entry>

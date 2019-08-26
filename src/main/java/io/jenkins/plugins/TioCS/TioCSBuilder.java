@@ -184,8 +184,20 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
             //listener.getLogger().println("Environment variable: " + envTioAccessKey );
         }
 
+        switch(Workflow) {
+            case "Test":
+                listener.getLogger().println("Only testing the image.");
+                break;
+            case "Evaluate":
+                listener.getLogger().println("Only evaluating the image test results.");
+                break;
+            case "TestEvaluate":
+                listener.getLogger().println("Both testing the image and evaluating the results.");
+                break;
+        }
+
         if ( Workflow.equals("TestEvaluate") || Workflow.equals("Test") ) {
-            listener.getLogger().println("Image will be tested.  Results will go into Tenable.io repository "+TioRepo);
+            listener.getLogger().println("Starting image testing.  Results will go into Tenable.io repository "+TioRepo);
             listener.getLogger().println("Tenable.io API Access Key: " + TioAccessKey );
 
             if (useOnPrem) {
@@ -293,6 +305,7 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
 
         //Get report and parse
         if ( Workflow.equals("TestEvaluate") || Workflow.equals("Evaluate") ) {
+            listener.getLogger().println("Evaluating the results of the image tests." );
             listener.getLogger().println("Any vulnerability with a CVSS of "+FailCVSS+ " or higher will be considered a failed build." );
             listener.getLogger().println("Fail build if malware detected: "+FailMalware );
 
