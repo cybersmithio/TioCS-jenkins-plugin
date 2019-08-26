@@ -121,9 +121,9 @@ public class TioCSAction implements RunAction2 {
             return "Not evaluated";
         }
         if ( malwareDetected ) {
-            return "True"
+            return "True";
         } else {
-            return "False"
+            return "False";
         }
     }
 
