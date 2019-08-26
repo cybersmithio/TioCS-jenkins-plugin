@@ -119,7 +119,7 @@ public class TioCSAction implements RunAction2 {
         return useOnPrem;
     }
 
-    public boolean getImageSize() {
+    public String getImageSize() {
         return ImageSize;
     }
 

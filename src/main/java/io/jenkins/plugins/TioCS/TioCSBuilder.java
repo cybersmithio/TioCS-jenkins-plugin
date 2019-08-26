@@ -230,7 +230,6 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
                     listener.getLogger().println("ERROR: Error running external command:"+output);
                     throw new SecurityException();
                 }
-
                 if ( output.length() < 12 ) {
                     listener.getLogger().println("Image does not exist");
                     throw new SecurityException();
@@ -262,7 +261,7 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
                     listener.getLogger().println("ERROR: Error running external command:"+output);
                     throw new SecurityException();
                 }
-                imagesize=output;
+                imagesize=output.toString();
                 listener.getLogger().println("Image size is "+imagesize);
             } catch (IOException e) {
                 listener.getLogger().println("IO Exception running external command");
