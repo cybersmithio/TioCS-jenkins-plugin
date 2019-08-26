@@ -203,6 +203,37 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
             listener.getLogger().println("Starting image testing.  Results will go into Tenable.io repository "+TioRepo);
             listener.getLogger().println("Tenable.io API Access Key: " + TioAccessKey );
 
+            //First, check if the image exists otherwise we need to stop the build since it will fail aways.
+            listener.getLogger().println("Check if image exists.");
+            ProcessBuilder processBuilder = new ProcessBuilder();
+            try {
+                listener.getLogger().println("docker images -q "+name+":"+imagetagstring+");
+                Process process=new ProcessBuilder("docker", "images","-q",name+":"+imagetagstring+").start();
+                StringBuilder output = new StringBuilder();
+                BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    output.append(line + "\n");
+                }
+                int exitVal = process.waitFor();
+                if (exitVal == 0) {
+                    listener.getLogger().println("Success running external command:"+output);
+                } else {
+                    listener.getLogger().println("ERROR: Error running external command:"+output);
+                    throw new SecurityException();
+                }
+            } catch (IOException e) {
+                listener.getLogger().println("IO Exception running external command");
+            } catch (InterruptedException e) {
+                listener.getLogger().println("Interrupted Exception running external command");
+            }
+            if ( output.equals("") || output.equals(null)) {
+                listener.getLogger().println("Image does not exist");
+                throw new SecurityException();
+            } else {
+                listener.getLogger().println("Image exists, continuing with build");
+            }
+
             if (useOnPrem) {
                 listener.getLogger().println("Testing with on-premise inspector.");
 
