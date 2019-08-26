@@ -321,6 +321,7 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
                         listener.getLogger().println("Success running external command:"+output);
                     } else {
                         listener.getLogger().println("Error ("+exitVal+") running external command:"+output);
+                        throw new SecurityException();
                     }
                 } catch (IOException e) {
                     listener.getLogger().println("IO Exception running external command");
@@ -343,6 +344,7 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
                         listener.getLogger().println("Success running external command: docker tag");
                     } else {
                         listener.getLogger().println("Error running external command: docker tag");
+                        throw new SecurityException();
                     }
                 } catch (IOException e) {
                     listener.getLogger().println("IO Exception running external command");
@@ -365,6 +367,7 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
                         listener.getLogger().println("Success running external command:"+output);
                     } else {
                         listener.getLogger().println("Error running external command:"+output);
+                        throw new SecurityException();
                     }
                 } catch (IOException e) {
                     listener.getLogger().println("IO Exception running external command");
