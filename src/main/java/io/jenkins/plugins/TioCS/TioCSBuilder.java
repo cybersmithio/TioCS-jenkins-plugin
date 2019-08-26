@@ -209,6 +209,9 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
                 listener.getLogger().println("Piping image into on-premise Tenable.io CS inspector ");
                 ProcessBuilder processBuilder = new ProcessBuilder();
                 try {
+                    listener.getLogger().println("sh -c docker save "+name+":"+imagetagstring+" | docker run -e TENABLE_ACCESS_KEY="
+                        +TioAccessKey+" -e TENABLE_SECRET_KEY="+TioSecretKey+" -e IMPORT_REPO_NAME="+TioRepo
+                        +" -i tenableio-docker-consec-local.jfrog.io/cs-scanner:latest inspect-image "+name+":"+imagetagstring);
                     Process process=new ProcessBuilder("sh", "-c","docker save "+name+":"+imagetagstring+" | docker run -e TENABLE_ACCESS_KEY="
                         +TioAccessKey+" -e TENABLE_SECRET_KEY="+TioSecretKey+" -e IMPORT_REPO_NAME="+TioRepo
                         +" -i tenableio-docker-consec-local.jfrog.io/cs-scanner:latest inspect-image "+name+":"+imagetagstring).start();
@@ -223,6 +226,7 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
                         listener.getLogger().println("Success running external command:"+output);
                     } else {
                         listener.getLogger().println("Error running external command:"+output);
+                        return()
                     }
                 } catch (IOException e) {
                     listener.getLogger().println("IO Exception running external command");
