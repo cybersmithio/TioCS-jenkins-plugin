@@ -211,7 +211,7 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
 
             // The testing is done through shell commands regardless of on-prem or in cloud.  So create ProcessBuilder
             ProcessBuilder processBuilder = new ProcessBuilder();
-            ProcessBuilder.redirectErrorStream(true);
+            processBuilder.redirectErrorStream(true);
 
             //First, check if the image exists otherwise we need to stop the build since it will fail aways.
             listener.getLogger().println("Check if image exists.");
