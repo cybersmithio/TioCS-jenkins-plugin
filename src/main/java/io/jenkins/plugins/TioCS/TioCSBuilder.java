@@ -282,7 +282,7 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
                         +TioAccessKey+" -e TENABLE_SECRET_KEY="+TioSecretKey+" -e IMPORT_REPO_NAME="+TioRepo
                         +" -i tenableio-docker-consec-local.jfrog.io/cs-scanner:latest inspect-image "+name+":"+imagetagstring);
                     processBuilder.redirectErrorStream(true);
-                    Process process=processBuilder().start();
+                    Process process=processBuilder.start();
                     StringBuilder output = new StringBuilder();
                     BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
                     String line;
