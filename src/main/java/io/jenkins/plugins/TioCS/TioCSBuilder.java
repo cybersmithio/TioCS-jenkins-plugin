@@ -153,7 +153,7 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
         this.DebugInfo = DebugInfo;
     }
 
-    public void setTioSecretKey(String Workflow) {
+    public void setWorkflow(String Workflow) {
         this.Workflow = Workflow;
     }
 
