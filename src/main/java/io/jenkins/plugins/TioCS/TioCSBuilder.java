@@ -36,6 +36,9 @@ import jenkins.tasks.SimpleBuildStep;
 import org.jenkinsci.Symbol;
 import org.kohsuke.stapler.DataBoundSetter;
 
+//TODO: Record the testing time duration
+//TODO: Record the size of the image
+
 public class TioCSBuilder extends Builder implements SimpleBuildStep {
 
     private final String name;
@@ -203,11 +206,12 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
             listener.getLogger().println("Starting image testing.  Results will go into Tenable.io repository "+TioRepo);
             listener.getLogger().println("Tenable.io API Access Key: " + TioAccessKey );
 
-            //First, check if the image exists otherwise we need to stop the build since it will fail aways.
-            listener.getLogger().println("Check if image exists.");
 
             // The testing is done through shell commands regardless of on-prem or in cloud.  So create ProcessBuilder
             ProcessBuilder processBuilder = new ProcessBuilder();
+
+            //First, check if the image exists otherwise we need to stop the build since it will fail aways.
+            listener.getLogger().println("Check if image exists.");
             try {
                 listener.getLogger().println("docker images -q "+name+":"+imagetagstring);
                 Process process=new ProcessBuilder("docker", "images","-q",name+":"+imagetagstring).start();
@@ -236,6 +240,35 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
             } catch (InterruptedException e) {
                 listener.getLogger().println("Interrupted Exception running external command");
             }
+
+
+            //Now record the image size (more for documentation purposes)
+            listener.getLogger().println("Checking image size.");
+            try {
+                listener.getLogger().println("docker images -q "+name+":"+imagetagstring);
+                Process process=new ProcessBuilder("docker", "images","--filter","{{.Size}}",name+":"+imagetagstring).start();
+                StringBuilder output = new StringBuilder();
+                BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    output.append(line + "\n");
+                }
+                int exitVal = process.waitFor();
+                if (exitVal == 0) {
+                    listener.getLogger().println("Success running external command:"+output);
+                } else {
+                    listener.getLogger().println("ERROR: Error running external command:"+output);
+                    throw new SecurityException();
+                }
+
+                listener.getLogger().println("Image size is "+output);
+            } catch (IOException e) {
+                listener.getLogger().println("IO Exception running external command");
+            } catch (InterruptedException e) {
+                listener.getLogger().println("Interrupted Exception running external command");
+            }
+
+
 
 
             if (useOnPrem) {
