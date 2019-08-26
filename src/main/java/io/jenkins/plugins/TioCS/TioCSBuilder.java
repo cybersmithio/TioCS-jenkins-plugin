@@ -205,6 +205,8 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
 
             //First, check if the image exists otherwise we need to stop the build since it will fail aways.
             listener.getLogger().println("Check if image exists.");
+
+            // The testing is done through shell commands regardless of on-prem or in cloud.  So create ProcessBuilder
             ProcessBuilder processBuilder = new ProcessBuilder();
             try {
                 listener.getLogger().println("docker images -q "+name+":"+imagetagstring);
@@ -235,11 +237,11 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
                 listener.getLogger().println("Interrupted Exception running external command");
             }
 
+
             if (useOnPrem) {
                 listener.getLogger().println("Testing with on-premise inspector.");
 
                 listener.getLogger().println("Piping image into on-premise Tenable.io CS inspector ");
-                ProcessBuilder processBuilder = new ProcessBuilder();
                 try {
                     listener.getLogger().println("sh -c docker save "+name+":"+imagetagstring+" | docker run -e TENABLE_ACCESS_KEY="
                         +TioAccessKey+" -e TENABLE_SECRET_KEY="+TioSecretKey+" -e IMPORT_REPO_NAME="+TioRepo
@@ -271,7 +273,6 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
                 listener.getLogger().println("Testing in Tenable.io cloud.");
 
                 listener.getLogger().println("Logging into registry.cloud.tenable.com with username " + TioUsername );
-                ProcessBuilder processBuilder = new ProcessBuilder();
                 try {
                     listener.getLogger().println("docker login -u "+TioUsername+" -p ********* registry.cloud.tenable.com");
                     Process process=new ProcessBuilder("docker", "login","-u", TioUsername,"-p", TioPassword,"registry.cloud.tenable.com").start();
