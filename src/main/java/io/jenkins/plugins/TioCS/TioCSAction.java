@@ -86,7 +86,7 @@ public class TioCSAction implements RunAction2 {
                 break;
         }
 
-        return """;
+        return "";
     }
 
     public String getTioUsername() {
