@@ -120,7 +120,11 @@ public class TioCSAction implements RunAction2 {
         if ( Workflow.equals("Test")  ) {
             return "Not evaluated";
         }
-        return malwareDetected.toString();
+        if ( malwareDetected ) {
+            return "True"
+        } else {
+            return "False"
+        }
     }
 
     public boolean getDebugInfo() {
