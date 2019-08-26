@@ -98,7 +98,7 @@ public class TioCSAction implements RunAction2 {
         if ( Workflow.equals("Test")  ) {
             return "Not evaluated";
         }
-        return HighCVSS;
+        return HighCVSS.toString();
     }
 
     public String getNumOfVulns() {
