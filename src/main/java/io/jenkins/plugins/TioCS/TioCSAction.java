@@ -119,18 +119,18 @@ public class TioCSAction implements RunAction2 {
             return "";
         }
         if ( HighCVSS >= 10.0) {
-            return "bgcolor=\"#EE3333\"";
+            return "#EE3333";
         }
         if ( HighCVSS >= 7.0) {
-            return "bgcolor=\"#FA8304\"";
+            return "#FA8304";
         }
         if ( HighCVSS >= 4.0) {
-            return "bgcolor=\"#FCC326\"";
+            return "#FCC326";
         }
         if ( HighCVSS >= 0.1) {
-            return "bgcolor=\"#3FAD29\"";
+            return "#3FAD29";
         }
-        return "bgcolor=\"#357ABD\"";
+        return "#357ABD";
 
     }
 
@@ -171,9 +171,9 @@ public class TioCSAction implements RunAction2 {
         }
 
         if ( malwareDetected ) {
-            return "bgcolor=\"#EE3333\"";
+            return "#EE3333";
         }
-        return "bgcolor=\"#3FAD29\"";
+        return "#3FAD29";
 
 
     }
