@@ -50,13 +50,20 @@ public class TioCSAction implements RunAction2 {
         this.TioUsername = TioUsername;
         this.TioPassword = TioPassword;
         this.FailCVSS = FailCVSS;
-        this.HighCVSS = HighCVSS;
         this.useOnPrem = useOnPrem;
         this.NumOfVulns = NumOfVulns;
         this.FailMalware = FailMalware;
-        this.malwareDetected = malwareDetected;
         this.DebugInfo = DebugInfo;
         this.Workflow = Workflow;
+        if ( Workflow.equals("Evaluate") || Workflow.equals("TestEvaluate") {
+            this.HighCVSS = HighCVSS;
+            this.malwareDetected = malwareDetected;
+        } else {
+            this.HighCVSS = null;
+            this.malwareDetected = null;
+
+        }
+
     }
 
     public String getName() {
