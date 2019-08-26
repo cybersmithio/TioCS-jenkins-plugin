@@ -338,13 +338,21 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
                     br.close();
 
                 } catch (Exception e) {
-                    listener.getLogger().println("Error getting image report");
+                    listener.getLogger().println("Error getting image report.  Tenable.io is likely still creating it.");
+                    reportReady=false;
+                    continue;
                 }
 
                 if ( DebugInfo ) {
                     listener.getLogger().println("Attempting to parse JSON string into JSON object:"+jsonstring);
                 }
-                responsejson = new JSONObject(jsonstring);
+                try {
+                    responsejson = new JSONObject(jsonstring);
+                } catch (Exception e) {
+                    listener.getLogger().println("Didn't get any valid JSON back, so looks like report is still processing.");
+                    reportReady=false;
+                    continue;
+                }
 
                 if ( DebugInfo ) {
                     listener.getLogger().println("DEBUG: JSON received:"+responsejson.toString());
