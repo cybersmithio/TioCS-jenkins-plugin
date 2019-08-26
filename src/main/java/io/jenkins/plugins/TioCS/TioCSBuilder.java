@@ -40,8 +40,8 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
     private final String name;
     private String ImageTag;
     private String TioRepo;
-    private boolean TestImage;
-    private boolean ReportImage;
+    private JSONArray TestImage;
+    private JSONArray ReportImage;
     private boolean useOnPrem;
     private String TioUsername;
     private String TioPassword;
@@ -52,8 +52,9 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
     private boolean DebugInfo;
 
     @DataBoundConstructor
-    public TioCSBuilder(String name, String ImageTag, String TioRepo, String TioAccessKey, String TioSecretKey,String TioUsername,
-        String TioPassword, Double FailCVSS, boolean FailMalware, boolean DebugInfo, boolean TestImage, boolean ReportImage) {
+//    public TioCSBuilder(String name, String ImageTag, String TioRepo, String TioAccessKey, String TioSecretKey,String TioUsername,
+//        String TioPassword, Double FailCVSS, boolean FailMalware, boolean DebugInfo, boolean TestImage, boolean ReportImage) {
+    public TioCSBuilder(String name, String ImageTag, String TioRepo, boolean DebugInfo, JSONArray TestImage, JSONArray ReportImage) {
         this.name = name;
         this.ImageTag = ImageTag;
         this.TioRepo = TioRepo;
@@ -108,11 +109,11 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
         return DebugInfo;
     }
 
-    public boolean getTestImage() {
+    public JSONArray getTestImage() {
         return TestImage;
     }
 
-    public boolean getReportImage() {
+    public JSONArray getReportImage() {
         return ReportImage;
     }
 
@@ -161,11 +162,11 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
         this.DebugInfo = DebugInfo;
     }
 
-    public void setTestImage(boolean TestImage) {
+    public void setTestImage(JSONArray TestImage) {
         this.TestImage = TestImage;
     }
 
-    public void setReportImage(boolean ReportImage) {
+    public void setReportImage(JSONArray ReportImage) {
         this.ReportImage = ReportImage;
     }
 
@@ -422,18 +423,18 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
                 return FormValidation.error(Messages.TioCSBuilder_DescriptorImpl_errors_missingName());
             if (TioRepo.length() == 0)
                 return FormValidation.error(Messages.TioCSBuilder_DescriptorImpl_errors_missingTioRepo());
-            if ( TestImage ) {
+            //if ( TestImage ) {
                 //if (TioUsername.length() == 0)
                 //    return FormValidation.error(Messages.TioCSBuilder_DescriptorImpl_errors_missingTioUsername());
                 //if (TioPassword.length() == 0)
                 //    return FormValidation.error(Messages.TioCSBuilder_DescriptorImpl_errors_missingTioPassword());
-            }
-            if ( ReportImage ) {
+            //}
+            //if ( ReportImage ) {
                 //if (TioAccessKey.length() == 0)
                 //    return FormValidation.error(Messages.TioCSBuilder_DescriptorImpl_errors_missingTioAccessKey());
                 //if (TioSecretKey.length() == 0)
                 //    return FormValidation.error(Messages.TioCSBuilder_DescriptorImpl_errors_missingTioSecretKey());
-            }
+            //}
 
             return FormValidation.ok();
         }
