@@ -423,16 +423,16 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
             if (TioRepo.length() == 0)
                 return FormValidation.error(Messages.TioCSBuilder_DescriptorImpl_errors_missingTioRepo());
             if ( TestImage ) {
-                if (TioUsername.length() == 0)
-                    return FormValidation.error(Messages.TioCSBuilder_DescriptorImpl_errors_missingTioUsername());
-                if (TioPassword.length() == 0)
-                    return FormValidation.error(Messages.TioCSBuilder_DescriptorImpl_errors_missingTioPassword());
+                //if (TioUsername.length() == 0)
+                //    return FormValidation.error(Messages.TioCSBuilder_DescriptorImpl_errors_missingTioUsername());
+                //if (TioPassword.length() == 0)
+                //    return FormValidation.error(Messages.TioCSBuilder_DescriptorImpl_errors_missingTioPassword());
             }
             if ( ReportImage ) {
-                if (TioAccessKey.length() == 0)
-                    return FormValidation.error(Messages.TioCSBuilder_DescriptorImpl_errors_missingTioAccessKey());
-                if (TioSecretKey.length() == 0)
-                    return FormValidation.error(Messages.TioCSBuilder_DescriptorImpl_errors_missingTioSecretKey());
+                //if (TioAccessKey.length() == 0)
+                //    return FormValidation.error(Messages.TioCSBuilder_DescriptorImpl_errors_missingTioAccessKey());
+                //if (TioSecretKey.length() == 0)
+                //    return FormValidation.error(Messages.TioCSBuilder_DescriptorImpl_errors_missingTioSecretKey());
             }
 
             return FormValidation.ok();
