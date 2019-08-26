@@ -1,0 +1,5 @@
+Image being tested is missing
+Image only being tested
+Image only being evaluated
+Image being tested and evaluated
+Image with malware

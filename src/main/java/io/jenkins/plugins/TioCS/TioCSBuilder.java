@@ -227,7 +227,7 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
             } catch (InterruptedException e) {
                 listener.getLogger().println("Interrupted Exception running external command");
             }
-            if ( output.equals("") || output.equals(null)) {
+            if ( output.equals("") ) {
                 listener.getLogger().println("Image does not exist");
                 throw new SecurityException();
             } else {
