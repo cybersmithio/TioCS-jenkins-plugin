@@ -76,13 +76,13 @@ public class TioCSAction implements RunAction2 {
     public String getWorkflow() {
         switch(Workflow) {
             case "Test":
-                return("Test image only.")
+                return("Test image only.");
                 break;
             case "Evaluate":
-                return("Evaluating test results only.")
+                return("Evaluating test results only.");
                 break;
             case "TestEvaluate":
-                return("Test image and evaluate results.")
+                return("Test image and evaluate results.");
                 break;
         }
 
