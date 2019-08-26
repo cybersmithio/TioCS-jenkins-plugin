@@ -9,6 +9,10 @@
                 Image: ${it.name}:${it.ImageTag}
             </h1>
             <p>
+               Image size: ${it.ImageSize}
+            </p>
+
+            <p>
                Debugging information enabled: ${it.DebugInfo}
             </p>
             <p>

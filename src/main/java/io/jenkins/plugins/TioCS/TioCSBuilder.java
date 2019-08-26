@@ -68,6 +68,7 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
         this.FailMalware = FailMalware;
         this.DebugInfo = DebugInfo;
         this.Workflow = Workflow;
+
     }
 
     public String getName() {
@@ -170,6 +171,7 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
         Integer NumOfVulns=0;
         boolean malwareDetected=false;
         String imagetagstring="latest";
+        String imagesize="";
 
         if ( !(ImageTag.equals("") ) ) {
             imagetagstring=ImageTag;
@@ -260,8 +262,8 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
                     listener.getLogger().println("ERROR: Error running external command:"+output);
                     throw new SecurityException();
                 }
-
-                listener.getLogger().println("Image size is "+output);
+                imagesize=output;
+                listener.getLogger().println("Image size is "+imagesize);
             } catch (IOException e) {
                 listener.getLogger().println("IO Exception running external command");
             } catch (InterruptedException e) {
@@ -372,7 +374,7 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
                 }
             }
             if ( Workflow.equals("Test") ) {
-                run.addAction(new TioCSAction(name,ImageTag,TioRepo,TioUsername, TioPassword, TioAccessKey,TioSecretKey,FailCVSS, highcvss, useOnPrem, NumOfVulns, FailMalware,malwareDetected,DebugInfo,Workflow));
+                run.addAction(new TioCSAction(name,ImageTag,TioRepo,TioUsername, TioPassword, TioAccessKey,TioSecretKey,FailCVSS, highcvss, useOnPrem, NumOfVulns, FailMalware,malwareDetected,DebugInfo,Workflow,imagesize));
             }
         }
 
@@ -461,7 +463,7 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
                 if ( Integer.compare(malware.length(),0) > 0 ) {
                     listener.getLogger().println("Malware detected, so failing the build.");
                     malwareDetected=true;
-                    run.addAction(new TioCSAction(name,ImageTag,TioRepo,TioUsername, TioPassword, TioAccessKey,TioSecretKey,FailCVSS, highcvss, useOnPrem, NumOfVulns, FailMalware,malwareDetected,DebugInfo,Workflow));
+                    run.addAction(new TioCSAction(name,ImageTag,TioRepo,TioUsername, TioPassword, TioAccessKey,TioSecretKey,FailCVSS, highcvss, useOnPrem, NumOfVulns, FailMalware,malwareDetected,DebugInfo,Workflow,imagesize));
                 } else {
                     listener.getLogger().println("Malware not detected. Continue with build.");
                 }
@@ -488,13 +490,13 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
             if (Double.compare(highcvss,FailCVSS) >= 0 ) {
                 listener.getLogger().println("ERROR: There are vulnerabilities equal to or higher than "+FailCVSS);
                 listener.getLogger().println("ERROR: Failing this build!");
-                run.addAction(new TioCSAction(name,ImageTag,TioRepo,TioUsername, TioPassword, TioAccessKey,TioSecretKey,FailCVSS, highcvss, useOnPrem, NumOfVulns, FailMalware, malwareDetected,DebugInfo,Workflow));
+                run.addAction(new TioCSAction(name,ImageTag,TioRepo,TioUsername, TioPassword, TioAccessKey,TioSecretKey,FailCVSS, highcvss, useOnPrem, NumOfVulns, FailMalware, malwareDetected,DebugInfo,Workflow,imagesize));
                 throw new SecurityException();
             } else {
                 listener.getLogger().println("Vulnerabilities are below threshold of "+FailCVSS);
             }
 
-            run.addAction(new TioCSAction(name,ImageTag,TioRepo,TioUsername, TioPassword, TioAccessKey,TioSecretKey,FailCVSS, highcvss, useOnPrem, NumOfVulns, FailMalware, malwareDetected,DebugInfo,Workflow));
+            run.addAction(new TioCSAction(name,ImageTag,TioRepo,TioUsername, TioPassword, TioAccessKey,TioSecretKey,FailCVSS, highcvss, useOnPrem, NumOfVulns, FailMalware, malwareDetected,DebugInfo,Workflow,imagesize));
         }
     }
 
