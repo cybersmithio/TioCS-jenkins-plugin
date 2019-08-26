@@ -40,6 +40,8 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
     private final String name;
     private String ImageTag;
     private String TioRepo;
+    private boolean TestImage;
+    private boolean ReportImage;
     private boolean useOnPrem;
     private String TioUsername;
     private String TioPassword;
@@ -51,7 +53,7 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
 
     @DataBoundConstructor
     public TioCSBuilder(String name, String ImageTag, String TioRepo, String TioAccessKey, String TioSecretKey,String TioUsername,
-        String TioPassword, Double FailCVSS, boolean FailMalware, boolean DebugInfo) {
+        String TioPassword, Double FailCVSS, boolean FailMalware, boolean DebugInfo, boolean TestImage, boolean ReportImage) {
         this.name = name;
         this.ImageTag = ImageTag;
         this.TioRepo = TioRepo;
@@ -62,6 +64,8 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
         this.FailCVSS = FailCVSS;
         this.FailMalware = FailMalware;
         this.DebugInfo = DebugInfo;
+        this.TestImage = TestImage;
+        this.ReportImage = ReportImage;
     }
 
     public String getName() {
@@ -102,6 +106,14 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
 
     public boolean getDebugInfo() {
         return DebugInfo;
+    }
+
+    public boolean getTestImage() {
+        return TestImage;
+    }
+
+    public boolean getReportImage() {
+        return ReportImage;
     }
 
     public boolean isUseOnPrem() {
@@ -147,6 +159,14 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
 
     public void setDebugInfo(boolean DebugInfo) {
         this.DebugInfo = DebugInfo;
+    }
+
+    public void setTestImage(boolean TestImage) {
+        this.TestImage = TestImage;
+    }
+
+    public void setReportImage(boolean ReportImage) {
+        this.ReportImage = ReportImage;
     }
 
     @Override
@@ -396,21 +416,24 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
         public FormValidation doCheckName(@QueryParameter String value, @QueryParameter String TioRepo,
             @QueryParameter String TioUsername, @QueryParameter String TioPassword, @QueryParameter String TioAccessKey,
             @QueryParameter String TioSecretKey, @QueryParameter boolean useOnPrem, @QueryParameter Double FailCVSS,
-            @QueryParameter boolean FailMalware, @QueryParameter boolean DebugInfo) throws IOException, ServletException {
+            @QueryParameter boolean FailMalware, @QueryParameter boolean DebugInfo, @QueryParameter boolean TestImage,
+            @QueryParameter boolean ReportImage) throws IOException, ServletException {
             if (value.length() == 0)
                 return FormValidation.error(Messages.TioCSBuilder_DescriptorImpl_errors_missingName());
             if (TioRepo.length() == 0)
                 return FormValidation.error(Messages.TioCSBuilder_DescriptorImpl_errors_missingTioRepo());
-            if (TioUsername.length() == 0)
-                return FormValidation.error(Messages.TioCSBuilder_DescriptorImpl_errors_missingTioUsername());
-            if (TioPassword.length() == 0)
-                return FormValidation.error(Messages.TioCSBuilder_DescriptorImpl_errors_missingTioPassword());
-            if (TioAccessKey.length() == 0)
-                return FormValidation.error(Messages.TioCSBuilder_DescriptorImpl_errors_missingTioAccessKey());
-            if (TioSecretKey.length() == 0)
-                return FormValidation.error(Messages.TioCSBuilder_DescriptorImpl_errors_missingTioSecretKey());
-            if (TioSecretKey.length() == 0)
-                return FormValidation.error(Messages.TioCSBuilder_DescriptorImpl_errors_missingTioSecretKey());
+            if ( TestImage ) {
+                if (TioUsername.length() == 0)
+                    return FormValidation.error(Messages.TioCSBuilder_DescriptorImpl_errors_missingTioUsername());
+                if (TioPassword.length() == 0)
+                    return FormValidation.error(Messages.TioCSBuilder_DescriptorImpl_errors_missingTioPassword());
+            }
+            if ( ReportImage ) {
+                if (TioAccessKey.length() == 0)
+                    return FormValidation.error(Messages.TioCSBuilder_DescriptorImpl_errors_missingTioAccessKey());
+                if (TioSecretKey.length() == 0)
+                    return FormValidation.error(Messages.TioCSBuilder_DescriptorImpl_errors_missingTioSecretKey());
+            }
 
             return FormValidation.ok();
         }

@@ -12,7 +12,7 @@
 
     <f:block>
         <table>
-            <f:optionalBlock name="dynamic" title="${%TestImage}">
+            <f:optionalBlock name="TestImage" title="${%TestImage}">
                 <f:entry title="${%TioUsername}" field="TioUsername">
                     <f:textbox />
                 </f:entry>
@@ -25,7 +25,7 @@
 
     <f:block>
         <table>
-            <f:optionalBlock name="dynamic" title="${%ReportImage}">
+            <f:optionalBlock name="ReportImage" title="${%ReportImage}">
                 <f:entry title="${%TioAccessKey}" field="TioAccessKey">
                     <f:textbox />
                 </f:entry>
