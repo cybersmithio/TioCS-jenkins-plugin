@@ -225,7 +225,7 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
                     throw new SecurityException();
                 }
 
-                if ( output.equals("") || output.equals(null)) {
+                if ( output.length() < 12 ) {
                     listener.getLogger().println("Image does not exist");
                     throw new SecurityException();
                 } else {
