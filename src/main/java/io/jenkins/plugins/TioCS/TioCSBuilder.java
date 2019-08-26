@@ -422,6 +422,14 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
     public static final class DescriptorImpl extends BuildStepDescriptor<Builder> {
 
 
+        public ListBoxModel doFillWorkflowItems() {
+            ListBoxModel items = new ListBoxModel();
+            items.add("Test the image and evaluate","TestEvaluate");
+            items.add("Only test the image (In cloud or on-prem","Test");
+            items.add("Only evaluate the image report","Evaluate");
+            return items;
+        }
+
         public FormValidation doCheckName(@QueryParameter String value, @QueryParameter String TioRepo,
             @QueryParameter String TioUsername, @QueryParameter String TioPassword, @QueryParameter String TioAccessKey,
             @QueryParameter String TioSecretKey, @QueryParameter boolean useOnPrem, @QueryParameter Double FailCVSS,

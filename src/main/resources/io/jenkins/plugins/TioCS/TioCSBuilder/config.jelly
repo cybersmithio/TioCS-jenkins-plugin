@@ -1,12 +1,8 @@
 <?jelly escape-by-default='true'?>
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form">
 
-    <f:entry name="Workflow" title="${%Workflow}" field="Workflow">
-        <select name="Workflow">
-            <option value="TestEvaluate">Test the image and evaluate</option>
-            <option value="Test">Only test the image (In cloud or on-prem</option>
-            <option value="Evaluate">Only evaluate the image report</option>
-        </select>
+    <f:entry title="${%Workflow}" field="Workflow">
+        <f:select />
     </f:entry>
 
 
