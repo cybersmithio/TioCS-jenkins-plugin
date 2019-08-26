@@ -185,7 +185,7 @@ public class TioCSAction implements RunAction2 {
 
     @Override
     public String getIconFileName() {
-        return "document.png";
+        return "tenable-icon.png";
     }
 
     @Override
