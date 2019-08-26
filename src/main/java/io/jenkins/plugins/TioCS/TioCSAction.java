@@ -113,6 +113,28 @@ public class TioCSAction implements RunAction2 {
         return HighCVSS.toString();
     }
 
+    //That's right, I spelled colour the proper way.
+    public String getHighCVSSColour() {
+        if ( Workflow.equals("Test")  ) {
+            return "";
+        }
+        if ( HighCVSS >= 10.0) {
+            return "bgcolor=\"#EE3333\""
+        }
+        if ( HighCVSS >= 7.0) {
+            return "bgcolor=\"#FA8304\""
+        }
+        if ( HighCVSS >= 4.0) {
+            return "bgcolor=\"#FCC326\""
+        }
+        if ( HighCVSS >= 0.1) {
+            return "bgcolor=\"#3FAD29\""
+        }
+        return "bgcolor=\"#357ABD\""
+
+    }
+
+
     public String getNumOfVulns() {
         if ( Workflow.equals("Test")  ) {
             return "Not evaluated";
@@ -142,6 +164,20 @@ public class TioCSAction implements RunAction2 {
             return "False";
         }
     }
+
+    public String getMalwareColour() {
+        if ( Workflow.equals("Test")  ) {
+            return "";
+        }
+
+        if ( malwareDetected ) {
+            return "bgcolor=\"#EE3333\""
+        }
+        return "bgcolor=\"#3FAD29\""
+
+
+    }
+
 
     public boolean getDebugInfo() {
         return DebugInfo;

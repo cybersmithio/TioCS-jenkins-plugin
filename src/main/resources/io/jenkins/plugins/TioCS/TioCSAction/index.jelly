@@ -35,8 +35,8 @@
             <tr><td>Fail build when malware is present in image</td><td>${it.FailMalware}</td></tr>
             <tr><td>On-Premise Inspection</td><td>${it.useOnPrem}</td></tr>
             <tr><td>Number of vulnerabilities found</td><td>${it.NumOfVulns}</td></tr>
-            <tr><td>Highest CVSS found in image</td><td>${it.HighCVSS}</td></tr>
-            <tr><td>Malware detected</td><td>${it.malwareDetected}</td></tr>
+            <tr><td>Highest CVSS found in image</td><td ${it.HighCVSSColour}>${it.HighCVSS}</td></tr>
+            <tr><td>Malware detected</td><td ${it.MalwareColour}>${it.malwareDetected}</td></tr>
             </table>
             </p>
         </l:main-panel>
