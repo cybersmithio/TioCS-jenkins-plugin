@@ -1,6 +1,5 @@
 package io.jenkins.plugins.TioCS;
 
-//Needed for Map class, when looking for all environment variables.
 import java.util.HashMap;
 import java.util.Map;
 
@@ -33,6 +32,9 @@ import jenkins.tasks.SimpleBuildStep;
 import org.jenkinsci.Symbol;
 import org.kohsuke.stapler.DataBoundSetter;
 
+//TODO: Add a field to check the overall Risk score and fail if it is over a certain threshold.
+//TODO: Option to delete any existing image reports in Tenable.io with the same name and tag
+//TODO: Have a function that just checks the reports, allowing for the docker push to be done as shell code.
 public class TioCSBuilder extends Builder implements SimpleBuildStep {
 
     private final String name;

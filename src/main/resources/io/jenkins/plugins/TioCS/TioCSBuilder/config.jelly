@@ -9,6 +9,11 @@
     <f:entry title="${%TioRepo}" field="TioRepo">
         <f:textbox />
     </f:entry>
+
+    <f:entry title="${%TestImage}" field="TestImage">
+        <f:checkbox />
+    </f:entry>
+
     <f:entry title="${%TioUsername}" field="TioUsername">
         <f:textbox />
     </f:entry>
