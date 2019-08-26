@@ -1,5 +1,6 @@
 <?jelly escape-by-default='true'?>
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form">
+
     <f:entry title="${%Name}" field="name">
         <f:textbox />
     </f:entry>
@@ -9,6 +10,8 @@
     <f:entry title="${%TioRepo}" field="TioRepo">
         <f:textbox />
     </f:entry>
+
+    <p>Tenable.io Credentials</p>
     <f:entry title="${%TioUsername}" field="TioUsername">
         <f:textbox />
     </f:entry>
@@ -21,12 +24,23 @@
     <f:entry title="${%TioSecretKey}" field="TioSecretKey">
         <f:password />
     </f:entry>
+
+    <p>Image testing workflow</p>
+    <f:entry name="Workflow" title="${%Workflow}" field="Workflow">
+        <select name="Workflow">
+            <option value="TestEvaluate">Test the image and evaluate</option>
+            <option value="Test">Only test the image (In cloud or on-prem</option>
+            <option value="Evaluate">Only evaluate the image report</option>
+        </select>
+    </f:entry>
+
     <f:entry title="${%FailCVSS}" field="FailCVSS">
         <f:textbox />
     </f:entry>
     <f:entry title="${%FailMalware}" field="FailMalware">
         <f:checkbox />
     </f:entry>
+
     <f:advanced>
         <f:entry title="${%OnPremInspector}" field="useOnPrem">
             <f:checkbox />

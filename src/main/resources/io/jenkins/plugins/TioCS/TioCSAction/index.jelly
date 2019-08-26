@@ -11,6 +11,10 @@
             <p>
                Debugging information enabled: ${it.DebugInfo}
             </p>
+            <p>
+               Workflow: ${it.Workflow}
+            </p>
+
 
             <p>
                Tenable.io Repository: ${it.TioRepo}

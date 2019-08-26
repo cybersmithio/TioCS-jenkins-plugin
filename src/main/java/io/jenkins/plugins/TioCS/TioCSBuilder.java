@@ -46,10 +46,11 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
     private Double FailCVSS;        // If there is a vulnerability with this CVSS or higher, fail the build.
     private boolean FailMalware;
     private boolean DebugInfo;
+    private String Workflow;
 
     @DataBoundConstructor
     public TioCSBuilder(String name, String ImageTag, String TioRepo, String TioAccessKey, String TioSecretKey,String TioUsername,
-        String TioPassword, Double FailCVSS, boolean FailMalware, boolean DebugInfo) {
+        String TioPassword, Double FailCVSS, boolean FailMalware, boolean DebugInfo, String Workflow) {
         this.name = name;
         this.ImageTag = ImageTag;
         this.TioRepo = TioRepo;
@@ -60,6 +61,7 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
         this.FailCVSS = FailCVSS;
         this.FailMalware = FailMalware;
         this.DebugInfo = DebugInfo;
+        this.Workflow = Workflow;
     }
 
     public String getName() {
@@ -105,6 +107,10 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
     public boolean isUseOnPrem() {
         return useOnPrem;
     }
+    public String getWorkflow() {
+        return Workflow;
+    }
+
 
     @DataBoundSetter
     public void setUseOnPrem(boolean useOnPrem) {
@@ -147,6 +153,11 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
         this.DebugInfo = DebugInfo;
     }
 
+    public void setTioSecretKey(String Workflow) {
+        this.Workflow = Workflow;
+    }
+
+
     @Override
     public void perform(Run<?, ?> run, FilePath workspace, Launcher launcher, TaskListener listener) throws InterruptedException, IOException {
         Double highcvss=0.0;
@@ -158,10 +169,7 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
             imagetagstring=ImageTag;
         }
 
-        listener.getLogger().println("Testing image " + name + ":"+imagetagstring+".  Results will go into Tenable.io repository "+TioRepo);
-        listener.getLogger().println("Any vulnerability with a CVSS of "+FailCVSS+ " or higher will be considered a failed build." );
-        listener.getLogger().println("Fail build if malware detected: "+FailMalware );
-        listener.getLogger().println("Tenable.io API Access Key: " + TioAccessKey );
+        listener.getLogger().println("Working on image " + name + ":"+imagetagstring+".");
         if ( DebugInfo ) {
             listener.getLogger().println("Showing debugging information as requested.");
         } else {
@@ -176,214 +184,224 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
             //listener.getLogger().println("Environment variable: " + envTioAccessKey );
         }
 
+        if ( Workflow.equals("TestEvaluate") || Workflow.equals("Test") ) {
+            listener.getLogger().println(Image will be tested.  "Results will go into Tenable.io repository "+TioRepo);
+            listener.getLogger().println("Tenable.io API Access Key: " + TioAccessKey );
 
-        if (useOnPrem) {
-            listener.getLogger().println("Testing with on-premise inspector.");
+            if (useOnPrem) {
+                listener.getLogger().println("Testing with on-premise inspector.");
 
-            listener.getLogger().println("Piping image into on-premise Tenable.io CS inspector ");
-            ProcessBuilder processBuilder = new ProcessBuilder();
-            try {
-                Process process=new ProcessBuilder("sh", "-c","docker save "+name+":"+imagetagstring+" | docker run -e TENABLE_ACCESS_KEY="
-                    +TioAccessKey+" -e TENABLE_SECRET_KEY="+TioSecretKey+" -e IMPORT_REPO_NAME="+TioRepo
-                    +" -i tenableio-docker-consec-local.jfrog.io/cs-scanner:latest inspect-image "+name+":"+imagetagstring).start();
-                StringBuilder output = new StringBuilder();
-                BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-                String line;
-                while ((line = reader.readLine()) != null) {
-                    output.append(line + "\n");
+                listener.getLogger().println("Piping image into on-premise Tenable.io CS inspector ");
+                ProcessBuilder processBuilder = new ProcessBuilder();
+                try {
+                    Process process=new ProcessBuilder("sh", "-c","docker save "+name+":"+imagetagstring+" | docker run -e TENABLE_ACCESS_KEY="
+                        +TioAccessKey+" -e TENABLE_SECRET_KEY="+TioSecretKey+" -e IMPORT_REPO_NAME="+TioRepo
+                        +" -i tenableio-docker-consec-local.jfrog.io/cs-scanner:latest inspect-image "+name+":"+imagetagstring).start();
+                    StringBuilder output = new StringBuilder();
+                    BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+                    String line;
+                    while ((line = reader.readLine()) != null) {
+                        output.append(line + "\n");
+                    }
+                    int exitVal = process.waitFor();
+                    if (exitVal == 0) {
+                        listener.getLogger().println("Success running external command:"+output);
+                    } else {
+                        listener.getLogger().println("Error running external command:"+output);
+                    }
+                } catch (IOException e) {
+                    listener.getLogger().println("IO Exception running external command");
+                } catch (InterruptedException e) {
+                    listener.getLogger().println("Interrupted Exception running external command");
                 }
-                int exitVal = process.waitFor();
-                if (exitVal == 0) {
-                    listener.getLogger().println("Success running external command:"+output);
-                } else {
-                    listener.getLogger().println("Error running external command:"+output);
+                listener.getLogger().println("Finished with on-prem inspector");
+
+            } else {
+                listener.getLogger().println("Testing in Tenable.io cloud.");
+
+                listener.getLogger().println("Logging into registry.cloud.tenable.com with username " + TioUsername );
+                ProcessBuilder processBuilder = new ProcessBuilder();
+                try {
+                    listener.getLogger().println("docker login -u "+TioUsername+" -p ********* registry.cloud.tenable.com");
+                    Process process=new ProcessBuilder("docker", "login","-u", TioUsername,"-p", TioPassword,"registry.cloud.tenable.com").start();
+                    StringBuilder output = new StringBuilder();
+                    BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+                    String line;
+                    while ((line = reader.readLine()) != null) {
+                        output.append(line + "\n");
+                    }
+                    int exitVal = process.waitFor();
+                    if (exitVal == 0) {
+                        listener.getLogger().println("Success running external command:"+output);
+                    } else {
+                        listener.getLogger().println("Error ("+exitVal+") running external command:"+output);
+                    }
+                } catch (IOException e) {
+                    listener.getLogger().println("IO Exception running external command");
+                } catch (InterruptedException e) {
+                    listener.getLogger().println("Interrupted Exception running external command");
                 }
-            } catch (IOException e) {
-                listener.getLogger().println("IO Exception running external command");
-            } catch (InterruptedException e) {
-                listener.getLogger().println("Interrupted Exception running external command");
+
+                listener.getLogger().println("Tagging image " + name + " for registry.cloud.tenable.com");
+                try {
+                    listener.getLogger().println("docker tag "+name+":"+imagetagstring+ " registry.cloud.tenable.com/"+TioRepo+"/"+name+":"+imagetagstring);
+                    Process process=new ProcessBuilder("docker", "tag",name+":"+imagetagstring , "registry.cloud.tenable.com/"+TioRepo+"/"+name+":"+imagetagstring).start();
+                    StringBuilder output = new StringBuilder();
+                    BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+                    String line;
+                    while ((line = reader.readLine()) != null) {
+                        output.append(line + "\n");
+                    }
+                    int exitVal = process.waitFor();
+                    if (exitVal == 0) {
+                        listener.getLogger().println("Success running external command: docker tag");
+                    } else {
+                        listener.getLogger().println("Error running external command: docker tag");
+                    }
+                } catch (IOException e) {
+                    listener.getLogger().println("IO Exception running external command");
+                } catch (InterruptedException e) {
+                    listener.getLogger().println("Interrupted Exception running external command");
+                }
+
+                listener.getLogger().println("Pushing image " + name + " to registry.cloud.tenable.com");
+                try {
+                    listener.getLogger().println("docker push registry.cloud.tenable.com/"+TioRepo+"/"+name+":"+imagetagstring);
+                    Process process=new ProcessBuilder("docker", "push", "registry.cloud.tenable.com/"+TioRepo+"/"+name+":"+imagetagstring).start();
+                    StringBuilder output = new StringBuilder();
+                    BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+                    String line;
+                    while ((line = reader.readLine()) != null) {
+                        output.append(line + "\n");
+                    }
+                    int exitVal = process.waitFor();
+                    if (exitVal == 0) {
+                        listener.getLogger().println("Success running external command:"+output);
+                    } else {
+                        listener.getLogger().println("Error running external command:"+output);
+                    }
+                } catch (IOException e) {
+                    listener.getLogger().println("IO Exception running external command");
+                } catch (InterruptedException e) {
+                    listener.getLogger().println("Interrupted Exception running external command");
+                }
             }
-            listener.getLogger().println("Finished with on-prem inspector");
-
-        } else {
-            listener.getLogger().println("Testing in Tenable.io cloud.");
-
-            listener.getLogger().println("Logging into registry.cloud.tenable.com with username " + TioUsername );
-            ProcessBuilder processBuilder = new ProcessBuilder();
-            try {
-                listener.getLogger().println("docker login -u "+TioUsername+" -p ********* registry.cloud.tenable.com");
-                Process process=new ProcessBuilder("docker", "login","-u", TioUsername,"-p", TioPassword,"registry.cloud.tenable.com").start();
-                StringBuilder output = new StringBuilder();
-                BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-                String line;
-                while ((line = reader.readLine()) != null) {
-                    output.append(line + "\n");
-                }
-                int exitVal = process.waitFor();
-                if (exitVal == 0) {
-                    listener.getLogger().println("Success running external command:"+output);
-                } else {
-                    listener.getLogger().println("Error ("+exitVal+") running external command:"+output);
-                }
-            } catch (IOException e) {
-                listener.getLogger().println("IO Exception running external command");
-            } catch (InterruptedException e) {
-                listener.getLogger().println("Interrupted Exception running external command");
-            }
-
-            listener.getLogger().println("Tagging image " + name + " for registry.cloud.tenable.com");
-            try {
-                listener.getLogger().println("docker tag "+name+":"+imagetagstring+ " registry.cloud.tenable.com/"+TioRepo+"/"+name+":"+imagetagstring);
-                Process process=new ProcessBuilder("docker", "tag",name+":"+imagetagstring , "registry.cloud.tenable.com/"+TioRepo+"/"+name+":"+imagetagstring).start();
-                StringBuilder output = new StringBuilder();
-                BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-                String line;
-                while ((line = reader.readLine()) != null) {
-                    output.append(line + "\n");
-                }
-                int exitVal = process.waitFor();
-                if (exitVal == 0) {
-                    listener.getLogger().println("Success running external command: docker tag");
-                } else {
-                    listener.getLogger().println("Error running external command: docker tag");
-                }
-            } catch (IOException e) {
-                listener.getLogger().println("IO Exception running external command");
-            } catch (InterruptedException e) {
-                listener.getLogger().println("Interrupted Exception running external command");
-            }
-
-            listener.getLogger().println("Pushing image " + name + " to registry.cloud.tenable.com");
-            try {
-                listener.getLogger().println("docker push registry.cloud.tenable.com/"+TioRepo+"/"+name+":"+imagetagstring);
-                Process process=new ProcessBuilder("docker", "push", "registry.cloud.tenable.com/"+TioRepo+"/"+name+":"+imagetagstring).start();
-                StringBuilder output = new StringBuilder();
-                BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-                String line;
-                while ((line = reader.readLine()) != null) {
-                    output.append(line + "\n");
-                }
-                int exitVal = process.waitFor();
-                if (exitVal == 0) {
-                    listener.getLogger().println("Success running external command:"+output);
-                } else {
-                    listener.getLogger().println("Error running external command:"+output);
-                }
-            } catch (IOException e) {
-                listener.getLogger().println("IO Exception running external command");
-            } catch (InterruptedException e) {
-                listener.getLogger().println("Interrupted Exception running external command");
+            if ( Workflow.equals("Test") ) {
+                run.addAction(new TioCSAction(name,ImageTag,TioRepo,TioUsername, TioPassword, TioAccessKey,TioSecretKey,FailCVSS, highcvss, useOnPrem, NumOfVulns, FailMalware,malwareDetected,DebugInfo,Workflow));
             }
         }
 
         //Get report and parse
-        boolean reportReady = false;
-        JSONObject responsejson = new JSONObject("{}");
+        if ( Workflow.equals("TestEvaluate") || Workflow.equals("Evaluate") ) {
+            listener.getLogger().println("Any vulnerability with a CVSS of "+FailCVSS+ " or higher will be considered a failed build." );
+            listener.getLogger().println("Fail build if malware detected: "+FailMalware );
 
-        while ( ! reportReady  ) {
-            Thread.sleep(10000);
-            listener.getLogger().println("Retrieving report of image " + name + " from Tenable.io API");
-            String jsonstring="";
-            try {
-                URL myUrl = new URL("https://cloud.tenable.com/container-security/api/v2/reports/"+TioRepo+"/"+name+"/"+imagetagstring);
-                HttpsURLConnection conn = (HttpsURLConnection)myUrl.openConnection();
-                conn.setRequestProperty("x-apikeys","accessKey="+TioAccessKey+";secretKey="+TioSecretKey);
-                conn.setRequestProperty("accept","application/json");
+            boolean reportReady = false;
+            JSONObject responsejson = new JSONObject("{}");
 
-                InputStream is = conn.getInputStream();
-                InputStreamReader isr = new InputStreamReader(is);
-                BufferedReader br = new BufferedReader(isr);
+            while ( ! reportReady  ) {
+                Thread.sleep(10000);
+                listener.getLogger().println("Retrieving report of image " + name + " from Tenable.io API");
+                String jsonstring="";
+                try {
+                    URL myUrl = new URL("https://cloud.tenable.com/container-security/api/v2/reports/"+TioRepo+"/"+name+"/"+imagetagstring);
+                    HttpsURLConnection conn = (HttpsURLConnection)myUrl.openConnection();
+                    conn.setRequestProperty("x-apikeys","accessKey="+TioAccessKey+";secretKey="+TioSecretKey);
+                    conn.setRequestProperty("accept","application/json");
 
-                String inputLine;
+                    InputStream is = conn.getInputStream();
+                    InputStreamReader isr = new InputStreamReader(is);
+                    BufferedReader br = new BufferedReader(isr);
 
-                while ((inputLine = br.readLine()) != null) {
-                    jsonstring=jsonstring+inputLine;
+                    String inputLine;
+
+                    while ((inputLine = br.readLine()) != null) {
+                        jsonstring=jsonstring+inputLine;
+                    }
+
+                    br.close();
+
+                } catch (Exception e) {
+                    listener.getLogger().println("Error getting image report");
                 }
 
-                br.close();
+                if ( DebugInfo ) {
+                    listener.getLogger().println("Attempting to parse JSON string into JSON object:"+jsonstring);
+                }
+                responsejson = new JSONObject(jsonstring);
 
-            } catch (Exception e) {
-                listener.getLogger().println("Error getting image report");
+                if ( DebugInfo ) {
+                    listener.getLogger().println("DEBUG: JSON received:"+responsejson.toString());
+                }
+
+                try {
+                    String reportmessage = responsejson.getString("message");
+                    listener.getLogger().println("Report status:"+reportmessage);
+                    reportReady = false;
+                } catch (JSONException e) {
+                    reportReady = true;
+                    listener.getLogger().println("No report status, so report should be complete.");
+                } catch (Exception e) {
+                    reportReady = false;
+                    listener.getLogger().println("Some other unknown exception: "+e.toString());
+                }
             }
+
 
             if ( DebugInfo ) {
-                listener.getLogger().println("Attempting to parse JSON string into JSON object:"+jsonstring);
+                listener.getLogger().println("Risk Score:"+responsejson.get("risk_score"));
             }
-            responsejson = new JSONObject(jsonstring);
-
+            JSONArray findings=responsejson.getJSONArray("findings");
             if ( DebugInfo ) {
-                listener.getLogger().println("DEBUG: JSON received:"+responsejson.toString());
+                listener.getLogger().println("Findings:"+responsejson.get("findings"));
             }
 
-            try {
-                String reportmessage = responsejson.getString("message");
-                listener.getLogger().println("Report status:"+reportmessage);
-                reportReady = false;
-            } catch (JSONException e) {
-                reportReady = true;
-                listener.getLogger().println("No report status, so report should be complete.");
-            } catch (Exception e) {
-                reportReady = false;
-                listener.getLogger().println("Some other unknown exception: "+e.toString());
+            JSONArray malware=responsejson.getJSONArray("malware");
+            if ( DebugInfo ) {
+                listener.getLogger().println("Findings:"+responsejson.get("malware"));
             }
-        }
+            listener.getLogger().println("Number of malware items found: "+malware.length());
 
+            if ( FailMalware ) {
+                listener.getLogger().println("If malware is detected, this build is set to fail.");
+                if ( Integer.compare(malware.length(),0) > 0 ) {
+                    listener.getLogger().println("Malware detected, so failing the build.");
+                    malwareDetected=true;
+                    run.addAction(new TioCSAction(name,ImageTag,TioRepo,TioUsername, TioPassword, TioAccessKey,TioSecretKey,FailCVSS, highcvss, useOnPrem, NumOfVulns, FailMalware,malwareDetected,DebugInfo,Workflow));
+                } else {
+                    listener.getLogger().println("Malware not detected. Continue with build.");
+                }
+            }
 
-        if ( DebugInfo ) {
-            listener.getLogger().println("Risk Score:"+responsejson.get("risk_score"));
-        }
-        JSONArray findings=responsejson.getJSONArray("findings");
-        if ( DebugInfo ) {
-            listener.getLogger().println("Findings:"+responsejson.get("findings"));
-        }
-
-        JSONArray malware=responsejson.getJSONArray("malware");
-        if ( DebugInfo ) {
-            listener.getLogger().println("Findings:"+responsejson.get("malware"));
-        }
-        listener.getLogger().println("Number of malware items found: "+malware.length());
-
-        if ( FailMalware ) {
-            listener.getLogger().println("If malware is detected, this build is set to fail.");
-            if ( Integer.compare(malware.length(),0) > 0 ) {
-                listener.getLogger().println("Malware detected, so failing the build.");
-                malwareDetected=true;
-                run.addAction(new TioCSAction(name,ImageTag,TioRepo,TioUsername, TioPassword, TioAccessKey,TioSecretKey,FailCVSS, highcvss, useOnPrem, NumOfVulns, FailMalware,malwareDetected,DebugInfo));
+            //JSONObject vulns=responsejson.getJSONArray("findings");
+            for ( int i =0; i    < findings.length(); i++ ) {
+                JSONObject ifinding = findings.getJSONObject(i);
+                //listener.getLogger().println("Vulnerability finding: "+ifinding);
+                JSONObject nvdfinding = ifinding.getJSONObject("nvdFinding");
+                //listener.getLogger().println("Vuln NVD info: "+nvdfinding);
+                String cvssscorestring=nvdfinding.getString("cvss_score");
+                //listener.getLogger().println("CVSSv2 Score: "+cvssscorestring);
+                if ( !(cvssscorestring.equals("")) ) {
+                    NumOfVulns++;
+                    Double cvssscorevalue=nvdfinding.getDouble("cvss_score");
+                    listener.getLogger().println("Found vulnerability with CVSSv2 score "+cvssscorevalue);
+                    if ( Double.compare(cvssscorevalue,highcvss) > 0 ) {
+                        highcvss=cvssscorevalue;
+                    }
+                }
+            }
+            listener.getLogger().println("Highest CVSS Score: "+highcvss);
+            if (Double.compare(highcvss,FailCVSS) >= 0 ) {
+                listener.getLogger().println("ERROR: There are vulnerabilities equal to or higher than "+FailCVSS);
+                listener.getLogger().println("ERROR: Failing this build!");
+                run.addAction(new TioCSAction(name,ImageTag,TioRepo,TioUsername, TioPassword, TioAccessKey,TioSecretKey,FailCVSS, highcvss, useOnPrem, NumOfVulns, FailMalware, malwareDetected,DebugInfo,Workflow));
+                throw new SecurityException();
             } else {
-                listener.getLogger().println("Malware not detected. Continue with build.");
+                listener.getLogger().println("Vulnerabilities are below threshold of "+FailCVSS);
             }
+
+            run.addAction(new TioCSAction(name,ImageTag,TioRepo,TioUsername, TioPassword, TioAccessKey,TioSecretKey,FailCVSS, highcvss, useOnPrem, NumOfVulns, FailMalware, malwareDetected,DebugInfo,Workflow));
         }
-
-        //JSONObject vulns=responsejson.getJSONArray("findings");
-        for ( int i =0; i    < findings.length(); i++ ) {
-            JSONObject ifinding = findings.getJSONObject(i);
-            //listener.getLogger().println("Vulnerability finding: "+ifinding);
-            JSONObject nvdfinding = ifinding.getJSONObject("nvdFinding");
-            //listener.getLogger().println("Vuln NVD info: "+nvdfinding);
-            String cvssscorestring=nvdfinding.getString("cvss_score");
-            //listener.getLogger().println("CVSSv2 Score: "+cvssscorestring);
-            if ( !(cvssscorestring.equals("")) ) {
-                NumOfVulns++;
-                Double cvssscorevalue=nvdfinding.getDouble("cvss_score");
-                listener.getLogger().println("Found vulnerability with CVSSv2 score "+cvssscorevalue);
-                if ( Double.compare(cvssscorevalue,highcvss) > 0 ) {
-                    highcvss=cvssscorevalue;
-                }
-            }
-        }
-        listener.getLogger().println("Highest CVSS Score: "+highcvss);
-        if (Double.compare(highcvss,FailCVSS) >= 0 ) {
-            listener.getLogger().println("ERROR: There are vulnerabilities equal to or higher than "+FailCVSS);
-            listener.getLogger().println("ERROR: Failing this build!");
-            run.addAction(new TioCSAction(name,ImageTag,TioRepo,TioUsername, TioPassword, TioAccessKey,TioSecretKey,FailCVSS, highcvss, useOnPrem, NumOfVulns, FailMalware, malwareDetected,DebugInfo));
-            throw new SecurityException();
-        } else {
-            listener.getLogger().println("Vulnerabilities are below threshold of "+FailCVSS);
-        }
-
-        run.addAction(new TioCSAction(name,ImageTag,TioRepo,TioUsername, TioPassword, TioAccessKey,TioSecretKey,FailCVSS, highcvss, useOnPrem, NumOfVulns, FailMalware, malwareDetected,DebugInfo));
-
-
     }
 
     @Symbol("greet")
@@ -394,7 +412,8 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
         public FormValidation doCheckName(@QueryParameter String value, @QueryParameter String TioRepo,
             @QueryParameter String TioUsername, @QueryParameter String TioPassword, @QueryParameter String TioAccessKey,
             @QueryParameter String TioSecretKey, @QueryParameter boolean useOnPrem, @QueryParameter Double FailCVSS,
-            @QueryParameter boolean FailMalware, @QueryParameter boolean DebugInfo) throws IOException, ServletException {
+            @QueryParameter boolean FailMalware, @QueryParameter boolean DebugInfo, @QueryParameter String Workflow)
+            throws IOException, ServletException {
             if (value.length() == 0)
                 return FormValidation.error(Messages.TioCSBuilder_DescriptorImpl_errors_missingName());
             if (TioRepo.length() == 0)
