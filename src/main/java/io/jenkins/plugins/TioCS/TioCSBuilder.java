@@ -229,7 +229,7 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
                     listener.getLogger().println("Image does not exist");
                     throw new SecurityException();
                 } else {
-                    listener.getLogger().println("Image exists, continuing with build");
+                    listener.getLogger().println("Image exists with ID "+output+", continuing with build");
                 }
             } catch (IOException e) {
                 listener.getLogger().println("IO Exception running external command");
