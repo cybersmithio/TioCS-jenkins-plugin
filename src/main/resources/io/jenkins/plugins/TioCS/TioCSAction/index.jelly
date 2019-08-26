@@ -8,28 +8,28 @@
             <h1>
                 Image: ${it.name}
             </h1>
-            <div>
+            <p>
             <table border="1">
             <tr><td>Image name</td><td>${it.name}:${it.ImageTag}</td></tr>
             <tr><td>Image size</td><td>${it.ImageSize}</td></tr>
             </table>
-            </div>
+            </p>
 
-            <div>
+            <p>
             <table border="1">
             <tr><td>Show debug information</td><td>${it.DebugInfo}</td></tr>
             <tr><td>Workflow</td><td>${it.Workflow}</td></tr>
             </table>
-            </div>
+            </p>
 
-            <div>
+            <p>
             <table border="1">
             <tr><td>Tenable.io Repository</td><td>${it.TioRepo}</td></tr>
             <tr><td>Tenable.io Username</td><td>${it.TioUsername}</td></tr>
             <tr><td>Tenable.io API Access Key</td><td>${it.TioAccessKey}</td></tr>
             </table>
-            </div>
-            <div>
+            </p>
+            <p>
             <table border="1">
             <tr><td>Fail build when vulnerabilities with CVSS equal to or higher than</td><td>${it.FailCVSS}</td></tr>
             <tr><td>Fail build when malware is present in image</td><td>${it.FailMalware}</td></tr>
@@ -38,7 +38,7 @@
             <tr><td>Highest CVSS found in image</td><td>${it.HighCVSS}</td></tr>
             <tr><td>Malware detected</td><td>${it.malwareDetected}</td></tr>
             </table>
-            </div>
+            </p>
         </l:main-panel>
     </l:layout>
 </j:jelly>
