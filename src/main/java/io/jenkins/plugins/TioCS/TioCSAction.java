@@ -105,7 +105,7 @@ public class TioCSAction implements RunAction2 {
         if ( Workflow.equals("Test")  ) {
             return "Not evaluated";
         }
-        return NumOfVulns;
+        return NumOfVulns.toString();
     }
 
     public boolean getFailMalware() {
@@ -120,7 +120,7 @@ public class TioCSAction implements RunAction2 {
         if ( Workflow.equals("Test")  ) {
             return "Not evaluated";
         }
-        return malwareDetected;
+        return malwareDetected.toString();
     }
 
     public boolean getDebugInfo() {
