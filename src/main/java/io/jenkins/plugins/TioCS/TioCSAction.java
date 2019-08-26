@@ -55,14 +55,6 @@ public class TioCSAction implements RunAction2 {
         this.FailMalware = FailMalware;
         this.DebugInfo = DebugInfo;
         this.Workflow = Workflow;
-        if ( Workflow.equals("Evaluate") || Workflow.equals("TestEvaluate") {
-            this.HighCVSS = HighCVSS;
-            this.malwareDetected = malwareDetected;
-        } else {
-            this.HighCVSS = null;
-            this.malwareDetected = null;
-
-        }
 
     }
 
@@ -102,11 +94,17 @@ public class TioCSAction implements RunAction2 {
         return FailCVSS;
     }
 
-    public Double getHighCVSS() {
+    public String getHighCVSS() {
+        if ( Workflow.equals("Test")  ) {
+            return "Not evaluated";
+        }
         return HighCVSS;
     }
 
-    public Integer getNumOfVulns() {
+    public String getNumOfVulns() {
+        if ( Workflow.equals("Test")  ) {
+            return "Not evaluated";
+        }
         return NumOfVulns;
     }
 
@@ -118,7 +116,10 @@ public class TioCSAction implements RunAction2 {
         return useOnPrem;
     }
 
-    public boolean getmalwareDetected() {
+    public String getmalwareDetected() {
+        if ( Workflow.equals("Test")  ) {
+            return "Not evaluated";
+        }
         return malwareDetected;
     }
 
