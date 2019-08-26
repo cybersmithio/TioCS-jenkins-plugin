@@ -6,11 +6,12 @@
         </l:side-panel>
         <l:main-panel>
             <h1>
-                Image: ${it.name}:${it.ImageTag}
+                Image: ${it.name}
             </h1>
-            <p>
-               Image size: ${it.ImageSize}
-            </p>
+            <table border=1>
+            <tr><td>Image name</td><td>${it.name}:${it.ImageTag}</td></tr>
+            <tr><td>Image size</td><td>${it.ImageSize}</td></tr>
+            </table>
 
             <p>
                Debugging information enabled: ${it.DebugInfo}
