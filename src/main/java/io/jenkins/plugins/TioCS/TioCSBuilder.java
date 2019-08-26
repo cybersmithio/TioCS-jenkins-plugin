@@ -54,7 +54,8 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
     @DataBoundConstructor
 //    public TioCSBuilder(String name, String ImageTag, String TioRepo, String TioAccessKey, String TioSecretKey,String TioUsername,
 //        String TioPassword, Double FailCVSS, boolean FailMalware, boolean DebugInfo, boolean TestImage, boolean ReportImage) {
-    public TioCSBuilder(String name, String ImageTag, String TioRepo, boolean DebugInfo, JSONArray TestImage, JSONArray ReportImage) {
+    public TioCSBuilder(String name, String ImageTag, String TioRepo, boolean DebugInfo, TestImage(String TioUsername,
+//        String TioPassword) ,  ReportImage(String TioAccessKey, String TioSecretKey, Double FailCVSS, boolean FailMalware) ) {
         this.name = name;
         this.ImageTag = ImageTag;
         this.TioRepo = TioRepo;
