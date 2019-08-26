@@ -245,8 +245,8 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
             //Now record the image size (more for documentation purposes)
             listener.getLogger().println("Checking image size.");
             try {
-                listener.getLogger().println("docker images --filter {{.Size}} "+name+":"+imagetagstring);
-                Process process=new ProcessBuilder("docker", "images","--filter","{{.Size}}",name+":"+imagetagstring).start();
+                listener.getLogger().println("docker images --format {{.Size}} "+name+":"+imagetagstring);
+                Process process=new ProcessBuilder("docker", "images","--format","{{.Size}}",name+":"+imagetagstring).start();
                 StringBuilder output = new StringBuilder();
                 BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
                 String line;
