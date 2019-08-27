@@ -316,7 +316,7 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
                 try {
                     listener.getLogger().println("docker login -u $TENABLE_USERNAME -p $TENABLE_PASSWORD registry.cloud.tenable.com");
                     //Process process=new ProcessBuilder("docker", "login","-u", TioUsername,"-p", TioPassword,"registry.cloud.tenable.com").start();
-                    ProcessBuilder processBuilder = new ProcessBuilder("docker", "login","-u", "$TENABLE_USERNAME","-p", "$TENABLE_PASSWORD","registry.cloud.tenable.com");
+                    ProcessBuilder processBuilder = new ProcessBuilder("sh", "-c", "docker", "login","-u", "$TENABLE_USERNAME","-p", "$TENABLE_PASSWORD","registry.cloud.tenable.com");
                     Map<String, String> env = processBuilder.environment();
                     env.put("TENABLE_PASSWORD", TioPassword);
                     env.put("TENABLE_USERNAME", TioUsername);
