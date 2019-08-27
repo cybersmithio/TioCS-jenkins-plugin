@@ -6,6 +6,7 @@ import jenkins.model.RunAction2;
 
 import hudson.PluginWrapper;
 import hudson.model.Hudson;
+import jenkins.model.Jenkins;
 
 
 public class TioCSAction implements RunAction2 {
