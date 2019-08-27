@@ -81,3 +81,6 @@ August 25, 2019 11:36am
 
 August 26, 2019
 * Added an image size field.
+
+August 26, 2019 11:30pm
+* Took me 5 hours, but finally figured out the right syntax and directory to get the Tenable icon to appear for the Action men.
