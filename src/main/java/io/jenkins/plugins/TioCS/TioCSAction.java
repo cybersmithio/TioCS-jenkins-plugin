@@ -17,9 +17,7 @@ public class TioCSAction implements RunAction2 {
     private String ImageTag;
 
     private String TioUsername;
-    private String TioPassword;
     private String TioAccessKey;
-    private String TioSecretKey;
     private Double FailCVSS;
     private boolean useOnPrem;
     private boolean FailMalware;
@@ -45,16 +43,14 @@ public class TioCSAction implements RunAction2 {
         return run;
     }
 
-    public TioCSAction(String name, String ImageTag, String TioRepo, String TioUsername, String TioPassword, String TioAccessKey,
-        String TioSecretKey, Double FailCVSS,Double HighCVSS, boolean useOnPrem, Integer NumOfVulns, boolean FailMalware,
+    public TioCSAction(String name, String ImageTag, String TioRepo, String TioUsername, String TioAccessKey,
+        Double FailCVSS,Double HighCVSS, boolean useOnPrem, Integer NumOfVulns, boolean FailMalware,
         boolean malwareDetected, boolean DebugInfo, String Workflow, String ImageSize) {
         this.name = name;
         this.ImageTag = ImageTag;
         this.TioRepo = TioRepo;
         this.TioAccessKey = TioAccessKey;
-        this.TioSecretKey = TioSecretKey;
         this.TioUsername = TioUsername;
-        this.TioPassword = TioPassword;
         this.FailCVSS = FailCVSS;
         this.HighCVSS = HighCVSS;
         this.useOnPrem = useOnPrem;
@@ -95,16 +91,8 @@ public class TioCSAction implements RunAction2 {
         return TioUsername;
     }
 
-    public String getTioPassword() {
-        return TioPassword;
-    }
-
     public String getTioAccessKey() {
         return TioAccessKey;
-    }
-
-    public String getTioSecretKey() {
-        return TioSecretKey;
     }
 
     public Double getFailCVSS() {

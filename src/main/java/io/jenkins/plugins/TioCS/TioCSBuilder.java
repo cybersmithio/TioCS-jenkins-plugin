@@ -275,19 +275,18 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
 
                 listener.getLogger().println("Piping image into on-premise Tenable.io CS inspector ");
                 try {
-                    listener.getLogger().println("sh -c docker save "+name+":"+imagetagstring+" | docker run -e TENABLE_ACCESS_KEY="
-                        +TioAccessKey+" -e TENABLE_SECRET_KEY="+TioSecretKey+" -e IMPORT_REPO_NAME="+TioRepo
+                    listener.getLogger().println("sh -c docker save "+name+":"+imagetagstring+" | docker run -e TENABLE_ACCESS_KEY=$TENABLE_ACCESS_KEY"
+                        +" -e TENABLE_SECRET_KEY=$TENABLE_SECRET_KEY -e IMPORT_REPO_NAME="+TioRepo
                         +" -i tenableio-docker-consec-local.jfrog.io/cs-scanner:latest inspect-image "+name+":"+imagetagstring);
 
-                    //ProcessBuilder processBuilder = new ProcessBuilder("sh", "-c","docker save "+name+":"+imagetagstring+" | docker run -e TENABLE_ACCESS_KEY="
-                    //    +TioAccessKey+" -e TENABLE_SECRET_KEY="+TioSecretKey+" -e IMPORT_REPO_NAME="+TioRepo
-                    //    +" -i tenableio-docker-consec-local.jfrog.io/cs-scanner:latest inspect-image "+name+":"+imagetagstring);
 
-                    ProcessBuilder processBuilder = new ProcessBuilder("sh", "-c","docker save "+name+":"+imagetagstring+" | docker run -e TENABLE_ACCESS_KEY="
-                        +TioAccessKey+" -e TENABLE_SECRET_KEY=$TENABLE_SECRET_KEY -e IMPORT_REPO_NAME="+TioRepo
-                        +" -i tenableio-docker-consec-local.jfrog.io/cs-scanner:latest inspect-image "+name+":"+imagetagstring);
+                    ProcessBuilder processBuilder = new ProcessBuilder("sh", "-c","docker save "+name+":"+imagetagstring
+                        +" | docker run -e TENABLE_ACCESS_KEY=$TENABLE_ACCESS_KEY -e TENABLE_SECRET_KEY=$TENABLE_SECRET_KEY -e IMPORT_REPO_NAME="
+                        +TioRepo +" -i tenableio-docker-consec-local.jfrog.io/cs-scanner:latest inspect-image "
+                        +name+":"+imagetagstring);
                     Map<String, String> env = processBuilder.environment();
                     env.put("TENABLE_SECRET_KEY", TioSecretKey);
+                    env.put("TENABLE_ACCESS_KEY", TioAccessKey);
                     processBuilder.redirectErrorStream(true);
                     Process process=processBuilder.start();
                     StringBuilder output = new StringBuilder();
@@ -316,7 +315,14 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
                 listener.getLogger().println("Logging into registry.cloud.tenable.com with username " + TioUsername );
                 try {
                     listener.getLogger().println("docker login -u "+TioUsername+" -p ********* registry.cloud.tenable.com");
-                    Process process=new ProcessBuilder("docker", "login","-u", TioUsername,"-p", TioPassword,"registry.cloud.tenable.com").start();
+                    //Process process=new ProcessBuilder("docker", "login","-u", TioUsername,"-p", TioPassword,"registry.cloud.tenable.com").start();
+                    ProcessBuilder processBuilder = new ProcessBuilder("docker", "login","-u", "$TENABLE_USERNAME","-p", "$TENABLE_PASSWORD","registry.cloud.tenable.com");
+                    Map<String, String> env = processBuilder.environment();
+                    env.put("TENABLE_PASSWORD", TioPassword);
+                    env.put("TENABLE_USERNAME", TioUsername);
+                    processBuilder.redirectErrorStream(true);
+                    Process process=processBuilder.start();
+
                     StringBuilder output = new StringBuilder();
                     BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
                     String line;
@@ -387,7 +393,7 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
                 }
             }
             if ( Workflow.equals("Test") ) {
-                run.addAction(new TioCSAction(name,ImageTag,TioRepo,TioUsername, TioPassword, TioAccessKey,TioSecretKey,FailCVSS, highcvss, useOnPrem, NumOfVulns, FailMalware,malwareDetected,DebugInfo,Workflow,imagesize));
+                run.addAction(new TioCSAction(name,ImageTag,TioRepo,TioUsername, TioAccessKey,FailCVSS, highcvss, useOnPrem, NumOfVulns, FailMalware,malwareDetected,DebugInfo,Workflow,imagesize));
             }
         }
 
@@ -476,7 +482,7 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
                 if ( Integer.compare(malware.length(),0) > 0 ) {
                     listener.getLogger().println("Malware detected, so failing the build.");
                     malwareDetected=true;
-                    run.addAction(new TioCSAction(name,ImageTag,TioRepo,TioUsername, TioPassword, TioAccessKey,TioSecretKey,FailCVSS, highcvss, useOnPrem, NumOfVulns, FailMalware,malwareDetected,DebugInfo,Workflow,imagesize));
+                    run.addAction(new TioCSAction(name,ImageTag,TioRepo,TioUsername, TioAccessKey,FailCVSS, highcvss, useOnPrem, NumOfVulns, FailMalware,malwareDetected,DebugInfo,Workflow,imagesize));
                 } else {
                     listener.getLogger().println("Malware not detected. Continue with build.");
                 }
@@ -503,13 +509,13 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
             if (Double.compare(highcvss,FailCVSS) >= 0 ) {
                 listener.getLogger().println("ERROR: There are vulnerabilities equal to or higher than "+FailCVSS);
                 listener.getLogger().println("ERROR: Failing this build!");
-                run.addAction(new TioCSAction(name,ImageTag,TioRepo,TioUsername, TioPassword, TioAccessKey,TioSecretKey,FailCVSS, highcvss, useOnPrem, NumOfVulns, FailMalware, malwareDetected,DebugInfo,Workflow,imagesize));
+                run.addAction(new TioCSAction(name,ImageTag,TioRepo,TioUsername, TioAccessKey,FailCVSS, highcvss, useOnPrem, NumOfVulns, FailMalware, malwareDetected,DebugInfo,Workflow,imagesize));
                 throw new SecurityException();
             } else {
                 listener.getLogger().println("Vulnerabilities are below threshold of "+FailCVSS);
             }
 
-            run.addAction(new TioCSAction(name,ImageTag,TioRepo,TioUsername, TioPassword, TioAccessKey,TioSecretKey,FailCVSS, highcvss, useOnPrem, NumOfVulns, FailMalware, malwareDetected,DebugInfo,Workflow,imagesize));
+            run.addAction(new TioCSAction(name,ImageTag,TioRepo,TioUsername,  TioAccessKey,FailCVSS, highcvss, useOnPrem, NumOfVulns, FailMalware, malwareDetected,DebugInfo,Workflow,imagesize));
         }
     }
 
@@ -541,8 +547,6 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
                 return FormValidation.error(Messages.TioCSBuilder_DescriptorImpl_errors_missingTioPassword());
             if (TioAccessKey.length() == 0)
                 return FormValidation.error(Messages.TioCSBuilder_DescriptorImpl_errors_missingTioAccessKey());
-            if (TioSecretKey.length() == 0)
-                return FormValidation.error(Messages.TioCSBuilder_DescriptorImpl_errors_missingTioSecretKey());
             if (TioSecretKey.length() == 0)
                 return FormValidation.error(Messages.TioCSBuilder_DescriptorImpl_errors_missingTioSecretKey());
 
