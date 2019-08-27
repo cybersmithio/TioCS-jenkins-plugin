@@ -190,14 +190,9 @@ public class TioCSAction implements RunAction2 {
         //return "/jenkins/plugin/TioCS/tenable-icon.png";
     }
 
-    public String getIconPath() {
-        PluginWrapper wrapper = Hudson.getInstance().getPluginManager().getPlugin([YOUR-PLUGIN-MAIN-CLASS].class);
-        return Hudson.getInstance().getRootUrl() + "plugin/"+ wrapper.getShortName()+"/";
-    }
-
     @Override
     public String getDisplayName() {
-        PluginWrapper wrapper = Hudson.getInstance().getPluginManager().getPlugin([YOUR-PLUGIN-MAIN-CLASS].class);
+        PluginWrapper wrapper = Hudson.getInstance().getPluginManager().getPlugin(TioCSBuilder.class);
         return Hudson.getInstance().getRootUrl() + "plugin/"+ wrapper.getShortName()+"/";
         //return "Tenable.io Container Security";
     }
