@@ -197,7 +197,7 @@ public class TioCSAction implements RunAction2 {
 
     @Override
     public String getDisplayName() {
-        PluginWrapper wrapper = Hudson.getInstance().getPluginManager().getPlugin(TioCS.class);
+        PluginWrapper wrapper = Hudson.getInstance().getPluginManager().getPlugin(TioCSAction.class);
         return Hudson.getInstance().getRootUrl() + "plugin/"+ wrapper.getShortName()+"/";
         //return "Tenable.io Container Security";
     }
