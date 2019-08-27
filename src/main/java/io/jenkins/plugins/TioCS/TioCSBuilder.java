@@ -37,7 +37,7 @@ import org.jenkinsci.Symbol;
 import org.kohsuke.stapler.DataBoundSetter;
 
 //TODO: Record the testing time duration
-//TODO: Record the size of the image
+//Done: Record the size of the image
 //TODO: Hide API keys using environment variables.
 public class TioCSBuilder extends Builder implements SimpleBuildStep {
 
@@ -278,9 +278,16 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
                     listener.getLogger().println("sh -c docker save "+name+":"+imagetagstring+" | docker run -e TENABLE_ACCESS_KEY="
                         +TioAccessKey+" -e TENABLE_SECRET_KEY="+TioSecretKey+" -e IMPORT_REPO_NAME="+TioRepo
                         +" -i tenableio-docker-consec-local.jfrog.io/cs-scanner:latest inspect-image "+name+":"+imagetagstring);
+
+                    //ProcessBuilder processBuilder = new ProcessBuilder("sh", "-c","docker save "+name+":"+imagetagstring+" | docker run -e TENABLE_ACCESS_KEY="
+                    //    +TioAccessKey+" -e TENABLE_SECRET_KEY="+TioSecretKey+" -e IMPORT_REPO_NAME="+TioRepo
+                    //    +" -i tenableio-docker-consec-local.jfrog.io/cs-scanner:latest inspect-image "+name+":"+imagetagstring);
+
                     ProcessBuilder processBuilder = new ProcessBuilder("sh", "-c","docker save "+name+":"+imagetagstring+" | docker run -e TENABLE_ACCESS_KEY="
-                        +TioAccessKey+" -e TENABLE_SECRET_KEY="+TioSecretKey+" -e IMPORT_REPO_NAME="+TioRepo
+                        +TioAccessKey+" -e TENABLE_SECRET_KEY=$TENABLE_SECRET_KEY -e IMPORT_REPO_NAME="+TioRepo
                         +" -i tenableio-docker-consec-local.jfrog.io/cs-scanner:latest inspect-image "+name+":"+imagetagstring);
+                    Map<String, String> env = processBuilder.environment();
+                    env.put("TENABLE_SECRET_KEY", TioSecretKey);
                     processBuilder.redirectErrorStream(true);
                     Process process=processBuilder.start();
                     StringBuilder output = new StringBuilder();
