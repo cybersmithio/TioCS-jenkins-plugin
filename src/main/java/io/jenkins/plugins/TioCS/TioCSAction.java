@@ -190,16 +190,14 @@ public class TioCSAction implements RunAction2 {
 
     @Override
     public String getIconFileName() {
-
-        return "/tenable-icon.png";
+        return "/plugin/credentials/images/24x24/tenable-icon.png"
+        //return "/tenable-icon.png";
         //return "/jenkins/plugin/TioCS/tenable-icon.png";
     }
 
     @Override
     public String getDisplayName() {
-        PluginWrapper wrapper = Hudson.getInstance().getPluginManager().getPlugin(TioCSAction.class);
-        return Hudson.getInstance().getRootUrl() + "plugin/"+ wrapper.getShortName()+"/";
-        //return "Tenable.io Container Security";
+        return "Tenable.io Container Security";
     }
 
     @Override
