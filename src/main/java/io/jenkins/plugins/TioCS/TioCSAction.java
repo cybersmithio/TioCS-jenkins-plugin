@@ -185,6 +185,7 @@ public class TioCSAction implements RunAction2 {
 
     @Override
     public String getIconFileName() {
+
         return "/images/tenable-icon.png";
         //return "/jenkins/plugin/TioCS/tenable-icon.png";
     }
