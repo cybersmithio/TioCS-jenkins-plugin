@@ -84,3 +84,6 @@ August 26, 2019
 
 August 26, 2019 11:30pm
 * Took me 5 hours, but finally figured out the right syntax and directory to get the Tenable icon to appear for the Action men.
+
+August 27, 2019 9:58am
+* All secrets should now be hidden in the logs, and removed from any unnecessary storage.
