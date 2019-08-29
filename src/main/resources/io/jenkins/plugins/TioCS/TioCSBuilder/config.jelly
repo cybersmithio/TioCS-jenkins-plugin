@@ -27,12 +27,6 @@
         <f:entry title="${%TioRepo}" field="TioRepo">
             <f:textbox />
         </f:entry>
-        <f:entry title="${%TioUsername}" field="TioUsername">
-            <f:textbox />
-        </f:entry>
-        <f:entry title="${%TioPassword}" field="TioPassword">
-            <f:password />
-        </f:entry>
         <f:entry title="${%TioAccessKey}" field="TioAccessKey">
             <f:textbox />
         </f:entry>
