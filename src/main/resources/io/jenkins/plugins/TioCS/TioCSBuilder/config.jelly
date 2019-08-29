@@ -39,9 +39,6 @@
         <f:entry title="${%FailCVSS}" field="FailCVSS">
             <f:textbox />
         </f:entry>
-        <f:entry title="${%FailMalware}" field="FailMalware">
-            <f:checkbox />
-        </f:entry>
     </f:section>
 
 

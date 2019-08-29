@@ -19,7 +19,6 @@ public class TioCSAction implements RunAction2 {
     private String TioAccessKey;
     private Double FailCVSS;
     private boolean useOnPrem;
-    private boolean FailMalware;
     private Double HighCVSS;
     private Integer NumOfVulns;
     private boolean malwareDetected;
@@ -43,7 +42,7 @@ public class TioCSAction implements RunAction2 {
     }
 
     public TioCSAction(String name, String ImageTag, String TioRepo, String TioAccessKey,
-        Double FailCVSS,Double HighCVSS, boolean useOnPrem, Integer NumOfVulns, boolean FailMalware,
+        Double FailCVSS,Double HighCVSS, boolean useOnPrem, Integer NumOfVulns,
         boolean malwareDetected, boolean DebugInfo, String Workflow, String ImageSize) {
         this.name = name;
         this.ImageTag = ImageTag;
@@ -53,7 +52,6 @@ public class TioCSAction implements RunAction2 {
         this.HighCVSS = HighCVSS;
         this.useOnPrem = useOnPrem;
         this.NumOfVulns = NumOfVulns;
-        this.FailMalware = FailMalware;
         this.DebugInfo = DebugInfo;
         this.Workflow = Workflow;
         this.ImageSize = ImageSize;
@@ -127,10 +125,6 @@ public class TioCSAction implements RunAction2 {
             return "Not evaluated";
         }
         return NumOfVulns.toString();
-    }
-
-    public boolean getFailMalware() {
-        return FailMalware;
     }
 
     public boolean getuseOnPrem() {

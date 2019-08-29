@@ -46,20 +46,18 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
     private String TioAccessKey;
     private String TioSecretKey;
     private Double FailCVSS;        // If there is a vulnerability with this CVSS or higher, fail the build.
-    private boolean FailMalware;
     private boolean DebugInfo;
     private String Workflow;
 
     @DataBoundConstructor
     public TioCSBuilder(String name, String ImageTag, String TioRepo, String TioAccessKey, String TioSecretKey,
-        Double FailCVSS, boolean FailMalware, boolean DebugInfo, String Workflow) {
+        Double FailCVSS, boolean DebugInfo, String Workflow) {
         this.name = name;
         this.ImageTag = ImageTag;
         this.TioRepo = TioRepo;
         this.TioAccessKey = TioAccessKey;
         this.TioSecretKey = TioSecretKey;
         this.FailCVSS = FailCVSS;
-        this.FailMalware = FailMalware;
         this.DebugInfo = DebugInfo;
         this.Workflow = Workflow;
 
@@ -87,10 +85,6 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
 
     public Double getFailCVSS() {
         return FailCVSS;
-    }
-
-    public boolean getFailMalware() {
-        return FailMalware;
     }
 
     public boolean getDebugInfo() {
@@ -128,10 +122,6 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
 
     public void setFailCVSS(Double FailCVSS) {
         this.FailCVSS = FailCVSS;
-    }
-
-    public void setFailMalware(boolean FailMalware) {
-        this.FailMalware = FailMalware;
     }
 
     public void setDebugInfo(boolean DebugInfo) {
@@ -371,7 +361,7 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
                 }
             }
             if ( Workflow.equals("Test") ) {
-                run.addAction(new TioCSAction(name,ImageTag,TioRepo, TioAccessKey,FailCVSS, highcvss, useOnPrem, NumOfVulns, FailMalware,malwareDetected,DebugInfo,Workflow,imagesize));
+                run.addAction(new TioCSAction(name,ImageTag,TioRepo, TioAccessKey,FailCVSS, highcvss, useOnPrem, NumOfVulns, malwareDetected,DebugInfo,Workflow,imagesize));
             }
         }
 
@@ -379,7 +369,6 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
         if ( Workflow.equals("TestEvaluate") || Workflow.equals("Evaluate") ) {
             listener.getLogger().println("Evaluating the results of the image tests." );
             listener.getLogger().println("Any vulnerability with a CVSS of "+FailCVSS+ " or higher will be considered a failed build." );
-            listener.getLogger().println("Fail build if malware detected: "+FailMalware );
 
             boolean reportReady = false;
             JSONObject responsejson = new JSONObject("{}");
@@ -455,15 +444,12 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
             }
             listener.getLogger().println("Number of malware items found: "+malware.length());
 
-            if ( FailMalware ) {
-                listener.getLogger().println("If malware is detected, this build is set to fail.");
-                if ( Integer.compare(malware.length(),0) > 0 ) {
-                    listener.getLogger().println("Malware detected, so failing the build.");
-                    malwareDetected=true;
-                    run.addAction(new TioCSAction(name,ImageTag,TioRepo, TioAccessKey,FailCVSS, highcvss, useOnPrem, NumOfVulns, FailMalware,malwareDetected,DebugInfo,Workflow,imagesize));
-                } else {
-                    listener.getLogger().println("Malware not detected. Continue with build.");
-                }
+            if ( Integer.compare(malware.length(),0) > 0 ) {
+                listener.getLogger().println("Malware detected in this image.");
+                malwareDetected=true;
+                run.addAction(new TioCSAction(name,ImageTag,TioRepo, TioAccessKey,FailCVSS, highcvss, useOnPrem, NumOfVulns, malwareDetected,DebugInfo,Workflow,imagesize));
+            } else {
+                listener.getLogger().println("Malware not detected. Continue with build.");
             }
 
             //JSONObject vulns=responsejson.getJSONArray("findings");
@@ -487,13 +473,13 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
             if (Double.compare(highcvss,FailCVSS) >= 0 ) {
                 listener.getLogger().println("ERROR: There are vulnerabilities equal to or higher than "+FailCVSS);
                 listener.getLogger().println("ERROR: Failing this build!");
-                run.addAction(new TioCSAction(name,ImageTag,TioRepo, TioAccessKey,FailCVSS, highcvss, useOnPrem, NumOfVulns, FailMalware, malwareDetected,DebugInfo,Workflow,imagesize));
+                run.addAction(new TioCSAction(name,ImageTag,TioRepo, TioAccessKey,FailCVSS, highcvss, useOnPrem, NumOfVulns,  malwareDetected,DebugInfo,Workflow,imagesize));
                 throw new SecurityException();
             } else {
                 listener.getLogger().println("Vulnerabilities are below threshold of "+FailCVSS);
             }
 
-            run.addAction(new TioCSAction(name,ImageTag,TioRepo,  TioAccessKey,FailCVSS, highcvss, useOnPrem, NumOfVulns, FailMalware, malwareDetected,DebugInfo,Workflow,imagesize));
+            run.addAction(new TioCSAction(name,ImageTag,TioRepo,  TioAccessKey,FailCVSS, highcvss, useOnPrem, NumOfVulns, malwareDetected,DebugInfo,Workflow,imagesize));
         }
     }
 
@@ -513,7 +499,7 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
         public FormValidation doCheckName(@QueryParameter String value, @QueryParameter String TioRepo,
             @QueryParameter String TioAccessKey,
             @QueryParameter String TioSecretKey, @QueryParameter boolean useOnPrem, @QueryParameter Double FailCVSS,
-            @QueryParameter boolean FailMalware, @QueryParameter boolean DebugInfo, @QueryParameter String Workflow)
+            @QueryParameter boolean DebugInfo, @QueryParameter String Workflow)
             throws IOException, ServletException {
             if (value.length() == 0)
                 return FormValidation.error(Messages.TioCSBuilder_DescriptorImpl_errors_missingName());

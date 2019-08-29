@@ -31,7 +31,6 @@
             <p>
             <table border="1">
             <tr><td>Fail build when vulnerabilities with CVSS equal to or higher than</td><td>${it.FailCVSS}</td></tr>
-            <tr><td>Fail build when malware is present in image</td><td>${it.FailMalware}</td></tr>
             <tr><td>On-Premise Inspection</td><td>${it.useOnPrem}</td></tr>
             <tr><td>Number of vulnerabilities found</td><td>${it.NumOfVulns}</td></tr>
             <tr><td>Highest CVSS found in image</td><td bgcolor="${it.HighCVSSColour}">${it.HighCVSS}</td></tr>
