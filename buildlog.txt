@@ -90,3 +90,6 @@ August 27, 2019 9:58am
 
 Aug 29, 2019 3:25pm
 * Doing a commit since everything is working nicely.  Going to make some changes and additions
+
+Aug 29, 2019 3:52pm
+* Removed Tenable.io username and password fields, and using the API keys for the docker commands now.  Everything working well.
