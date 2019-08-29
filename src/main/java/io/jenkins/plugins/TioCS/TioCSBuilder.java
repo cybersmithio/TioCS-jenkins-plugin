@@ -37,8 +37,6 @@ import org.jenkinsci.Symbol;
 import org.kohsuke.stapler.DataBoundSetter;
 
 //TODO: Record the testing time duration
-//Done: Record the size of the image
-//TODO: Hide API keys using environment variables.
 public class TioCSBuilder extends Builder implements SimpleBuildStep {
 
     private final String name;
