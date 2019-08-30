@@ -67,7 +67,11 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
         this.TioSecretKey = TioSecretKey;
         this.DebugInfo = DebugInfo;
         this.Workflow = Workflow;
-        this.ScanID= ScanID;
+        if ( ScanID.equals(null) ) {
+            this.ScanID= """;
+        } else {
+            this.ScanID= ScanID;
+        }
         this.ScanTarget= ScanTarget;
 
     }
@@ -613,7 +617,7 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
                 return FormValidation.error(Messages.TioCSBuilder_DescriptorImpl_errors_missingTioSecretKey());
             if ( ! TioSecretKey.matches("^[a-z0-9]*$") )
                 return FormValidation.error(Messages.TioCSBuilder_DescriptorImpl_errors_invalidTioSecretKey());
-            if (ScanID.length() <= 0)
+            if ( ScanID.length() <= 0 )
                 return FormValidation.error(Messages.TioCSBuilder_DescriptorImpl_errors_missingScanID());
             if ( ! ScanID.matches("^[0-9]*$") )
                 return FormValidation.error(Messages.TioCSBuilder_DescriptorImpl_errors_notnumericScanID());
