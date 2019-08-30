@@ -53,7 +53,7 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
     @DataBoundConstructor
     //TODO need to validate input
     public TioCSBuilder(String name, String ImageTag, String TioRepo, String TioAccessKey, String TioSecretKey,
-        boolean DebugInfo, String Workflow, String ScanID) {
+        boolean DebugInfo, String Workflow, String ScanID, String ScanTarget) {
         this.name = name;
 
         if ( !(ImageTag.equals("") ) ) {
