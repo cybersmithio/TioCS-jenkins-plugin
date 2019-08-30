@@ -138,7 +138,7 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
     }
 
 
-    private String getCompliance(TaskListener listener) throws InterruptedException, IOException  {
+    private String getCompliance(TaskListener listener) throws InterruptedException {
         listener.getLogger().println("Retrieving compliance report for container image" );
 
         boolean reportReady = false;
