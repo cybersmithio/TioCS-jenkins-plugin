@@ -27,6 +27,7 @@ public class TioCSAction implements RunAction2 {
     private String Workflow;
     private String ImageSize;
     private String ComplianceStatus;
+    private String ScanID;
 
 
     @Override
@@ -45,7 +46,7 @@ public class TioCSAction implements RunAction2 {
 
     public TioCSAction(String name, String ImageTag, String TioRepo, String TioAccessKey,
         Double HighCVSS, boolean useOnPrem, Integer NumOfVulns, boolean malwareDetected, boolean DebugInfo,
-        String Workflow, String ImageSize, String ComplianceStatus) {
+        String Workflow, String ImageSize, String ComplianceStatus, String ScanID) {
         this.name = name;
         if ( !(ImageTag.equals("") ) ) {
             this.ImageTag=ImageTag;
@@ -84,6 +85,7 @@ public class TioCSAction implements RunAction2 {
         this.DebugInfo = DebugInfo;
         this.ImageSize = ImageSize;
         this.ComplianceStatus = ComplianceStatus;
+        this.ScanID = ScanID;
 
     }
 
@@ -164,6 +166,10 @@ public class TioCSAction implements RunAction2 {
 
     public boolean getDebugInfo() {
         return DebugInfo;
+    }
+
+    public String getScanID() {
+        return ScanID;
     }
 
     @Override

@@ -10,6 +10,12 @@
             </h1>
             <p>
             <table border="1">
+            <tr><td>Scan ID</td><td>${it.ScanID}</td></tr>
+            </table>
+            </p>
+
+            <p>
+            <table border="1">
             <tr><td>Image name</td><td>${it.name}:${it.ImageTag}</td></tr>
             <tr><td>Image size</td><td>${it.ImageSize}</td></tr>
             </table>

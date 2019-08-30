@@ -47,11 +47,12 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
     private String TioSecretKey;
     private boolean DebugInfo;
     private String Workflow;
+    private String ScanID;
 
     @DataBoundConstructor
     //TODO need to validate input
     public TioCSBuilder(String name, String ImageTag, String TioRepo, String TioAccessKey, String TioSecretKey,
-        boolean DebugInfo, String Workflow) {
+        boolean DebugInfo, String Workflow, String ScanID) {
         this.name = name;
 
         if ( !(ImageTag.equals("") ) ) {
@@ -65,6 +66,7 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
         this.TioSecretKey = TioSecretKey;
         this.DebugInfo = DebugInfo;
         this.Workflow = Workflow;
+        this.ScanID= ScanID;
 
     }
 
@@ -99,6 +101,9 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
         return Workflow;
     }
 
+    public String getScanID() {
+        return ScanID;
+    }
 
     @DataBoundSetter
     public void setUseOnPrem(boolean useOnPrem) {
@@ -137,6 +142,9 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
         this.Workflow = Workflow;
     }
 
+    public void setScanID(String ScanID) {
+        this.ScanID = ScanID;
+    }
 
     private String getCompliance(TaskListener listener) throws InterruptedException {
         listener.getLogger().println("Retrieving compliance report for container image" );
@@ -596,7 +604,7 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
             if (TioSecretKey.length() <= 0)
                 return FormValidation.error(Messages.TioCSBuilder_DescriptorImpl_errors_missingTioSecretKey());
             if ( ! TioSecretKey.matches("^[a-z0-9]*$") )
-                return FormValidation.error(Messages.TioCSBuilder_DescriptorImpl_errors_invalidTioSecretKeyKey());
+                return FormValidation.error(Messages.TioCSBuilder_DescriptorImpl_errors_invalidTioSecretKey());
             if (ScanID.length() <= 0)
                 return FormValidation.error(Messages.TioCSBuilder_DescriptorImpl_errors_missingScanID());
             if ( ! ScanID.matches("^[0-9]*$") )
