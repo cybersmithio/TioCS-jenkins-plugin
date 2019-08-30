@@ -68,7 +68,7 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
         this.DebugInfo = DebugInfo;
         this.Workflow = Workflow;
         if ( ScanID.equals(null) ) {
-            this.ScanID= """;
+            this.ScanID= "";
         } else {
             this.ScanID= ScanID;
         }
