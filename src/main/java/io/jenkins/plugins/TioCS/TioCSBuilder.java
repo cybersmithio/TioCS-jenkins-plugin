@@ -582,7 +582,7 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
 
         public ListBoxModel doFillScanFolderItems() {
             ListBoxModel items = new ListBoxModel();
-            if (TioAccessKey.length() != 0 && TioSecretKey.length() != 0) {
+            if (this.TioAccessKey.length() != 0 && this.TioSecretKey.length() != 0) {
                 //TODO Change this to query Tenable.io for the scan names
                 items.add("1","Test Folder 1");
                 items.add("2","Test Folder 2");
