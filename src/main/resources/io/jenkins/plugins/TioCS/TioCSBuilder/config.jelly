@@ -17,7 +17,7 @@
     </f:section>
 
 
-    <f:section title="Tenable.io Vulnerability Management & Web Application Security">
+    <f:section title="Tenable.io Vulnerability Management And Web Application Security">
         <f:entry title="${%ScanID}" field="ScanID">
             <f:textbox />
         </f:entry>
