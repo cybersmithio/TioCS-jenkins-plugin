@@ -55,9 +55,9 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
         this.name = name;
 
         if ( !(ImageTag.equals("") ) ) {
-            this.ImageTag=ImageTag
+            this.ImageTag=ImageTag;
         } else {
-            this.ImageTag = "latest"";
+            this.ImageTag = "latest";
         }
 
         this.TioRepo = TioRepo;
@@ -108,9 +108,9 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
     //TODO need to validate input
     public void setImageTag(String ImageTag) {
         if ( !(ImageTag.equals("") ) ) {
-            this.ImageTag=ImageTag
+            this.ImageTag=ImageTag;
         } else {
-            this.ImageTag = "latest"";
+            this.ImageTag = "latest";
         }
     }
 

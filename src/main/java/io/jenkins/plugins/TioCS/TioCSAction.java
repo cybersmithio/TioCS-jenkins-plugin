@@ -48,9 +48,9 @@ public class TioCSAction implements RunAction2 {
         String Workflow, String ImageSize, String ComplianceStatus) {
         this.name = name;
         if ( !(ImageTag.equals("") ) ) {
-            this.ImageTag=ImageTag
+            this.ImageTag=ImageTag;
         } else {
-            this.ImageTag = "latest"";
+            this.ImageTag = "latest";
         }
         this.TioRepo = TioRepo;
         this.TioAccessKey = TioAccessKey;
@@ -58,7 +58,7 @@ public class TioCSAction implements RunAction2 {
         this.HighCVSS = HighCVSS;
         if ( Workflow.equals("Test")  ) {
             HighCVSSColour="";
-            MalwareColour=""
+            MalwareColour="";
         } else {
             if ( HighCVSS >= 10.0) {
                 HighCVSSColour="#EE3333";
