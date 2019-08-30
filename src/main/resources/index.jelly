@@ -1,4 +1,4 @@
 <?jelly escape-by-default='true'?>
 <div>
-    Vulnerability and malware testing using Tenable.io cloud or on-premise inspector.
+    Container image vulnerability and malware testing using Tenable.io cloud or on-premise inspector.
 </div>

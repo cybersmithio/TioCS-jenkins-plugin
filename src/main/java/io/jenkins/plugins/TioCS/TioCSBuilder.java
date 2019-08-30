@@ -198,7 +198,7 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
                 reportReady = false;
                 continue;
             } catch (JSONException e) {
-                listener.getLogger().println("No report message, so report should be complete.");
+                listener.getLogger().println("No message value returned, so report should be complete.");
             } catch (Exception e) {
                 listener.getLogger().println("Some other unknown exception getting reportMessage: "+e.toString());
                 reportReady = false;

@@ -15,7 +15,7 @@
         <jenkins.version>2.164.1</jenkins.version>
         <java.level>8</java.level>
     </properties>
-    <name>Tenable.io Container Security</name>
+    <name>Tenable.io</name>
     <licenses>
         <license>
             <name>MIT License</name>

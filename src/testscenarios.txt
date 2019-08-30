@@ -3,3 +3,7 @@ Image only being tested
 Image only being evaluated
 Image being tested and evaluated
 Image with malware
+
+
+Image testing in cloud that has vulnerabilities or malware and fails policy compliance
+Image testing in cloud that has vulnerabilities or malware but passes policy compliance
