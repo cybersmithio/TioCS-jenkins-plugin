@@ -585,15 +585,22 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
             @QueryParameter String TioSecretKey, @QueryParameter boolean useOnPrem,
             @QueryParameter boolean DebugInfo, @QueryParameter String Workflow)
             throws IOException, ServletException {
-            if (value.length() == 0)
+            if (value.length() <= 0)
                 return FormValidation.error(Messages.TioCSBuilder_DescriptorImpl_errors_missingName());
-            if (TioRepo.length() == 0)
+            if (TioRepo.length() <= 0)
                 return FormValidation.error(Messages.TioCSBuilder_DescriptorImpl_errors_missingTioRepo());
-            if (TioAccessKey.length() == 0)
+            if (TioAccessKey.length() <= 0)
                 return FormValidation.error(Messages.TioCSBuilder_DescriptorImpl_errors_missingTioAccessKey());
-            if (TioSecretKey.length() == 0)
+            if ( ! TioAccessKey.matches("^[a-z0-9]*$") )
+                return FormValidation.error(Messages.TioCSBuilder_DescriptorImpl_errors_invalidTioAccessKey());
+            if (TioSecretKey.length() <= 0)
                 return FormValidation.error(Messages.TioCSBuilder_DescriptorImpl_errors_missingTioSecretKey());
-
+            if ( ! TioSecretKey.matches("^[a-z0-9]*$") )
+                return FormValidation.error(Messages.TioCSBuilder_DescriptorImpl_errors_invalidTioSecretKeyKey());
+            if (ScanID.length() <= 0)
+                return FormValidation.error(Messages.TioCSBuilder_DescriptorImpl_errors_missingScanID());
+            if ( ! ScanID.matches("^[0-9]*$") )
+                return FormValidation.error(Messages.TioCSBuilder_DescriptorImpl_errors_notnumericScanID());
 
             return FormValidation.ok();
         }

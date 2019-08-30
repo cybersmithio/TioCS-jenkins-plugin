@@ -1,7 +1,7 @@
 <?jelly escape-by-default='true'?>
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form">
 
-    <f:section title="Tenable.io">
+    <f:section title="General Settings">
         <f:entry title="${%Workflow}" field="Workflow">
             <f:select />
         </f:entry>
@@ -35,12 +35,6 @@
         </f:entry>
         <f:entry title="${%TioRepo}" field="TioRepo">
             <f:textbox />
-        </f:entry>
-        <f:entry title="${%TioAccessKey}" field="TioAccessKey">
-            <f:textbox />
-        </f:entry>
-        <f:entry title="${%TioSecretKey}" field="TioSecretKey">
-            <f:password />
         </f:entry>
         <f:entry title="${%OnPremInspector}" field="useOnPrem">
             <f:checkbox />
