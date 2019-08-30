@@ -617,10 +617,12 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
                 return FormValidation.error(Messages.TioCSBuilder_DescriptorImpl_errors_missingTioSecretKey());
             if ( ! TioSecretKey.matches("^[a-z0-9]*$") )
                 return FormValidation.error(Messages.TioCSBuilder_DescriptorImpl_errors_invalidTioSecretKey());
-            if ( ScanID.length() <= 0 )
-                return FormValidation.error(Messages.TioCSBuilder_DescriptorImpl_errors_missingScanID());
-            if ( ! ScanID.matches("^[0-9]*$") )
-                return FormValidation.error(Messages.TioCSBuilder_DescriptorImpl_errors_notnumericScanID());
+            if ( ScanID != null ) {
+                if ( ScanID.length() <= 0 )
+                    return FormValidation.error(Messages.TioCSBuilder_DescriptorImpl_errors_missingScanID());
+                if ( ! ScanID.matches("^[0-9]*$") )
+                    return FormValidation.error(Messages.TioCSBuilder_DescriptorImpl_errors_notnumericScanID());
+            }
 
             return FormValidation.ok();
         }
