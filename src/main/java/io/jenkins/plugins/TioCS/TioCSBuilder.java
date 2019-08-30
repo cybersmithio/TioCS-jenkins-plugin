@@ -48,6 +48,7 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
     private boolean DebugInfo;
     private String Workflow;
     private String ScanID;
+    private String ScanTarget;
 
     @DataBoundConstructor
     //TODO need to validate input
@@ -67,6 +68,7 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
         this.DebugInfo = DebugInfo;
         this.Workflow = Workflow;
         this.ScanID= ScanID;
+        this.ScanTarget= ScanTarget;
 
     }
 
@@ -103,6 +105,10 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
 
     public String getScanID() {
         return ScanID;
+    }
+
+    public String getScanTarget() {
+        return ScanTarget;
     }
 
     @DataBoundSetter
@@ -144,6 +150,10 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
 
     public void setScanID(String ScanID) {
         this.ScanID = ScanID;
+    }
+
+    public void setScanTarget(String ScanTarget) {
+        this.ScanTarget = ScanTarget;
     }
 
     private String getCompliance(TaskListener listener) throws InterruptedException {
@@ -250,8 +260,6 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
             for (String envName : env.keySet()) {
                 listener.getLogger().println("Environment variable list: " + envName+" = " +env.get(envName) );
             }
-            //String envTioAccessKey=System.getenv("TIOACCESSKEY");
-            //listener.getLogger().println("Environment variable: " + envTioAccessKey );
         }
 
         switch(Workflow) {
@@ -565,10 +573,10 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
             listener.getLogger().println("Highest CVSS Score: "+highcvss);
             String ComplianceStatus=getCompliance(listener);
             if ( ComplianceStatus.equals("pass") ) {
-                run.addAction(new TioCSAction(name,ImageTag,TioRepo,  TioAccessKey, highcvss, useOnPrem, NumOfVulns, malwareDetected,DebugInfo,Workflow,imagesize, ComplianceStatus ));
+                run.addAction(new TioCSAction(name,ImageTag,TioRepo,  TioAccessKey, highcvss, useOnPrem, NumOfVulns, malwareDetected,DebugInfo,Workflow,imagesize, ComplianceStatus, ScanID, ScanTarget ));
                 listener.getLogger().println("The image is compliant with the Tenable.io Container Security policy rules.");
             } else  {
-                run.addAction(new TioCSAction(name,ImageTag,TioRepo,  TioAccessKey, highcvss, useOnPrem, NumOfVulns, malwareDetected,DebugInfo,Workflow,imagesize, ComplianceStatus));
+                run.addAction(new TioCSAction(name,ImageTag,TioRepo,  TioAccessKey, highcvss, useOnPrem, NumOfVulns, malwareDetected,DebugInfo,Workflow,imagesize, ComplianceStatus, ScanID, ScanTarget));
                 listener.getLogger().println("ERROR: The image is non-compliant with the Tenable.io Container Security policy rules.");
                 throw new SecurityException();
             }
@@ -591,7 +599,7 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
         public FormValidation doCheckName(@QueryParameter String value, @QueryParameter String TioRepo,
             @QueryParameter String TioAccessKey,
             @QueryParameter String TioSecretKey, @QueryParameter boolean useOnPrem,
-            @QueryParameter boolean DebugInfo, @QueryParameter String Workflow)
+            @QueryParameter boolean DebugInfo, @QueryParameter String Workflow, String ScanID, String ScanTarget)
             throws IOException, ServletException {
             if (value.length() <= 0)
                 return FormValidation.error(Messages.TioCSBuilder_DescriptorImpl_errors_missingName());

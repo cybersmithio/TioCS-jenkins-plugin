@@ -11,6 +11,7 @@
             <p>
             <table border="1">
             <tr><td>Scan ID</td><td>${it.ScanID}</td></tr>
+            <tr><td>Scan Target</td><td>${it.ScanTarget}</td></tr>
             </table>
             </p>
 
