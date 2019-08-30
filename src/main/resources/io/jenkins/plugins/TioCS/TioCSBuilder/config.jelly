@@ -21,7 +21,7 @@
         <f:entry title="${%ScanID}" field="ScanID">
             <f:select />
         </f:entry>
-        <f:entry title="${%ScanTarget}" field="Scan Target">
+        <f:entry title="${%ScanTarget}" field="ScanTarget">
             <f:textbox />
         </f:entry>
     </f:section>
