@@ -138,7 +138,7 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
     }
 
 
-    private String getCompliance() {
+    private String getCompliance(TaskListener listener) {
         listener.getLogger().println("Retrieving compliance report for container image" );
 
         boolean reportReady = false;
@@ -555,7 +555,7 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
                 }
             }
             listener.getLogger().println("Highest CVSS Score: "+highcvss);
-            String ComplianceStatus=getCompliance();
+            String ComplianceStatus=getCompliance(listener);
             if ( ComplianceStatus.equals("pass") ) {
                 run.addAction(new TioCSAction(name,ImageTag,TioRepo,  TioAccessKey, highcvss, useOnPrem, NumOfVulns, malwareDetected,DebugInfo,Workflow,imagesize, ComplianceStatus ));
                 listener.getLogger().println("The image is compliant with the Tenable.io Container Security policy rules.");
