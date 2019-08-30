@@ -35,11 +35,4 @@
         </f:entry>
     </f:section>
 
-    <f:section title="Image testing workflow">
-        <f:entry title="${%FailCVSS}" field="FailCVSS">
-            <f:textbox />
-        </f:entry>
-    </f:section>
-
-
 </j:jelly>

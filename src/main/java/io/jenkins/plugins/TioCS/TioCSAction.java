@@ -17,14 +17,16 @@ public class TioCSAction implements RunAction2 {
     private String ImageTag;
 
     private String TioAccessKey;
-    private Double FailCVSS;
     private boolean useOnPrem;
     private Double HighCVSS;
+    private String HighCVSSColour;
     private Integer NumOfVulns;
     private boolean malwareDetected;
+    private String MalwareColour;
     private boolean DebugInfo;
     private String Workflow;
     private String ImageSize;
+    private String ComplianceStatus;
 
 
     @Override
@@ -42,19 +44,46 @@ public class TioCSAction implements RunAction2 {
     }
 
     public TioCSAction(String name, String ImageTag, String TioRepo, String TioAccessKey,
-        Double FailCVSS,Double HighCVSS, boolean useOnPrem, Integer NumOfVulns,
-        boolean malwareDetected, boolean DebugInfo, String Workflow, String ImageSize) {
+        Double HighCVSS, boolean useOnPrem, Integer NumOfVulns, boolean malwareDetected, boolean DebugInfo,
+        String Workflow, String ImageSize, String ComplianceStatus) {
         this.name = name;
-        this.ImageTag = ImageTag;
+        if ( !(ImageTag.equals("") ) ) {
+            this.ImageTag=ImageTag
+        } else {
+            this.ImageTag = "latest"";
+        }
         this.TioRepo = TioRepo;
         this.TioAccessKey = TioAccessKey;
-        this.FailCVSS = FailCVSS;
+        this.Workflow = Workflow;
         this.HighCVSS = HighCVSS;
+        if ( Workflow.equals("Test")  ) {
+            HighCVSSColour="";
+            MalwareColour=""
+        } else {
+            if ( HighCVSS >= 10.0) {
+                HighCVSSColour="#EE3333";
+            } else if ( HighCVSS >= 7.0) {
+                HighCVSSColour="#FA8304";
+            } else if ( HighCVSS >= 4.0) {
+                HighCVSSColour="#FCC326";
+            } else if ( HighCVSS >= 0.1) {
+                HighCVSSColour="#3FAD29";
+            } else {
+                HighCVSSColour="#357ABD";
+            }
+            if ( malwareDetected ) {
+                return "#EE3333";
+            } else {
+                return "#3FAD29";
+            }
+
+        }
+
         this.useOnPrem = useOnPrem;
         this.NumOfVulns = NumOfVulns;
         this.DebugInfo = DebugInfo;
-        this.Workflow = Workflow;
         this.ImageSize = ImageSize;
+        this.ComplianceStatus = ComplianceStatus;
 
     }
 
@@ -87,10 +116,6 @@ public class TioCSAction implements RunAction2 {
         return TioAccessKey;
     }
 
-    public Double getFailCVSS() {
-        return FailCVSS;
-    }
-
     public String getHighCVSS() {
         if ( Workflow.equals("Test")  ) {
             return "Not evaluated";
@@ -100,25 +125,8 @@ public class TioCSAction implements RunAction2 {
 
     //That's right, I spelled colour the proper way.
     public String getHighCVSSColour() {
-        if ( Workflow.equals("Test")  ) {
-            return "";
-        }
-        if ( HighCVSS >= 10.0) {
-            return "#EE3333";
-        }
-        if ( HighCVSS >= 7.0) {
-            return "#FA8304";
-        }
-        if ( HighCVSS >= 4.0) {
-            return "#FCC326";
-        }
-        if ( HighCVSS >= 0.1) {
-            return "#3FAD29";
-        }
-        return "#357ABD";
-
+        return HighCVSSColour;
     }
-
 
     public String getNumOfVulns() {
         if ( Workflow.equals("Test")  ) {
@@ -135,7 +143,11 @@ public class TioCSAction implements RunAction2 {
         return ImageSize;
     }
 
-    public String getmalwareDetected() {
+    public String getComplianceStatus() {
+        return ComplianceStatus;
+    }
+
+    public String getMalwareDetected() {
         if ( Workflow.equals("Test")  ) {
             return "Not evaluated";
         }
@@ -147,18 +159,8 @@ public class TioCSAction implements RunAction2 {
     }
 
     public String getMalwareColour() {
-        if ( Workflow.equals("Test")  ) {
-            return "";
-        }
-
-        if ( malwareDetected ) {
-            return "#EE3333";
-        }
-        return "#3FAD29";
-
-
+        return MalwareColour;
     }
-
 
     public boolean getDebugInfo() {
         return DebugInfo;
@@ -167,9 +169,6 @@ public class TioCSAction implements RunAction2 {
     @Override
     public String getIconFileName() {
         return "/plugin/TioCS/images/tenable-icon.png";
-        //return "/plugin/tiocs/images/24x24/tenable-icon.png";
-        //return "/tenable-icon.png";
-        //return "/jenkins/plugin/TioCS/tenable-icon.png";
     }
 
     @Override
