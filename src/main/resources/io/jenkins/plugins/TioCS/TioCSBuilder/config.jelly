@@ -17,17 +17,25 @@
     </f:section>
 
 
-    <f:section title="Tenable.io Vulnerability Management">
-        <f:entry title="${%ScanFolder}" field="ScanFolder">
-            <f:select />
-        </f:entry>
-        <f:entry title="${%ScanName}" field="ScanName">
+    <f:section title="Tenable.io Vulnerability Management & Web Application Security">
+        <f:entry title="${%ScanID}" field="ScanID">
             <f:select />
         </f:entry>
         <f:entry title="${%ScanTarget}" field="Scan Target">
             <f:textbox />
         </f:entry>
     </f:section>
+
+    <f:section title="Tenable.io Web Application Scanning">
+        <f:entry title="${%VMScanID}" field="VMScanID">
+            <f:select />
+        </f:entry>
+        <f:entry title="${%ScanTarget}" field="Scan Target">
+            <f:textbox />
+        </f:entry>
+    </f:section>
+
+
 
     <f:section title="Tenable.io Container Security">
         <f:entry title="${%Name}" field="name">
