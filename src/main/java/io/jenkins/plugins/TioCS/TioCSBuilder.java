@@ -447,7 +447,7 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
                 }
             }
             if ( Workflow.equals("Test") ) {
-                run.addAction(new TioCSAction(name,ImageTag,TioRepo, TioAccessKey, highcvss, useOnPrem, NumOfVulns, malwareDetected,DebugInfo,Workflow,imagesize));
+                run.addAction(new TioCSAction(name,ImageTag,TioRepo, TioAccessKey, highcvss, useOnPrem, NumOfVulns, malwareDetected,DebugInfo,Workflow,imagesize,""));
             }
         }
 
