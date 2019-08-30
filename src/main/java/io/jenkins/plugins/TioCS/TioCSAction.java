@@ -72,9 +72,9 @@ public class TioCSAction implements RunAction2 {
                 HighCVSSColour="#357ABD";
             }
             if ( malwareDetected ) {
-                return "#EE3333";
+                MalwareColour="#EE3333";
             } else {
-                return "#3FAD29";
+                MalwareColour="#3FAD29";
             }
 
         }
