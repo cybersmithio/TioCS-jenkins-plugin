@@ -93,3 +93,6 @@ Aug 29, 2019 3:25pm
 
 Aug 29, 2019 3:52pm
 * Removed Tenable.io username and password fields, and using the API keys for the docker commands now.  Everything working well.
+
+August 29, 2019 3:18pm
+* Everything is working again! Time to refactor.  Going to have a dropdown box that selects VM/WAS scan versus Container Security test.
