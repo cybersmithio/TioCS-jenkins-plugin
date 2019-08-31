@@ -594,9 +594,10 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
 
         public ListBoxModel doFillWorkflowItems() {
             ListBoxModel items = new ListBoxModel();
-            items.add("Test the image and evaluate","TestEvaluate");
-            items.add("Only test the image (In cloud or on-prem)","Test");
-            items.add("Only evaluate the image report","Evaluate");
+            items.add("VM/WAS: Launch active scan","Scan");
+            items.add("CS: Test the image and evaluate","TestEvaluate");
+            items.add("CS: Only test the image (In cloud or on-prem)","Test");
+            items.add("CS: Only evaluate the image report","Evaluate");
             return items;
         }
 
