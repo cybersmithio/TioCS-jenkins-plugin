@@ -270,6 +270,9 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
         }
 
         switch(Workflow) {
+            case "Scan":
+                listener.getLogger().println("Launching scan.");
+                break;
             case "Test":
                 listener.getLogger().println("Only testing the image.");
                 break;
@@ -280,6 +283,66 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
                 listener.getLogger().println("Both testing the image and evaluating the results.");
                 break;
         }
+
+
+        //Launch Active Scan (WAS or VM)
+        if ( Workflow.equals("Scan") ) {
+            listener.getLogger().println("Launching scan" );
+
+            boolean reportReady = false;
+            JSONObject responsejson = new JSONObject("{}");
+
+            listener.getLogger().println("Launching scan with ID " + ScanID + " from Tenable.io API");
+            String jsonstring="";
+            try {
+                URL myUrl = new URL("https://cloud.tenable.com/scans/"+ScanID+"/launch");
+                HttpsURLConnection conn = (HttpsURLConnection)myUrl.openConnection();
+                conn.setRequestProperty("x-apikeys","accessKey="+TioAccessKey+";secretKey="+TioSecretKey);
+                conn.setRequestProperty("accept","application/json");
+
+                InputStream is = conn.getInputStream();
+                InputStreamReader isr = new InputStreamReader(is);
+                BufferedReader br = new BufferedReader(isr);
+
+                String inputLine;
+
+                while ((inputLine = br.readLine()) != null) {
+                    jsonstring=jsonstring+inputLine;
+                }
+
+                br.close();
+            } catch (Exception e) {
+                listener.getLogger().println("Error getting image report.  Tenable.io is likely still creating it.");
+                reportReady=false;
+                continue;
+            }
+
+            //See if the JSON string from Tenable.io is valid.  If not, it is likely the report is still generating.
+            if ( DebugInfo ) {
+                listener.getLogger().println("Attempting to parse JSON string into JSON object:"+jsonstring);
+            }
+            try {
+                responsejson = new JSONObject(jsonstring);
+            } catch (Exception e) {
+                listener.getLogger().println("Didn't get any valid JSON back, so looks like report is still processing.");
+                reportReady=false;
+                continue;
+            }
+
+            //Check the JSON to see if the report is finished.
+            if ( DebugInfo ) {
+                listener.getLogger().println("DEBUG: JSON received:"+responsejson.toString());
+            }
+            try {
+                String scanuuid = responsejson.getString("scan_uuid");
+                listener.getLogger().println("Scan UUID:"+scanuuid);
+            } catch (JSONException e) {
+                listener.getLogger().println("ERROR: A scan UUID was not found, so the scan was likely not launched properly.");
+            } catch (Exception e) {
+                listener.getLogger().println("ERROR: A scan UUID was not found, so the scan was likely not launched properly.");
+            }
+        }
+
 
         if ( Workflow.equals("TestEvaluate") || Workflow.equals("Test") ) {
             listener.getLogger().println("Starting image testing.  Results will go into Tenable.io repository "+TioRepo);
