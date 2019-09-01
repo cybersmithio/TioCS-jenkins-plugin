@@ -50,7 +50,6 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
     private String ScanID;
     private String ScanTarget;
     private boolean WaitForScanFinish;
-    private String ScanUUID;
 
     @DataBoundConstructor
     //TODO need to validate input
@@ -77,8 +76,6 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
             this.ScanID= ScanID;
         }
         this.ScanTarget= ScanTarget;
-        this.ScanUUID="";
-
     }
 
     public String getName() {
@@ -175,8 +172,10 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
         this.ScanTarget = ScanTarget;
     }
 
+    // Waits for an active scan to finish.  It uses the stored private variables to see what the scan ID is.
+
     private void waitForScanToFinish(TaskListener listener) throws InterruptedException {
-        listener.getLogger().println("Waiting for scan to finish.  Scan UUID"+this.ScanUUID );
+        listener.getLogger().println("Waiting for scan to finish.  Scan ID"+this.ScanID );
 
         boolean scanComplete = false;
         JSONObject responsejson = new JSONObject("{}");
@@ -187,7 +186,7 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
             String jsonstring="";
             try {
                 URL myUrl = new URL("https://cloud.tenable.com/scans/"+ScanID+"/latest-status");
-                listener.getLogger().println("Retrieving scan status for scan UUID " + this.ScanUUID);
+                listener.getLogger().println("Retrieving scan status for scan ID " + this.ScanID);
                 HttpsURLConnection conn = (HttpsURLConnection)myUrl.openConnection();
                 conn.setRequestMethod("GET");
                 conn.setRequestProperty("x-apikeys","accessKey="+TioAccessKey+";secretKey="+TioSecretKey);
@@ -333,6 +332,65 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
         return "";
     }
 
+    // Launches an active scan by the scan ID stored in the private variables.  It does not wait for the scan to finish.
+    private String launchActiveScan(TaskListener listener) throws InterruptedException {
+        listener.getLogger().println("Launching scan" );
+
+        boolean reportReady = false;
+        JSONObject responsejson = new JSONObject("{}");
+
+        listener.getLogger().println("Launching scan with ID " + ScanID + " from Tenable.io API");
+        String jsonstring="";
+        try {
+            URL myUrl = new URL("https://cloud.tenable.com/scans/"+ScanID+"/launch");
+            listener.getLogger().println("Launching scan with ID " + ScanID + " from Tenable.io API: "+"https://cloud.tenable.com/scans/"+ScanID+"/launch");
+            HttpsURLConnection conn = (HttpsURLConnection)myUrl.openConnection();
+            conn.setRequestMethod("POST");
+            conn.setRequestProperty("x-apikeys","accessKey="+TioAccessKey+";secretKey="+TioSecretKey);
+            conn.setRequestProperty("accept","application/json");
+
+            InputStream is = conn.getInputStream();
+            InputStreamReader isr = new InputStreamReader(is);
+            BufferedReader br = new BufferedReader(isr);
+
+            String inputLine;
+
+            while ((inputLine = br.readLine()) != null) {
+                jsonstring=jsonstring+inputLine;
+            }
+
+            br.close();
+        } catch (Exception e) {
+            listener.getLogger().println("ERROR launching scan.  Check in Tenable.io if it was launched.");
+            listener.getLogger().println(e);
+        }
+
+        //See if the JSON string from Tenable.io is valid.  If not, there may have been a problem launching the scan.
+        if ( DebugInfo ) {
+            listener.getLogger().println("Attempting to parse JSON string into JSON object:"+jsonstring);
+        }
+        try {
+            responsejson = new JSONObject(jsonstring);
+        } catch (Exception e) {
+            listener.getLogger().println("ERROR: Didn't get any valid JSON back.  Check in Tenable.io if scan was launched.");
+        }
+
+        //Check the JSON to see if we got a valid scan UUID back.
+        if ( DebugInfo ) {
+            listener.getLogger().println("DEBUG: JSON received:"+responsejson.toString());
+        }
+
+        try {
+            String scanuuid = responsejson.getString("scan_uuid");
+            listener.getLogger().println("Scan UUID:"+scanuuid);
+        } catch (JSONException e) {
+            listener.getLogger().println("ERROR: A scan UUID was not found.  Check in Tenable.io if scan was launched.");
+        } catch (Exception e) {
+            listener.getLogger().println("ERROR: A scan UUID was not found.  Check in Tenable.io if scan was launched.");
+        }
+    }
+
+
     @Override
     public void perform(Run<?, ?> run, FilePath workspace, Launcher launcher, TaskListener listener) throws InterruptedException, IOException {
         Double highcvss=0.0;
@@ -371,67 +429,13 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
 
         //Launch Active Scan (WAS or VM)
         if ( Workflow.equals("Scan") ) {
-            listener.getLogger().println("Launching scan" );
-
-            boolean reportReady = false;
-            JSONObject responsejson = new JSONObject("{}");
-
-            listener.getLogger().println("Launching scan with ID " + ScanID + " from Tenable.io API");
-            String jsonstring="";
-            try {
-                URL myUrl = new URL("https://cloud.tenable.com/scans/"+ScanID+"/launch");
-                listener.getLogger().println("Launching scan with ID " + ScanID + " from Tenable.io API: "+"https://cloud.tenable.com/scans/"+ScanID+"/launch");
-                HttpsURLConnection conn = (HttpsURLConnection)myUrl.openConnection();
-                conn.setRequestMethod("POST");
-                conn.setRequestProperty("x-apikeys","accessKey="+TioAccessKey+";secretKey="+TioSecretKey);
-                conn.setRequestProperty("accept","application/json");
-
-
-                InputStream is = conn.getInputStream();
-                InputStreamReader isr = new InputStreamReader(is);
-                BufferedReader br = new BufferedReader(isr);
-
-                String inputLine;
-
-                while ((inputLine = br.readLine()) != null) {
-                    jsonstring=jsonstring+inputLine;
-                }
-
-                br.close();
-            } catch (Exception e) {
-                listener.getLogger().println("ERROR launching scan.  Check in Tenable.io if it was launched.");
-                listener.getLogger().println(e);
-            }
-
-            //See if the JSON string from Tenable.io is valid.  If not, there may have been a problem launching the scan.
-            if ( DebugInfo ) {
-                listener.getLogger().println("Attempting to parse JSON string into JSON object:"+jsonstring);
-            }
-            try {
-                responsejson = new JSONObject(jsonstring);
-            } catch (Exception e) {
-                listener.getLogger().println("ERROR: Didn't get any valid JSON back.  Check in Tenable.io if scan was launched.");
-            }
-
-            //Check the JSON to see if we got a valid scan UUID back.
-            if ( DebugInfo ) {
-                listener.getLogger().println("DEBUG: JSON received:"+responsejson.toString());
-            }
-            try {
-                String scanuuid = responsejson.getString("scan_uuid");
-                listener.getLogger().println("Scan UUID:"+scanuuid);
-            } catch (JSONException e) {
-                listener.getLogger().println("ERROR: A scan UUID was not found.  Check in Tenable.io if scan was launched.");
-            } catch (Exception e) {
-                listener.getLogger().println("ERROR: A scan UUID was not found.  Check in Tenable.io if scan was launched.");
-            }
+            launchActiveScan(listener);
 
             if ( WaitForScanFinish ) {
                 listener.getLogger().println("Wait for scan to finish as requested...");
                 waitForScanToFinish(listener);
             }
         }
-
 
         if ( Workflow.equals("TestEvaluate") || Workflow.equals("Test") ) {
             listener.getLogger().println("Starting image testing.  Results will go into Tenable.io repository "+TioRepo);
