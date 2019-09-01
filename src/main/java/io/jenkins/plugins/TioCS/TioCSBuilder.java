@@ -627,12 +627,13 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
                 if ( ! ScanID.matches("^[0-9]*$") )
                     return FormValidation.error(Messages.TioCSBuilder_DescriptorImpl_errors_notnumericScanID());
             } else {
-                 if (value.length() <= 0)
-                return FormValidation.error(Messages.TioCSBuilder_DescriptorImpl_errors_missingName());
+                if (value.length() <= 0)
+                    return FormValidation.error(Messages.TioCSBuilder_DescriptorImpl_errors_missingName());
                 if (TioRepo.length() <= 0)
                     return FormValidation.error(Messages.TioCSBuilder_DescriptorImpl_errors_missingTioRepo());
-                if ( ScanID.length() > 0 )
-                    return FormValidation.error(Messages.TioCSBuilder_DescriptorImpl_errors_includedScanIDWhenTesting());
+                if ( ScanID != null )
+                    if ( ScanID.length() > 0 )
+                        return FormValidation.error(Messages.TioCSBuilder_DescriptorImpl_errors_includedScanIDWhenTesting());
             }
 
 
