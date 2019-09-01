@@ -383,7 +383,7 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
         }
 
         try {
-            String scanuuid = responsejson.getString("scan_uuid");
+            scanuuid = responsejson.getString("scan_uuid");
             listener.getLogger().println("Scan UUID:"+scanuuid);
         } catch (JSONException e) {
             listener.getLogger().println("ERROR: A scan UUID was not found.  Check in Tenable.io if scan was launched.");
