@@ -49,11 +49,13 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
     private String Workflow;
     private String ScanID;
     private String ScanTarget;
+    private boolean WaitForScanFinish;
+    private String ScanUUID;
 
     @DataBoundConstructor
     //TODO need to validate input
     public TioCSBuilder(String name, String ImageTag, String TioRepo, String TioAccessKey, String TioSecretKey,
-        boolean DebugInfo, String Workflow, String ScanID, String ScanTarget) {
+        boolean DebugInfo, String Workflow, String ScanID, String ScanTarget, boolean WaitForScanFinish) {
         this.name = name;
 
         if ( (ImageTag.equals("") ) ) {
@@ -67,6 +69,7 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
         this.TioAccessKey = TioAccessKey;
         this.TioSecretKey = TioSecretKey;
         this.DebugInfo = DebugInfo;
+        this.WaitForScanFinish = WaitForScanFinish;
         this.Workflow = Workflow;
         if ( ScanID == null ) {
             this.ScanID= "";
@@ -74,6 +77,7 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
             this.ScanID= ScanID;
         }
         this.ScanTarget= ScanTarget;
+        this.ScanUUID="";
 
     }
 
@@ -99,6 +103,10 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
 
     public boolean getDebugInfo() {
         return DebugInfo;
+    }
+
+    public boolean getWaitForScanFinish() {
+        return WaitForScanFinish;
     }
 
     public boolean isUseOnPrem() {
@@ -151,6 +159,10 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
         this.DebugInfo = DebugInfo;
     }
 
+    public void setWaitForScanFinish(boolean WaitForScanFinish) {
+        this.WaitForScanFinish = WaitForScanFinish;
+    }
+
     public void setWorkflow(String Workflow) {
         this.Workflow = Workflow;
     }
@@ -161,6 +173,79 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
 
     public void setScanTarget(String ScanTarget) {
         this.ScanTarget = ScanTarget;
+    }
+
+    private void waitForScanToFinish(TaskListener listener) throws InterruptedException {
+        listener.getLogger().println("Waiting for scan to finish.  Scan UUID"+this.ScanUUID );
+
+        boolean scanComplete = false;
+        JSONObject responsejson = new JSONObject("{}");
+
+        //Wait 10 seconds for the report to generate and keep looping (waiting 10 seconds) until the report is ready.
+        while ( ! scanComplete  ) {
+            Thread.sleep(30000);
+            String jsonstring="";
+            try {
+                URL myUrl = new URL("https://cloud.tenable.com/scans/"+ScanID+"/latest-status");
+                listener.getLogger().println("Retrieving scan status for scan UUID " + +this.ScanUUID);
+                HttpsURLConnection conn = (HttpsURLConnection)myUrl.openConnection();
+                conn.setRequestMethod("GET");
+                conn.setRequestProperty("x-apikeys","accessKey="+TioAccessKey+";secretKey="+TioSecretKey);
+                conn.setRequestProperty("accept","application/json");
+
+                InputStream is = conn.getInputStream();
+                InputStreamReader isr = new InputStreamReader(is);
+                BufferedReader br = new BufferedReader(isr);
+
+                String inputLine;
+
+                while ((inputLine = br.readLine()) != null) {
+                    jsonstring=jsonstring+inputLine;
+                }
+
+                br.close();
+            } catch (Exception e) {
+                listener.getLogger().println("Error getting scan status.  Tenable.io is likely still creating it.");
+                scanComplete=false;
+                continue;
+            }
+
+            //See if the JSON string from Tenable.io is valid.  If not, it is likely the report is still generating.
+            if ( DebugInfo ) {
+                listener.getLogger().println("Attempting to parse JSON string into JSON object:"+jsonstring);
+            }
+
+            try {
+                responsejson = new JSONObject(jsonstring);
+            } catch (Exception e) {
+                listener.getLogger().println("Didn't get any valid JSON back.");
+                scanComplete=false;
+                continue;
+            }
+
+            //Check the JSON to see if the report is finished.
+            if ( DebugInfo ) {
+                listener.getLogger().println("DEBUG: JSON received:"+responsejson.toString());
+            }
+
+            try {
+                String scanstatus = responsejson.getString("status");
+                listener.getLogger().println("Scan status:"+scanstatus);
+                if( scanstatus.equals("complete") ) {
+                    scanComplete = true;
+                    listener.getLogger().println("Scan has completed");
+                }
+
+            } catch (JSONException e) {
+                scanComplete = false;
+                listener.getLogger().println("Exception: No scan status:"+e.toString());
+                continue;
+            } catch (Exception e) {
+                scanComplete = false;
+                listener.getLogger().println("Some other unknown exception: "+e.toString());
+                continue;
+            }
+        }
     }
 
     private String getCompliance(TaskListener listener) throws InterruptedException {
@@ -340,6 +425,10 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
                 listener.getLogger().println("ERROR: A scan UUID was not found.  Check in Tenable.io if scan was launched.");
             } catch (Exception e) {
                 listener.getLogger().println("ERROR: A scan UUID was not found.  Check in Tenable.io if scan was launched.");
+            }
+
+            if ( WaitForScanFinish(listener) ) {
+                listener.getLogger().println("Wait for scan to finish as requested...");
             }
         }
 
@@ -671,7 +760,7 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
             @QueryParameter String TioAccessKey, @QueryParameter String ImageTag,
             @QueryParameter String TioSecretKey, @QueryParameter boolean useOnPrem,
             @QueryParameter boolean DebugInfo, @QueryParameter String Workflow, @QueryParameter String ScanID,
-            @QueryParameter String ScanTarget)
+            @QueryParameter String ScanTarget, @QueryParameter boolean WaitForScanFinish)
             throws IOException, ServletException {
             if (TioAccessKey.length() <= 0)
                 return FormValidation.error(Messages.TioCSBuilder_DescriptorImpl_errors_missingTioAccessKey());
@@ -701,6 +790,8 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
                 if ( ScanID != null )
                     if ( ScanID.length() > 0 )
                         return FormValidation.error(Messages.TioCSBuilder_DescriptorImpl_errors_includedScanIDWhenTesting());
+                if ( WaitForScanFinish )
+                    return FormValidation.error(Messages.TioCSBuilder_DescriptorImpl_errors_includedWaitForScanFinishWhenTesting());
             }
 
 

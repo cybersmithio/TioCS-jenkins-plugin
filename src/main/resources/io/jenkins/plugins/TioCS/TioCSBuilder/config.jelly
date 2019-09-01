@@ -24,6 +24,10 @@
         <f:entry title="${%ScanTarget}" field="ScanTarget">
             <f:textbox />
         </f:entry>
+        <f:entry title="${%WaitForScanFinish}" field="WaitForScanFinish">
+            <f:checkbox />
+        </f:entry>
+
     </f:section>
 
     <f:section title="Tenable.io Container Security">
