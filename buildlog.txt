@@ -99,3 +99,6 @@ August 29, 2019 3:18pm
 
 September 1, 2019 1:41pm
 * Active scanning is working.  It can optionally wait for the scan to finish after launching.  Time to tidy up the code a bit by breaking up things into class methods.
+
+September 1, 2019 2:58pm
+* Launching scans works, and some input field validation is being done.  Added custom targets to active scans.
