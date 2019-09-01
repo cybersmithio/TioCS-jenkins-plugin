@@ -606,10 +606,6 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
             @QueryParameter String TioSecretKey, @QueryParameter boolean useOnPrem,
             @QueryParameter boolean DebugInfo, @QueryParameter String Workflow, String ScanID, String ScanTarget)
             throws IOException, ServletException {
-            if (value.length() <= 0)
-                return FormValidation.error(Messages.TioCSBuilder_DescriptorImpl_errors_missingName());
-            if (TioRepo.length() <= 0)
-                return FormValidation.error(Messages.TioCSBuilder_DescriptorImpl_errors_missingTioRepo());
             if (TioAccessKey.length() <= 0)
                 return FormValidation.error(Messages.TioCSBuilder_DescriptorImpl_errors_missingTioAccessKey());
             if ( ! TioAccessKey.matches("^[a-z0-9]*$") )
@@ -618,12 +614,28 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
                 return FormValidation.error(Messages.TioCSBuilder_DescriptorImpl_errors_missingTioSecretKey());
             if ( ! TioSecretKey.matches("^[a-z0-9]*$") )
                 return FormValidation.error(Messages.TioCSBuilder_DescriptorImpl_errors_invalidTioSecretKey());
-            if ( ScanID != null ) {
+
+            if ( Workflow.equals("Scan") ) {
+                if (value.length() > 0)
+                    return FormValidation.error(Messages.TioCSBuilder_DescriptorImpl_errors_includedImageNameWhenScanning());
+                if (TioRepo.length() > 0)
+                    return FormValidation.error(Messages.TioCSBuilder_DescriptorImpl_errors_includedRepoWhenScanning());
+                if (ImageTag.length() > 0)
+                    return FormValidation.error(Messages.TioCSBuilder_DescriptorImpl_errors_includedLocalImageTagWhenScanning());
                 if ( ScanID.length() <= 0 )
                     return FormValidation.error(Messages.TioCSBuilder_DescriptorImpl_errors_missingScanID());
                 if ( ! ScanID.matches("^[0-9]*$") )
                     return FormValidation.error(Messages.TioCSBuilder_DescriptorImpl_errors_notnumericScanID());
+            } else {
+                 if (value.length() <= 0)
+                return FormValidation.error(Messages.TioCSBuilder_DescriptorImpl_errors_missingName());
+                if (TioRepo.length() <= 0)
+                    return FormValidation.error(Messages.TioCSBuilder_DescriptorImpl_errors_missingTioRepo());
+                if ( ScanID.length() > 0 )
+                    return FormValidation.error(Messages.TioCSBuilder_DescriptorImpl_errors_includedScanIDWhenTesting());
             }
+
+
 
             return FormValidation.ok();
         }
