@@ -312,24 +312,21 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
 
                 br.close();
             } catch (Exception e) {
-                listener.getLogger().println("Error getting image report.  Tenable.io is likely still creating it.");
+                listener.getLogger().println("ERROR launching scan.  Check in Tenable.io if it was launched.");
                 reportReady=false;
-                continue;
             }
 
-            //See if the JSON string from Tenable.io is valid.  If not, it is likely the report is still generating.
+            //See if the JSON string from Tenable.io is valid.  If not, there may have been a problem launching the scan.
             if ( DebugInfo ) {
                 listener.getLogger().println("Attempting to parse JSON string into JSON object:"+jsonstring);
             }
             try {
                 responsejson = new JSONObject(jsonstring);
             } catch (Exception e) {
-                listener.getLogger().println("Didn't get any valid JSON back, so looks like report is still processing.");
-                reportReady=false;
-                continue;
+                listener.getLogger().println("ERROR: Didn't get any valid JSON back.  Check in Tenable.io if scan was launched.");
             }
 
-            //Check the JSON to see if the report is finished.
+            //Check the JSON to see if we got a valid scan UUID back.
             if ( DebugInfo ) {
                 listener.getLogger().println("DEBUG: JSON received:"+responsejson.toString());
             }
@@ -337,9 +334,9 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
                 String scanuuid = responsejson.getString("scan_uuid");
                 listener.getLogger().println("Scan UUID:"+scanuuid);
             } catch (JSONException e) {
-                listener.getLogger().println("ERROR: A scan UUID was not found, so the scan was likely not launched properly.");
+                listener.getLogger().println("ERROR: A scan UUID was not found.  Check in Tenable.io if scan was launched.");
             } catch (Exception e) {
-                listener.getLogger().println("ERROR: A scan UUID was not found, so the scan was likely not launched properly.");
+                listener.getLogger().println("ERROR: A scan UUID was not found.  Check in Tenable.io if scan was launched.");
             }
         }
 
