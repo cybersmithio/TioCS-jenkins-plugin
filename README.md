@@ -21,4 +21,4 @@ https://wiki.jenkins.io/display/JENKINS/Jelly+form+controls
 https://wiki.jenkins.io/display/JENKINS/Writing+a+foldable+section+controlled+by+a+checkbox
 https://github.com/jenkinsci/credentials-plugin
 https://docs.oracle.com/javase/7/docs/api/java/lang/ProcessBuilder.html
-https://www.baeldung.com/httpurlconnection-post
+https://stackoverflow.com/questions/21404252/post-request-send-json-data-java-httpurlconnection
