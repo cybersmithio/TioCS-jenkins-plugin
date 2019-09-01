@@ -56,10 +56,11 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
         boolean DebugInfo, String Workflow, String ScanID, String ScanTarget) {
         this.name = name;
 
-        if ( !(ImageTag.equals("") ) ) {
-            this.ImageTag=ImageTag;
+        if ( (ImageTag.equals("") ) ) {
+            if ( ! Workflow.equals("Scan") )
+                this.ImageTag = "latest";
         } else {
-            this.ImageTag = "latest";
+            this.ImageTag=ImageTag;
         }
 
         this.TioRepo = TioRepo;
@@ -122,11 +123,13 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
 
     //TODO need to validate input
     public void setImageTag(String ImageTag) {
-        if ( !(ImageTag.equals("") ) ) {
-            this.ImageTag=ImageTag;
+        if ( (ImageTag.equals("") ) ) {
+            if ( ! this.Workflow.equals("Scan") )
+                this.ImageTag = "latest";
         } else {
-            this.ImageTag = "latest";
+            this.ImageTag=ImageTag;
         }
+
     }
 
     //TODO need to validate input
