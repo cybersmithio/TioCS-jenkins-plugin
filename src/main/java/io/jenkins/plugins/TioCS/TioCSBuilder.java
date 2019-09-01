@@ -602,7 +602,7 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
         }
 
         public FormValidation doCheckName(@QueryParameter String value, @QueryParameter String TioRepo,
-            @QueryParameter String TioAccessKey,
+            @QueryParameter String TioAccessKey, @QueryParameter String ImageTag,
             @QueryParameter String TioSecretKey, @QueryParameter boolean useOnPrem,
             @QueryParameter boolean DebugInfo, @QueryParameter String Workflow, String ScanID, String ScanTarget)
             throws IOException, ServletException {
