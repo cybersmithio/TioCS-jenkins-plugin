@@ -231,7 +231,7 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
             try {
                 String scanstatus = responsejson.getString("status");
                 listener.getLogger().println("Scan status:"+scanstatus);
-                if( scanstatus.equals("complete") ) {
+                if( scanstatus.equals("completed") ) {
                     scanComplete = true;
                     listener.getLogger().println("Scan has completed");
                 }
