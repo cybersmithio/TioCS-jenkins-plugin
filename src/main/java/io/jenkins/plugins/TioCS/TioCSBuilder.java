@@ -314,7 +314,7 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
                 br.close();
             } catch (Exception e) {
                 listener.getLogger().println("ERROR launching scan.  Check in Tenable.io if it was launched.");
-                reportReady=false;
+                listener.getLogger().println(e);
             }
 
             //See if the JSON string from Tenable.io is valid.  If not, there may have been a problem launching the scan.
