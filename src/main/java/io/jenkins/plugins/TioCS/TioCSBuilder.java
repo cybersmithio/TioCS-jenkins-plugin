@@ -183,7 +183,7 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
 
         //Wait 10 seconds for the report to generate and keep looping (waiting 10 seconds) until the report is ready.
         while ( ! scanComplete  ) {
-            Thread.sleep(30000);
+            Thread.sleep(60000);
             String jsonstring="";
             try {
                 URL myUrl = new URL("https://cloud.tenable.com/scans/"+ScanID+"/latest-status");
@@ -235,7 +235,6 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
                     scanComplete = true;
                     listener.getLogger().println("Scan has completed");
                 }
-
             } catch (JSONException e) {
                 scanComplete = false;
                 listener.getLogger().println("Exception: No scan status:"+e.toString());
@@ -429,7 +428,7 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
 
             if ( WaitForScanFinish ) {
                 listener.getLogger().println("Wait for scan to finish as requested...");
-                waitForScanToFinish(listener)
+                waitForScanToFinish(listener);
             }
         }
 
