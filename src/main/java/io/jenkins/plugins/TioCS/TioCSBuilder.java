@@ -187,7 +187,7 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
             String jsonstring="";
             try {
                 URL myUrl = new URL("https://cloud.tenable.com/scans/"+ScanID+"/latest-status");
-                listener.getLogger().println("Retrieving scan status for scan UUID " + +this.ScanUUID);
+                listener.getLogger().println("Retrieving scan status for scan UUID " + this.ScanUUID);
                 HttpsURLConnection conn = (HttpsURLConnection)myUrl.openConnection();
                 conn.setRequestMethod("GET");
                 conn.setRequestProperty("x-apikeys","accessKey="+TioAccessKey+";secretKey="+TioSecretKey);
@@ -427,7 +427,7 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
                 listener.getLogger().println("ERROR: A scan UUID was not found.  Check in Tenable.io if scan was launched.");
             }
 
-            if ( WaitForScanFinish(listener) ) {
+            if ( waitForScanToFinish(listener) ) {
                 listener.getLogger().println("Wait for scan to finish as requested...");
             }
         }
