@@ -55,6 +55,7 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
     //TODO need to validate input
     public TioCSBuilder(String name, String ImageTag, String TioRepo, String TioAccessKey, String TioSecretKey,
         boolean DebugInfo, String Workflow, String ScanID, String ScanTarget, boolean WaitForScanFinish) {
+
         this.name = name;
 
         if ( (ImageTag.equals("") ) ) {
@@ -74,49 +75,44 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
             this.ScanID= "";
         } else {
             this.ScanID= ScanID;
+            if ( ! ScanID.matches("^[0-9]*$") )
+                this.ScanID= "";
         }
+
         this.ScanTarget= ScanTarget;
     }
 
+    //All the "get" methods
     public String getName() {
         return name;
     }
-
     public String getImageTag() {
         return ImageTag;
     }
-
     public String getTioRepo() {
         return TioRepo;
     }
-
     public String getTioAccessKey() {
         return TioAccessKey;
     }
-
     public String getTioSecretKey() {
         return TioSecretKey;
     }
-
     public boolean getDebugInfo() {
         return DebugInfo;
     }
-
     public boolean getWaitForScanFinish() {
         return WaitForScanFinish;
     }
-
     public boolean isUseOnPrem() {
         return useOnPrem;
     }
     public String getWorkflow() {
         return Workflow;
     }
-
     public String getScanID() {
         return ScanID;
     }
-
     public String getScanTarget() {
         return ScanTarget;
     }
@@ -173,9 +169,8 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
     }
 
     // Waits for an active scan to finish.  It uses the stored private variables to see what the scan ID is.
-
     private void waitForScanToFinish(TaskListener listener) throws InterruptedException {
-        listener.getLogger().println("Waiting for scan to finish.  Scan ID"+this.ScanID );
+        listener.getLogger().println("Waiting for scan to finish.  Scan ID "+this.ScanID );
 
         boolean scanComplete = false;
         JSONObject responsejson = new JSONObject("{}");
@@ -791,6 +786,8 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
                     return FormValidation.error(Messages.TioCSBuilder_DescriptorImpl_errors_missingScanID());
                 if ( ! ScanID.matches("^[0-9]*$") )
                     return FormValidation.error(Messages.TioCSBuilder_DescriptorImpl_errors_notnumericScanID());
+                if ( useOnPrem )
+                    return FormValidation.error(Messages.TioCSBuilder_DescriptorImpl_errors_includedUseOnPremWhenScanning());
             } else {
                 if (value.length() <= 0)
                     return FormValidation.error(Messages.TioCSBuilder_DescriptorImpl_errors_missingName());
