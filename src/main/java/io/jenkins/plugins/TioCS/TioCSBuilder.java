@@ -427,8 +427,9 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
                 listener.getLogger().println("ERROR: A scan UUID was not found.  Check in Tenable.io if scan was launched.");
             }
 
-            if ( waitForScanToFinish(listener) ) {
+            if ( WaitForScanFinish ) {
                 listener.getLogger().println("Wait for scan to finish as requested...");
+                waitForScanToFinish(listener)
             }
         }
 
