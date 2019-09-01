@@ -604,7 +604,8 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
         public FormValidation doCheckName(@QueryParameter String value, @QueryParameter String TioRepo,
             @QueryParameter String TioAccessKey, @QueryParameter String ImageTag,
             @QueryParameter String TioSecretKey, @QueryParameter boolean useOnPrem,
-            @QueryParameter boolean DebugInfo, @QueryParameter String Workflow, String ScanID, String ScanTarget)
+            @QueryParameter boolean DebugInfo, @QueryParameter String Workflow, @QueryParameter String ScanID,
+            @QueryParameter String ScanTarget)
             throws IOException, ServletException {
             if (TioAccessKey.length() <= 0)
                 return FormValidation.error(Messages.TioCSBuilder_DescriptorImpl_errors_missingTioAccessKey());
