@@ -352,7 +352,7 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
                 JSONObject altTargets = new JSONObject();
                 altTargets.put("alt_targets", ScanTarget);
                 OutputStreamWriter wr= new OutputStreamWriter(conn.getOutputStream());
-                wr.write(parent.toString());
+                wr.write(altTargets.toString());
             }
 
 
