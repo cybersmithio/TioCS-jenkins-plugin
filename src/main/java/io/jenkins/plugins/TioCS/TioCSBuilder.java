@@ -298,8 +298,10 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
                 URL myUrl = new URL("https://cloud.tenable.com/scans/"+ScanID+"/launch");
                 listener.getLogger().println("Launching scan with ID " + ScanID + " from Tenable.io API: "+"https://cloud.tenable.com/scans/"+ScanID+"/launch");
                 HttpsURLConnection conn = (HttpsURLConnection)myUrl.openConnection();
+                conn.setRequestMethod("POST");
                 conn.setRequestProperty("x-apikeys","accessKey="+TioAccessKey+";secretKey="+TioSecretKey);
                 conn.setRequestProperty("accept","application/json");
+
 
                 InputStream is = conn.getInputStream();
                 InputStreamReader isr = new InputStreamReader(is);
