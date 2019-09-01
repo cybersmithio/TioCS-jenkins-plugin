@@ -339,6 +339,8 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
         boolean reportReady = false;
         JSONObject responsejson = new JSONObject("{}");
 
+        String scanuuid=null;
+
         listener.getLogger().println("Launching scan with ID " + ScanID + " from Tenable.io API");
         String jsonstring="";
         try {
@@ -388,6 +390,7 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
         } catch (Exception e) {
             listener.getLogger().println("ERROR: A scan UUID was not found.  Check in Tenable.io if scan was launched.");
         }
+        return scanuuid;
     }
 
 
@@ -429,11 +432,13 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
 
         //Launch Active Scan (WAS or VM)
         if ( Workflow.equals("Scan") ) {
-            launchActiveScan(listener);
-
-            if ( WaitForScanFinish ) {
-                listener.getLogger().println("Wait for scan to finish as requested...");
-                waitForScanToFinish(listener);
+            if ( launchActiveScan(listener) == null ) {
+                listener.getLogger().println("Problem launching scan");
+            } else {
+                if ( WaitForScanFinish ) {
+                    listener.getLogger().println("Wait for scan to finish as requested...");
+                    waitForScanToFinish(listener);
+                }
             }
         }
 
