@@ -345,6 +345,17 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
             conn.setRequestMethod("POST");
             conn.setRequestProperty("x-apikeys","accessKey="+TioAccessKey+";secretKey="+TioSecretKey);
             conn.setRequestProperty("accept","application/json");
+            if ( ScanTarget != null && !ScanTarget.equals("") ) {
+                listener.getLogger().println("Launching with custom scan targets:" +ScanTarget);
+                conn.setRequestProperty("Content-Type", "application/json; utf-8");
+                conn.setDoOutput(true)
+                String jsonInputString = "{"alt_targets": ScanTarget}";
+                try(OutputStream os = conn.getOutputStream()) {
+                    byte[] input = jsonInputString.getBytes("utf-8");
+                    os.write(input, 0, input.length);
+                }
+            }
+
 
             InputStream is = conn.getInputStream();
             InputStreamReader isr = new InputStreamReader(is);
