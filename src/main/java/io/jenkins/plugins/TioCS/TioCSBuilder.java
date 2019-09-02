@@ -358,6 +358,7 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
 
                 OutputStreamWriter wr= new OutputStreamWriter(conn.getOutputStream());
                 wr.write(altTargets.toString());
+                wr.close();
             }
 
 
