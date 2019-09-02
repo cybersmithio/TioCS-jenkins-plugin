@@ -353,7 +353,7 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
                 JSONObject altTargets = new JSONObject();
 
                 altTargets.put("alt_targets", targets);
-                if (DEBUG)
+                if (DebugInfo)
                     listener.getLogger().println("Scan targets will be overridden with:"+altTargets.toString() );
 
                 OutputStreamWriter wr= new OutputStreamWriter(conn.getOutputStream());
