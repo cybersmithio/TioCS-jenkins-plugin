@@ -343,11 +343,11 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
             listener.getLogger().println("Launching scan with ID " + ScanID + " from Tenable.io API: "+"https://cloud.tenable.com/scans/"+ScanID+"/launch");
             HttpsURLConnection conn = (HttpsURLConnection)myUrl.openConnection();
             conn.setRequestMethod("POST");
+            conn.setRequestProperty("Content-Type", "application/json");
             conn.setRequestProperty("x-apikeys","accessKey="+TioAccessKey+";secretKey="+TioSecretKey);
-            conn.setRequestProperty("accept","application/json");
+            conn.setRequestProperty("Accept","application/json");
             if ( ScanTarget != null && !ScanTarget.equals("") ) {
                 listener.getLogger().println("Launching with custom scan targets:" +ScanTarget);
-                conn.setRequestProperty("Content-Type", "application/json; utf-8");
                 conn.setDoOutput(true);
                 JSONArray targets = new JSONArray("["+ScanTarget+"]");
                 JSONObject altTargets = new JSONObject();
