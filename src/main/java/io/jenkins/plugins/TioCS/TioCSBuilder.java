@@ -349,8 +349,13 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
                 listener.getLogger().println("Launching with custom scan targets:" +ScanTarget);
                 conn.setRequestProperty("Content-Type", "application/json; utf-8");
                 conn.setDoOutput(true);
+                JSONArray targets = JSON.createArrayBuilder()
+                    .add(JSON.createObjectBuilder()
+                        .add(ScanTarget))
+                    .build();
                 JSONObject altTargets = new JSONObject();
-                altTargets.put("alt_targets", ScanTarget);
+
+                altTargets.put("alt_targets", targets);
                 OutputStreamWriter wr= new OutputStreamWriter(conn.getOutputStream());
                 wr.write(altTargets.toString());
             }
