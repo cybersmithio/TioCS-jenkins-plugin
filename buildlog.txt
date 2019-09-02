@@ -102,3 +102,6 @@ September 1, 2019 1:41pm
 
 September 1, 2019 2:58pm
 * Launching scans works, and some input field validation is being done.  Added custom targets to active scans.
+
+September 1, 2019 10:56pm
+* Got custom targets for the active scans working.
