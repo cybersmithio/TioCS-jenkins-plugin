@@ -354,7 +354,7 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
 
                 altTargets.put("alt_targets", targets);
                 if (DEBUG)
-                    listener.getLogger().println("Scan targets will be overridden with:" altTargets.toString() );
+                    listener.getLogger().println("Scan targets will be overridden with:"+altTargets.toString() );
 
                 OutputStreamWriter wr= new OutputStreamWriter(conn.getOutputStream());
                 wr.write(altTargets.toString());
