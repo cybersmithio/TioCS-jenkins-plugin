@@ -524,7 +524,7 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
 
                 listener.getLogger().println("Piping image into on-premise Tenable.io CS inspector ");
                 try {
-                    String debugstring=""
+                    String debugstring="";
                     if( DebugInfo ) {
                         String debugstring=" -e DEBUG_MODE=true ";
                     }
