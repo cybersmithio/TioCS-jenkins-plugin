@@ -7,6 +7,10 @@ import java.util.Map;
 //Needed for dynamic HTML form list boxes
 import hudson.util.ListBoxModel;
 
+//For displaying date and time in the logs
+import java.time.format.DateTimeFormatter;
+import java.time.LocalDateTime;
+
 import java.net.URL;
 import java.io.*;
 import javax.net.ssl.HttpsURLConnection;
@@ -411,6 +415,7 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
         Integer NumOfVulns=0;
         boolean malwareDetected=false;
         String imagesize="";
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
 
         listener.getLogger().println("Working on image " + name + ":"+ImageTag+".");
         if ( DebugInfo ) {
@@ -662,7 +667,8 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
             //Wait 10 seconds for the report to generate and keep looping (waiting 10 seconds) until the report is ready.
             while ( ! reportReady  ) {
                 Thread.sleep(10000);
-                listener.getLogger().println("Retrieving report of image " + name + " from Tenable.io API");
+
+                listener.getLogger().println(dtf.format(LocalDateTime.now())+": Retrieving report of image " + name + " from Tenable.io API");
                 String jsonstring="";
                 try {
                     URL myUrl = new URL("https://cloud.tenable.com/container-security/api/v2/reports/"+TioRepo+"/"+name+"/"+ImageTag);
