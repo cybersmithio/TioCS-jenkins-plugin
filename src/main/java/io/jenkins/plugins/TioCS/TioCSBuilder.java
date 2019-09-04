@@ -453,7 +453,7 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
                 listener.getLogger().println(dtf.format(LocalDateTime.now())+"Problem launching scan");
             } else {
                 if ( WaitForScanFinish ) {
-                    listener.getLogger().printlndtf.format(LocalDateTime.now())+("Wait for scan to finish as requested...");
+                    listener.getLogger().println(dtf.format(LocalDateTime.now())+"Wait for scan to finish as requested...");
                     waitForScanToFinish(listener);
                 }
             }
