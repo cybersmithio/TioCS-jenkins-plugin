@@ -526,7 +526,7 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
                 try {
                     String debugstring="";
                     if( DebugInfo ) {
-                        String debugstring=" -e DEBUG_MODE=true ";
+                        debugstring=" -e DEBUG_MODE=true ";
                     }
 
                     listener.getLogger().println("sh -c docker save "+name+":"+ImageTag+" | docker run -e TENABLE_ACCESS_KEY=$TENABLE_ACCESS_KEY"
