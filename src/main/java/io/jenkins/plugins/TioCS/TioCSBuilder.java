@@ -174,7 +174,7 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
 
     // Waits for an active scan to finish.  It uses the stored private variables to see what the scan ID is.
     private void waitForScanToFinish(TaskListener listener) throws InterruptedException {
-        listener.getLogger().println("Waiting for scan to finish.  Scan ID "+this.ScanID );
+        listener.getLogger().println(dtf.format(LocalDateTime.now())+"Waiting for scan to finish.  Scan ID "+this.ScanID );
 
         boolean scanComplete = false;
         JSONObject responsejson = new JSONObject("{}");
@@ -185,7 +185,7 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
             String jsonstring="";
             try {
                 URL myUrl = new URL("https://cloud.tenable.com/scans/"+ScanID+"/latest-status");
-                listener.getLogger().println("Retrieving scan status for scan ID " + this.ScanID);
+                listener.getLogger().println(dtf.format(LocalDateTime.now())+"Retrieving scan status for scan ID " + this.ScanID);
                 HttpsURLConnection conn = (HttpsURLConnection)myUrl.openConnection();
                 conn.setRequestMethod("GET");
                 conn.setRequestProperty("x-apikeys","accessKey="+TioAccessKey+";secretKey="+TioSecretKey);
@@ -203,50 +203,50 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
 
                 br.close();
             } catch (Exception e) {
-                listener.getLogger().println("Error getting scan status.  Tenable.io is likely still creating it.");
+                listener.getLogger().println(dtf.format(LocalDateTime.now())+"Error getting scan status.  Tenable.io is likely still creating it.");
                 scanComplete=false;
                 continue;
             }
 
             //See if the JSON string from Tenable.io is valid.  If not, it is likely the report is still generating.
             if ( DebugInfo ) {
-                listener.getLogger().println("Attempting to parse JSON string into JSON object:"+jsonstring);
+                listener.getLogger().println(dtf.format(LocalDateTime.now())+"Attempting to parse JSON string into JSON object:"+jsonstring);
             }
 
             try {
                 responsejson = new JSONObject(jsonstring);
             } catch (Exception e) {
-                listener.getLogger().println("Didn't get any valid JSON back.");
+                listener.getLogger().println(dtf.format(LocalDateTime.now())+"Didn't get any valid JSON back.");
                 scanComplete=false;
                 continue;
             }
 
             //Check the JSON to see if the report is finished.
             if ( DebugInfo ) {
-                listener.getLogger().println("DEBUG: JSON received:"+responsejson.toString());
+                listener.getLogger().println(dtf.format(LocalDateTime.now())+"DEBUG: JSON received:"+responsejson.toString());
             }
 
             try {
                 String scanstatus = responsejson.getString("status");
-                listener.getLogger().println("Scan status:"+scanstatus);
+                listener.getLogger().println(dtf.format(LocalDateTime.now())+"Scan status:"+scanstatus);
                 if( scanstatus.equals("completed") ) {
                     scanComplete = true;
-                    listener.getLogger().println("Scan has completed");
+                    listener.getLogger().println(dtf.format(LocalDateTime.now())+"Scan has completed");
                 }
             } catch (JSONException e) {
                 scanComplete = false;
-                listener.getLogger().println("Exception: No scan status:"+e.toString());
+                listener.getLogger().println(dtf.format(LocalDateTime.now())+"Exception: No scan status:"+e.toString());
                 continue;
             } catch (Exception e) {
                 scanComplete = false;
-                listener.getLogger().println("Some other unknown exception: "+e.toString());
+                listener.getLogger().println(dtf.format(LocalDateTime.now())+"Some other unknown exception: "+e.toString());
                 continue;
             }
         }
     }
 
     private String getCompliance(TaskListener listener) throws InterruptedException {
-        listener.getLogger().println("Retrieving compliance report for container image" );
+        listener.getLogger().println(dtf.format(LocalDateTime.now())+"Retrieving compliance report for container image" );
 
         boolean reportReady = false;
         Integer sleepPeriod=0;
@@ -257,7 +257,7 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
             Thread.sleep(sleepPeriod);
             sleepPeriod=10000;
 
-            listener.getLogger().println("Retrieving report of image " + name + " from Tenable.io API");
+            listener.getLogger().println(dtf.format(LocalDateTime.now())+"Retrieving report of image " + name + " from Tenable.io API");
             String jsonstring="";
             try {
                 URL myUrl = new URL("https://cloud.tenable.com/container-security/api/v1/compliancebyname?repo="+TioRepo+"&image="+name+"&tag="+ImageTag);
@@ -277,19 +277,19 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
 
                 br.close();
             } catch (Exception e) {
-                listener.getLogger().println("Error getting image report.  Tenable.io is likely still creating it.");
+                listener.getLogger().println(dtf.format(LocalDateTime.now())+"Error getting image report.  Tenable.io is likely still creating it.");
                 reportReady=false;
                 continue;
             }
 
             //See if the JSON string from Tenable.io is valid.  If not, it is likely the report is still generating.
             if ( DebugInfo ) {
-                listener.getLogger().println("Attempting to parse JSON string into JSON object:"+jsonstring);
+                listener.getLogger().println(dtf.format(LocalDateTime.now())+"Attempting to parse JSON string into JSON object:"+jsonstring);
             }
             try {
                 responsejson = new JSONObject(jsonstring);
             } catch (Exception e) {
-                listener.getLogger().println("Didn't get any valid JSON back, so looks like report is still processing.");
+                listener.getLogger().println(dtf.format(LocalDateTime.now())+"Didn't get any valid JSON back, so looks like report is still processing.");
                 reportReady=false;
                 continue;
             }
@@ -297,32 +297,32 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
             //Check the JSON to see if the report is finished.  If the report is finished, only "status" will be in
             // the JSON.  Otherwise a "message" will exist.  If we see that, the report is likely not ready.
             if ( DebugInfo ) {
-                listener.getLogger().println("DEBUG: JSON received:"+responsejson.toString());
+                listener.getLogger().println(dtf.format(LocalDateTime.now())+"DEBUG: JSON received:"+responsejson.toString());
             }
             try {
                 String reportMessage = responsejson.getString("message");
-                listener.getLogger().println("Report message:"+reportMessage);
+                listener.getLogger().println(dtf.format(LocalDateTime.now())+"Report message:"+reportMessage);
                 reportReady = false;
                 continue;
             } catch (JSONException e) {
-                listener.getLogger().println("No message value returned, so report should be complete.");
+                listener.getLogger().println(dtf.format(LocalDateTime.now())+"No message value returned, so report should be complete.");
             } catch (Exception e) {
-                listener.getLogger().println("Some other unknown exception getting reportMessage: "+e.toString());
+                listener.getLogger().println(dtf.format(LocalDateTime.now())+"Some other unknown exception getting reportMessage: "+e.toString());
                 reportReady = false;
                 continue;
             }
 
             try {
                 String reportStatus = responsejson.getString("status");
-                listener.getLogger().println("Report status:"+reportStatus);
+                listener.getLogger().println(dtf.format(LocalDateTime.now())+"Report status:"+reportStatus);
                 reportReady = true;
                 return reportStatus;
             } catch (JSONException e) {
-                listener.getLogger().println("No report status, so report is not ready");
+                listener.getLogger().println(dtf.format(LocalDateTime.now())+"No report status, so report is not ready");
                 reportReady = false;
                 continue;
             } catch (Exception e) {
-                listener.getLogger().println("Some other unknown exception getting reportStatus: "+e.toString());
+                listener.getLogger().println(dtf.format(LocalDateTime.now())+"Some other unknown exception getting reportStatus: "+e.toString());
                 reportReady = false;
                 continue;
             }
@@ -333,32 +333,32 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
 
     // Launches an active scan by the scan ID stored in the private variables.  It does not wait for the scan to finish.
     private String launchActiveScan(TaskListener listener) throws InterruptedException {
-        listener.getLogger().println("Launching scan" );
+        listener.getLogger().println(dtf.format(LocalDateTime.now())+"Launching scan" );
 
         boolean reportReady = false;
         JSONObject responsejson = new JSONObject("{}");
 
         String scanuuid=null;
 
-        listener.getLogger().println("Launching scan with ID " + ScanID + " from Tenable.io API");
+        listener.getLogger().println(dtf.format(LocalDateTime.now())+"Launching scan with ID " + ScanID + " from Tenable.io API");
         String jsonstring="";
         try {
             URL myUrl = new URL("https://cloud.tenable.com/scans/"+ScanID+"/launch");
-            listener.getLogger().println("Launching scan with ID " + ScanID + " from Tenable.io API: "+"https://cloud.tenable.com/scans/"+ScanID+"/launch");
+            listener.getLogger().println(dtf.format(LocalDateTime.now())+"Launching scan with ID " + ScanID + " from Tenable.io API: "+"https://cloud.tenable.com/scans/"+ScanID+"/launch");
             HttpsURLConnection conn = (HttpsURLConnection)myUrl.openConnection();
             conn.setRequestMethod("POST");
             conn.setRequestProperty("Content-Type", "application/json");
             conn.setRequestProperty("x-apikeys","accessKey="+TioAccessKey+";secretKey="+TioSecretKey);
             conn.setRequestProperty("Accept","application/json");
             if ( ScanTarget != null && !ScanTarget.equals("") ) {
-                listener.getLogger().println("Launching with custom scan targets:" +ScanTarget);
+                listener.getLogger().println(dtf.format(LocalDateTime.now())+"Launching with custom scan targets:" +ScanTarget);
                 conn.setDoOutput(true);
                 JSONArray targets = new JSONArray("["+ScanTarget+"]");
                 JSONObject altTargets = new JSONObject();
 
                 altTargets.put("alt_targets", targets);
                 if (DebugInfo)
-                    listener.getLogger().println("Scan targets will be overridden with:"+altTargets.toString() );
+                    listener.getLogger().println(dtf.format(LocalDateTime.now())+"Scan targets will be overridden with:"+altTargets.toString() );
 
                 OutputStreamWriter wr= new OutputStreamWriter(conn.getOutputStream());
                 wr.write(altTargets.toString());
@@ -378,32 +378,32 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
 
             br.close();
         } catch (Exception e) {
-            listener.getLogger().println("ERROR launching scan.  Check in Tenable.io if it was launched.");
+            listener.getLogger().println(dtf.format(LocalDateTime.now())+"ERROR launching scan.  Check in Tenable.io if it was launched.");
             listener.getLogger().println(e);
         }
 
         //See if the JSON string from Tenable.io is valid.  If not, there may have been a problem launching the scan.
         if ( DebugInfo ) {
-            listener.getLogger().println("Attempting to parse JSON string into JSON object:"+jsonstring);
+            listener.getLogger().println(dtf.format(LocalDateTime.now())+"Attempting to parse JSON string into JSON object:"+jsonstring);
         }
         try {
             responsejson = new JSONObject(jsonstring);
         } catch (Exception e) {
-            listener.getLogger().println("ERROR: Didn't get any valid JSON back.  Check in Tenable.io if scan was launched.");
+            listener.getLogger().println(dtf.format(LocalDateTime.now())+"ERROR: Didn't get any valid JSON back.  Check in Tenable.io if scan was launched.");
         }
 
         //Check the JSON to see if we got a valid scan UUID back.
         if ( DebugInfo ) {
-            listener.getLogger().println("DEBUG: JSON received:"+responsejson.toString());
+            listener.getLogger().println(dtf.format(LocalDateTime.now())+"DEBUG: JSON received:"+responsejson.toString());
         }
 
         try {
             scanuuid = responsejson.getString("scan_uuid");
-            listener.getLogger().println("Scan UUID:"+scanuuid);
+            listener.getLogger().println(dtf.format(LocalDateTime.now())+"Scan UUID:"+scanuuid);
         } catch (JSONException e) {
-            listener.getLogger().println("ERROR: A scan UUID was not found.  Check in Tenable.io if scan was launched.");
+            listener.getLogger().println(dtf.format(LocalDateTime.now())+"ERROR: A scan UUID was not found.  Check in Tenable.io if scan was launched.");
         } catch (Exception e) {
-            listener.getLogger().println("ERROR: A scan UUID was not found.  Check in Tenable.io if scan was launched.");
+            listener.getLogger().println(dtf.format(LocalDateTime.now())+"ERROR: A scan UUID was not found.  Check in Tenable.io if scan was launched.");
         }
         return scanuuid;
     }
@@ -415,33 +415,33 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
         Integer NumOfVulns=0;
         boolean malwareDetected=false;
         String imagesize="";
-        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss - ");
 
-        listener.getLogger().println("Working on image " + name + ":"+ImageTag+".");
+        listener.getLogger().println(dtf.format(LocalDateTime.now())+"Working on image " + name + ":"+ImageTag+".");
         if ( DebugInfo ) {
-            listener.getLogger().println("Showing debugging information as requested.");
+            listener.getLogger().println(dtf.format(LocalDateTime.now())+"Showing debugging information as requested.");
         } else {
-            listener.getLogger().println("Debugging information will be suppressed.");
+            listener.getLogger().println(dtf.format(LocalDateTime.now())+"Debugging information will be suppressed.");
         }
         if ( DebugInfo ) {
             Map<String, String> env = System.getenv();
             for (String envName : env.keySet()) {
-                listener.getLogger().println("Environment variable list: " + envName+" = " +env.get(envName) );
+                listener.getLogger().println(dtf.format(LocalDateTime.now())+"Environment variable list: " + envName+" = " +env.get(envName) );
             }
         }
 
         switch(Workflow) {
             case "Scan":
-                listener.getLogger().println("Launching scan.");
+                listener.getLogger().println(dtf.format(LocalDateTime.now())+"Launching scan.");
                 break;
             case "Test":
-                listener.getLogger().println("Only testing the image.");
+                listener.getLogger().println(dtf.format(LocalDateTime.now())+"Only testing the image.");
                 break;
             case "Evaluate":
-                listener.getLogger().println("Only evaluating the image test results.");
+                listener.getLogger().println(dtf.format(LocalDateTime.now())+"Only evaluating the image test results.");
                 break;
             case "TestEvaluate":
-                listener.getLogger().println("Both testing the image and evaluating the results.");
+                listener.getLogger().println(dtf.format(LocalDateTime.now())+"Both testing the image and evaluating the results.");
                 break;
         }
 
@@ -449,24 +449,24 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
         //Launch Active Scan (WAS or VM)
         if ( Workflow.equals("Scan") ) {
             if ( launchActiveScan(listener) == null ) {
-                listener.getLogger().println("Problem launching scan");
+                listener.getLogger().println(dtf.format(LocalDateTime.now())+"Problem launching scan");
             } else {
                 if ( WaitForScanFinish ) {
-                    listener.getLogger().println("Wait for scan to finish as requested...");
+                    listener.getLogger().printlndtf.format(LocalDateTime.now())+("Wait for scan to finish as requested...");
                     waitForScanToFinish(listener);
                 }
             }
         }
 
         if ( Workflow.equals("TestEvaluate") || Workflow.equals("Test") ) {
-            listener.getLogger().println("Starting image testing.  Results will go into Tenable.io repository "+TioRepo);
-            listener.getLogger().println("Tenable.io API Access Key: " + TioAccessKey );
+            listener.getLogger().println(dtf.format(LocalDateTime.now())+"Starting image testing.  Results will go into Tenable.io repository "+TioRepo);
+            listener.getLogger().println(dtf.format(LocalDateTime.now())+"Tenable.io API Access Key: " + TioAccessKey );
 
 
             //First, check if the image exists otherwise we need to stop the build since it will fail aways.
-            listener.getLogger().println("Check if image exists.");
+            listener.getLogger().println(dtf.format(LocalDateTime.now())+"Check if image exists.");
             try {
-                listener.getLogger().println("docker images -q "+name+":"+ImageTag);
+                listener.getLogger().println(dtf.format(LocalDateTime.now())+"docker images -q "+name+":"+ImageTag);
 
                 Process process=new ProcessBuilder("docker", "images","-q",name+":"+ImageTag).start();
                 StringBuilder output = new StringBuilder();
@@ -477,28 +477,28 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
                 }
                 int exitVal = process.waitFor();
                 if (exitVal == 0) {
-                    listener.getLogger().println("Success running external command:"+output);
+                    listener.getLogger().println(dtf.format(LocalDateTime.now())+"Success running external command:"+output);
                 } else {
-                    listener.getLogger().println("ERROR: Error running external command:"+output);
+                    listener.getLogger().println(dtf.format(LocalDateTime.now())+"ERROR: Error running external command:"+output);
                     throw new SecurityException();
                 }
                 if ( output.length() < 12 ) {
-                    listener.getLogger().println("Image does not exist");
+                    listener.getLogger().println(dtf.format(LocalDateTime.now())+"Image does not exist");
                     throw new SecurityException();
                 } else {
-                    listener.getLogger().println("Image exists with ID "+output+", continuing with build");
+                    listener.getLogger().println(dtf.format(LocalDateTime.now())+"Image exists with ID "+output+", continuing with build");
                 }
             } catch (IOException e) {
-                listener.getLogger().println("IO Exception running external command");
+                listener.getLogger().println(dtf.format(LocalDateTime.now())+"IO Exception running external command");
             } catch (InterruptedException e) {
-                listener.getLogger().println("Interrupted Exception running external command");
+                listener.getLogger().println(dtf.format(LocalDateTime.now())+"Interrupted Exception running external command");
             }
 
 
             //Now record the image size (more for documentation purposes)
-            listener.getLogger().println("Checking image size.");
+            listener.getLogger().println(dtf.format(LocalDateTime.now())+"Checking image size.");
             try {
-                listener.getLogger().println("docker images --format {{.Size}} "+name+":"+ImageTag);
+                listener.getLogger().println(dtf.format(LocalDateTime.now())+"docker images --format {{.Size}} "+name+":"+ImageTag);
                 Process process=new ProcessBuilder("docker", "images","--format","{{.Size}}",name+":"+ImageTag).start();
                 StringBuilder output = new StringBuilder();
                 BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
@@ -508,33 +508,33 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
                 }
                 int exitVal = process.waitFor();
                 if (exitVal == 0) {
-                    listener.getLogger().println("Success running external command:"+output);
+                    listener.getLogger().println(dtf.format(LocalDateTime.now())+"Success running external command:"+output);
                 } else {
-                    listener.getLogger().println("ERROR: Error running external command:"+output);
+                    listener.getLogger().println(dtf.format(LocalDateTime.now())+"ERROR: Error running external command:"+output);
                     throw new SecurityException();
                 }
                 imagesize=output.toString();
-                listener.getLogger().println("Image size is "+imagesize);
+                listener.getLogger().println(dtf.format(LocalDateTime.now())+"Image size is "+imagesize);
             } catch (IOException e) {
-                listener.getLogger().println("IO Exception running external command");
+                listener.getLogger().println(dtf.format(LocalDateTime.now())+"IO Exception running external command");
             } catch (InterruptedException e) {
-                listener.getLogger().println("Interrupted Exception running external command");
+                listener.getLogger().println(dtf.format(LocalDateTime.now())+"Interrupted Exception running external command");
             }
 
 
 
 
             if (useOnPrem) {
-                listener.getLogger().println("Testing with on-premise inspector.");
+                listener.getLogger().println(dtf.format(LocalDateTime.now())+"Testing with on-premise inspector.");
 
-                listener.getLogger().println("Piping image into on-premise Tenable.io CS inspector ");
+                listener.getLogger().println(dtf.format(LocalDateTime.now())+"Piping image into on-premise Tenable.io CS inspector ");
                 try {
                     String debugstring="";
                     if( DebugInfo ) {
                         debugstring=" -e DEBUG_MODE=true ";
                     }
 
-                    listener.getLogger().println("sh -c docker save "+name+":"+ImageTag+" | docker run -e TENABLE_ACCESS_KEY=$TENABLE_ACCESS_KEY"
+                    listener.getLogger().println(dtf.format(LocalDateTime.now())+"sh -c docker save "+name+":"+ImageTag+" | docker run -e TENABLE_ACCESS_KEY=$TENABLE_ACCESS_KEY"
                         +" -e TENABLE_SECRET_KEY=$TENABLE_SECRET_KEY"+debugstring+" -e IMPORT_REPO_NAME="+TioRepo
                         +" -i tenableio-docker-consec-local.jfrog.io/cs-scanner:latest inspect-image "+name+":"+ImageTag);
 
@@ -557,24 +557,24 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
                     }
                     int exitVal = process.waitFor();
                     if (exitVal == 0) {
-                        listener.getLogger().println("Success running external command:"+output);
+                        listener.getLogger().println(dtf.format(LocalDateTime.now())+"Success running external command:"+output);
                     } else {
-                        listener.getLogger().println("ERROR: Error running external command:"+output);
+                        listener.getLogger().println(dtf.format(LocalDateTime.now())+"ERROR: Error running external command:"+output);
                         throw new SecurityException();
                     }
                 } catch (IOException e) {
-                    listener.getLogger().println("IO Exception running external command");
+                    listener.getLogger().println(dtf.format(LocalDateTime.now())+"IO Exception running external command");
                 } catch (InterruptedException e) {
-                    listener.getLogger().println("Interrupted Exception running external command");
+                    listener.getLogger().println(dtf.format(LocalDateTime.now())+"Interrupted Exception running external command");
                 }
-                listener.getLogger().println("Finished with on-prem inspector");
+                listener.getLogger().println(dtf.format(LocalDateTime.now())+"Finished with on-prem inspector");
 
             } else {
-                listener.getLogger().println("Testing in Tenable.io cloud.");
+                listener.getLogger().println(dtf.format(LocalDateTime.now())+"Testing in Tenable.io cloud.");
 
-                listener.getLogger().println("Logging into registry.cloud.tenable.com with access key " + TioAccessKey );
+                listener.getLogger().println(dtf.format(LocalDateTime.now())+"Logging into registry.cloud.tenable.com with access key " + TioAccessKey );
                 try {
-                    listener.getLogger().println("docker login -u $TIOACCESSKEY -p $TIOSECRETKEY registry.cloud.tenable.com");
+                    listener.getLogger().println(dtf.format(LocalDateTime.now())+"docker login -u $TIOACCESSKEY -p $TIOSECRETKEY registry.cloud.tenable.com");
                     //Process process=new ProcessBuilder("docker", "login","-u", TioAccessKey,"-p", TioSecretKey,"registry.cloud.tenable.com").start();
                     ProcessBuilder processBuilder = new ProcessBuilder("sh", "-c", "docker login -u $TIOACCESSKEY -p $TIOSECRETKEY registry.cloud.tenable.com");
                     Map<String, String> env = processBuilder.environment();
@@ -591,20 +591,20 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
                     }
                     int exitVal = process.waitFor();
                     if (exitVal == 0) {
-                        listener.getLogger().println("Success running external command:"+output);
+                        listener.getLogger().println(dtf.format(LocalDateTime.now())+"Success running external command:"+output);
                     } else {
-                        listener.getLogger().println("Error ("+exitVal+") running external command:"+output);
+                        listener.getLogger().println(dtf.format(LocalDateTime.now())+"Error ("+exitVal+") running external command:"+output);
                         throw new SecurityException();
                     }
                 } catch (IOException e) {
-                    listener.getLogger().println("IO Exception running external command");
+                    listener.getLogger().println(dtf.format(LocalDateTime.now())+"IO Exception running external command");
                 } catch (InterruptedException e) {
-                    listener.getLogger().println("Interrupted Exception running external command");
+                    listener.getLogger().println(dtf.format(LocalDateTime.now())+"Interrupted Exception running external command");
                 }
 
-                listener.getLogger().println("Tagging image " + name + " for registry.cloud.tenable.com");
+                listener.getLogger().println(dtf.format(LocalDateTime.now())+"Tagging image " + name + " for registry.cloud.tenable.com");
                 try {
-                    listener.getLogger().println("docker tag "+name+":"+ImageTag+ " registry.cloud.tenable.com/"+TioRepo+"/"+name+":"+ImageTag);
+                    listener.getLogger().println(dtf.format(LocalDateTime.now())+"docker tag "+name+":"+ImageTag+ " registry.cloud.tenable.com/"+TioRepo+"/"+name+":"+ImageTag);
                     Process process=new ProcessBuilder("docker", "tag",name+":"+ImageTag , "registry.cloud.tenable.com/"+TioRepo+"/"+name+":"+ImageTag).start();
                     StringBuilder output = new StringBuilder();
                     BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
@@ -614,20 +614,20 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
                     }
                     int exitVal = process.waitFor();
                     if (exitVal == 0) {
-                        listener.getLogger().println("Success running external command: docker tag");
+                        listener.getLogger().println(dtf.format(LocalDateTime.now())+"Success running external command: docker tag");
                     } else {
-                        listener.getLogger().println("Error running external command: docker tag");
+                        listener.getLogger().println(dtf.format(LocalDateTime.now())+"Error running external command: docker tag");
                         throw new SecurityException();
                     }
                 } catch (IOException e) {
-                    listener.getLogger().println("IO Exception running external command");
+                    listener.getLogger().println(dtf.format(LocalDateTime.now())+"IO Exception running external command");
                 } catch (InterruptedException e) {
-                    listener.getLogger().println("Interrupted Exception running external command");
+                    listener.getLogger().println(dtf.format(LocalDateTime.now())+"Interrupted Exception running external command");
                 }
 
-                listener.getLogger().println("Pushing image " + name + " to registry.cloud.tenable.com");
+                listener.getLogger().println(dtf.format(LocalDateTime.now())+"Pushing image " + name + " to registry.cloud.tenable.com");
                 try {
-                    listener.getLogger().println("docker push registry.cloud.tenable.com/"+TioRepo+"/"+name+":"+ImageTag);
+                    listener.getLogger().println(dtf.format(LocalDateTime.now())+"docker push registry.cloud.tenable.com/"+TioRepo+"/"+name+":"+ImageTag);
 
                     ProcessBuilder processBuilder=new ProcessBuilder("docker", "push", "registry.cloud.tenable.com/"+TioRepo+"/"+name+":"+ImageTag);
                     processBuilder.redirectErrorStream(true);
@@ -641,15 +641,15 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
                     }
                     int exitVal = process.waitFor();
                     if (exitVal == 0) {
-                        listener.getLogger().println("Success running external command:"+output);
+                        listener.getLogger().println(dtf.format(LocalDateTime.now())+"Success running external command:"+output);
                     } else {
-                        listener.getLogger().println("Error running external command:"+output);
+                        listener.getLogger().println(dtf.format(LocalDateTime.now())+"Error running external command:"+output);
                         throw new SecurityException();
                     }
                 } catch (IOException e) {
-                    listener.getLogger().println("IO Exception running external command");
+                    listener.getLogger().println(dtf.format(LocalDateTime.now())+"IO Exception running external command");
                 } catch (InterruptedException e) {
-                    listener.getLogger().println("Interrupted Exception running external command");
+                    listener.getLogger().println(dtf.format(LocalDateTime.now())+"Interrupted Exception running external command");
                 }
             }
             if ( Workflow.equals("Test") ) {
@@ -659,7 +659,7 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
 
         //Get report and parse
         if ( Workflow.equals("TestEvaluate") || Workflow.equals("Evaluate") ) {
-            listener.getLogger().println("Evaluating the results of the image tests." );
+            listener.getLogger().println(dtf.format(LocalDateTime.now())+"Evaluating the results of the image tests." );
 
             boolean reportReady = false;
             JSONObject responsejson = new JSONObject("{}");
@@ -668,7 +668,7 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
             while ( ! reportReady  ) {
                 Thread.sleep(10000);
 
-                listener.getLogger().println(dtf.format(LocalDateTime.now())+": Retrieving report of image " + name + " from Tenable.io API");
+                listener.getLogger().println(dtf.format(LocalDateTime.now())+"Retrieving report of image " + name + " from Tenable.io API");
                 String jsonstring="";
                 try {
                     URL myUrl = new URL("https://cloud.tenable.com/container-security/api/v2/reports/"+TioRepo+"/"+name+"/"+ImageTag);
@@ -688,87 +688,87 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
 
                     br.close();
                 } catch (Exception e) {
-                    listener.getLogger().println("Error getting image report.  Tenable.io is likely still creating it.");
+                    listener.getLogger().println(dtf.format(LocalDateTime.now())+"Error getting image report.  Tenable.io is likely still creating it.");
                     reportReady=false;
                     continue;
                 }
 
                 //See if the JSON string from Tenable.io is valid.  If not, it is likely the report is still generating.
                 if ( DebugInfo ) {
-                    listener.getLogger().println("Attempting to parse JSON string into JSON object:"+jsonstring);
+                    listener.getLogger().println(dtf.format(LocalDateTime.now())+"Attempting to parse JSON string into JSON object:"+jsonstring);
                 }
                 try {
                     responsejson = new JSONObject(jsonstring);
                 } catch (Exception e) {
-                    listener.getLogger().println("Didn't get any valid JSON back, so looks like report is still processing.");
+                    listener.getLogger().println(dtf.format(LocalDateTime.now())+"Didn't get any valid JSON back, so looks like report is still processing.");
                     reportReady=false;
                     continue;
                 }
 
                 //Check the JSON to see if the report is finished.
                 if ( DebugInfo ) {
-                    listener.getLogger().println("DEBUG: JSON received:"+responsejson.toString());
+                    listener.getLogger().println(dtf.format(LocalDateTime.now())+"DEBUG: JSON received:"+responsejson.toString());
                 }
                 try {
                     String reportmessage = responsejson.getString("message");
-                    listener.getLogger().println("Report status:"+reportmessage);
+                    listener.getLogger().println(dtf.format(LocalDateTime.now())+"Report status:"+reportmessage);
                     reportReady = false;
                 } catch (JSONException e) {
                     reportReady = true;
-                    listener.getLogger().println("No report status, so report should be complete.");
+                    listener.getLogger().println(dtf.format(LocalDateTime.now())+"No report status, so report should be complete.");
                 } catch (Exception e) {
                     reportReady = false;
-                    listener.getLogger().println("Some other unknown exception: "+e.toString());
+                    listener.getLogger().println(dtf.format(LocalDateTime.now())+"Some other unknown exception: "+e.toString());
                 }
             }
 
 
             if ( DebugInfo ) {
-                listener.getLogger().println("Risk Score:"+responsejson.get("risk_score"));
+                listener.getLogger().println(dtf.format(LocalDateTime.now())+"Risk Score:"+responsejson.get("risk_score"));
             }
 
             JSONArray findings=responsejson.getJSONArray("findings");
             if ( DebugInfo ) {
-                listener.getLogger().println("Findings:"+responsejson.get("findings"));
+                listener.getLogger().println(dtf.format(LocalDateTime.now())+"Findings:"+responsejson.get("findings"));
             }
 
             //Count the malware records and log the number.  Also set the malwareDetected flag.
             JSONArray malware=responsejson.getJSONArray("malware");
             if ( DebugInfo ) {
-                listener.getLogger().println("Findings:"+responsejson.get("malware"));
+                listener.getLogger().println(dtf.format(LocalDateTime.now())+"Findings:"+responsejson.get("malware"));
             }
             listener.getLogger().println("Number of malware items found: "+malware.length());
             if ( Integer.compare(malware.length(),0) > 0 ) {
-                listener.getLogger().println("Malware detected in this image.");
+                listener.getLogger().println(dtf.format(LocalDateTime.now())+"Malware detected in this image.");
                 malwareDetected=true;
             } else {
-                listener.getLogger().println("Malware not detected. Continue with build.");
+                listener.getLogger().println(dtf.format(LocalDateTime.now())+"Malware not detected. Continue with build.");
             }
 
             for ( int i =0; i    < findings.length(); i++ ) {
                 JSONObject ifinding = findings.getJSONObject(i);
-                //listener.getLogger().println("Vulnerability finding: "+ifinding);
+                //listener.getLogger().println(dtf.format(LocalDateTime.now())+"Vulnerability finding: "+ifinding);
                 JSONObject nvdfinding = ifinding.getJSONObject("nvdFinding");
-                //listener.getLogger().println("Vuln NVD info: "+nvdfinding);
+                //listener.getLogger().println(dtf.format(LocalDateTime.now())+"Vuln NVD info: "+nvdfinding);
                 String cvssscorestring=nvdfinding.getString("cvss_score");
-                //listener.getLogger().println("CVSSv2 Score: "+cvssscorestring);
+                //listener.getLogger().println(dtf.format(LocalDateTime.now())+"CVSSv2 Score: "+cvssscorestring);
                 if ( !(cvssscorestring.equals("")) ) {
                     NumOfVulns++;
                     Double cvssscorevalue=nvdfinding.getDouble("cvss_score");
-                    listener.getLogger().println("Found vulnerability with CVSSv2 score "+cvssscorevalue);
+                    listener.getLogger().println(dtf.format(LocalDateTime.now())+"Found vulnerability with CVSSv2 score "+cvssscorevalue);
                     if ( Double.compare(cvssscorevalue,highcvss) > 0 ) {
                         highcvss=cvssscorevalue;
                     }
                 }
             }
-            listener.getLogger().println("Highest CVSS Score: "+highcvss);
+            listener.getLogger().println(dtf.format(LocalDateTime.now())+"Highest CVSS Score: "+highcvss);
             String ComplianceStatus=getCompliance(listener);
             if ( ComplianceStatus.equals("pass") ) {
                 run.addAction(new TioCSAction(name,ImageTag,TioRepo,  TioAccessKey, highcvss, useOnPrem, NumOfVulns, malwareDetected,DebugInfo,Workflow,imagesize, ComplianceStatus, ScanID, ScanTarget ));
-                listener.getLogger().println("The image is compliant with the Tenable.io Container Security policy rules.");
+                listener.getLogger().println(dtf.format(LocalDateTime.now())+"The image is compliant with the Tenable.io Container Security policy rules.");
             } else  {
                 run.addAction(new TioCSAction(name,ImageTag,TioRepo,  TioAccessKey, highcvss, useOnPrem, NumOfVulns, malwareDetected,DebugInfo,Workflow,imagesize, ComplianceStatus, ScanID, ScanTarget));
-                listener.getLogger().println("ERROR: The image is non-compliant with the Tenable.io Container Security policy rules.");
+                listener.getLogger().println(dtf.format(LocalDateTime.now())+"ERROR: The image is non-compliant with the Tenable.io Container Security policy rules.");
                 throw new SecurityException();
             }
         }
