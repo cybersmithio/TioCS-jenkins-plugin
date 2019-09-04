@@ -174,6 +174,7 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
 
     // Waits for an active scan to finish.  It uses the stored private variables to see what the scan ID is.
     private void waitForScanToFinish(TaskListener listener) throws InterruptedException {
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss - ");
         listener.getLogger().println(dtf.format(LocalDateTime.now())+"Waiting for scan to finish.  Scan ID "+this.ScanID );
 
         boolean scanComplete = false;
@@ -246,8 +247,8 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
     }
 
     private String getCompliance(TaskListener listener) throws InterruptedException {
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss - ");
         listener.getLogger().println(dtf.format(LocalDateTime.now())+"Retrieving compliance report for container image" );
-
         boolean reportReady = false;
         Integer sleepPeriod=0;
         JSONObject responsejson = new JSONObject("{}");
@@ -333,8 +334,8 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
 
     // Launches an active scan by the scan ID stored in the private variables.  It does not wait for the scan to finish.
     private String launchActiveScan(TaskListener listener) throws InterruptedException {
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss - ");
         listener.getLogger().println(dtf.format(LocalDateTime.now())+"Launching scan" );
-
         boolean reportReady = false;
         JSONObject responsejson = new JSONObject("{}");
 
