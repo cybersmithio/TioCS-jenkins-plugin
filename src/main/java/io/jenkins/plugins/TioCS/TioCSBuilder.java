@@ -487,7 +487,7 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
                     listener.getLogger().println(dtf.format(LocalDateTime.now())+"Image does not exist");
                     throw new SecurityException();
                 } else {
-                    listener.getLogger().println(dtf.format(LocalDateTime.now())+"Image exists with ID "+output+", continuing with build");
+                    listener.getLogger().println(dtf.format(LocalDateTime.now())+"Continuing with build as the image exists with ID "+output);
                 }
             } catch (IOException e) {
                 listener.getLogger().println(dtf.format(LocalDateTime.now())+"IO Exception running external command");
