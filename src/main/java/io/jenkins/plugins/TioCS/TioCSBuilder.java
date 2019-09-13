@@ -1,7 +1,7 @@
 package io.jenkins.plugins.TioCS;
 
 //For Credentials plugin
-import com.cloudbees.plugins.credentials.*;
+//import com.cloudbees.plugins.credentials.*;
 //import com.cloudbees.plugins.credentials.common.StandardCredentials;
 //import com.cloudbees.plugins.credentials.common.StandardListBoxModel;
 //import com.cloudbees.plugins.credentials.builds.CredentialsParameterBinder;
