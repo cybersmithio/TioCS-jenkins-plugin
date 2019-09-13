@@ -1,8 +1,8 @@
 package io.jenkins.plugins.TioCS;
 
 //For Credentials plugin
-import com.cloudbees.plugins.credentials.common.StandardCredentials;
-import com.cloudbees.plugins.credentials.common.StandardListBoxModel;
+//import com.cloudbees.plugins.credentials.common.StandardCredentials;
+//import com.cloudbees.plugins.credentials.common.StandardListBoxModel;
 
 //Needed for Map class, when looking for all environment variables.
 import java.util.HashMap;
@@ -795,6 +795,7 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
             return items;
         }
 
+/*
         public ListBoxModel doFillTioCredentialsIdItems(@QueryParameter String credentialsId) {
             StandardListBoxModel result = new StandardListBoxModel();
             if (item == null) {
@@ -811,6 +812,7 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
             .includeMatchingAs()
             .includeCurrentValue(credentialsId);
         }
+*/
 
         public FormValidation doCheckName(@QueryParameter String value, @QueryParameter String TioRepo,
             @QueryParameter String TioAccessKey, @QueryParameter String ImageTag,
@@ -855,6 +857,7 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
             return FormValidation.ok();
         }
 
+/*
         public FormValidation doCheckTioCredentialsId( @QueryParameter String value ) throws IOException, ServletException {
             if (item == null) {
                 if (!Jenkins.get().hasPermission(Jenkins.ADMINISTER)) {
@@ -876,7 +879,7 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
             }
             return FormValidation.ok();
         }
-
+*/
         @Override
         public boolean isApplicable(Class<? extends AbstractProject> aClass) {
             return true;
