@@ -2,6 +2,7 @@ package io.jenkins.plugins.TioCS;
 
 //For Credentials plugin
 import com.cloudbees.plugins.credentials.*;
+import com.cloudbees.plugins.credentials.common.StandardListBoxModel;
 
 //Needed for Map class, when looking for all environment variables.
 import java.util.HashMap;
