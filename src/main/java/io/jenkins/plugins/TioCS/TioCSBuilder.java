@@ -8,6 +8,8 @@ import hudson.model.Item;
 import org.kohsuke.stapler.AncestorInPath;
 import jenkins.model.Jenkins;
 import org.apache.commons.lang.StringUtils;
+import com.cloudbees.plugins.credentials.common.StandardCredentials;
+import com.cloudbees.plugins.credentials.domains.DomainRequirement;
 
 //Needed for Map class, when looking for all environment variables.
 import java.util.HashMap;
@@ -804,7 +806,7 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
             StandardListBoxModel result = new StandardListBoxModel();
 
             if (item == null && !Jenkins.get().hasPermission(Jenkins.ADMINISTER) ||
-                item != null && !context.hasPermission(Item.EXTENDED_READ)) {
+                item != null && !item.hasPermission(Item.EXTENDED_READ)) {
                 System.out.println("Don't have permissions to change the credentials");
                 return result.includeCurrentValue(TioCredentialsId);
             }
@@ -814,7 +816,7 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
                 .includeEmptyValue()
                 .includeMatchingAs(CredentialsProvider.lookupCredentials(
                                     StandardCredentials.class,
-                                    context,
+                                    item,
                                     ACL.SYSTEM,
                                     domainRequirements))
                 .includeCurrentValue(TioCredentialsId);
