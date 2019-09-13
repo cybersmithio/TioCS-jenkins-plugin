@@ -818,11 +818,10 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
             List<DomainRequirement> domainRequirements = newArrayList();
             return result
                 .withEmptySelection()
-                .withMatching(CredentialsProvider.lookupCredentials(
-                                    StandardCredentials.class,
-                                    item,
-                                    ACL.SYSTEM,
-                                    domainRequirements))
+                .withMatching(anyOf(
+                instanceOf(FileCredentials.class),
+                instanceOf(StringCredentials.class)),
+                CredentialsProvider.lookupCredentials(StandardCredentials.class, project))
                 .withCurrentValue(TioCredentialsId);
         }
 
