@@ -2,6 +2,7 @@ package io.jenkins.plugins.TioCS;
 
 //For Credentials plugin
 import com.cloudbees.plugins.credentials.*;
+import com.cloudbees.plugins.credentials.CredentialsProvider;
 import com.cloudbees.plugins.credentials.common.StandardListBoxModel;
 import hudson.model.Item;
 import org.kohsuke.stapler.AncestorInPath;
