@@ -798,15 +798,15 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
             return items;
         }
 
-        public ListBoxModel doFillTioCredentialsIdItems( @AncestorInPath Item item, @QueryParameter String credentialsId) {
+        public ListBoxModel doFillTioCredentialsIdItems( @AncestorInPath Item item, @QueryParameter String TioCredentialsId) {
             StandardListBoxModel result = new StandardListBoxModel();
             if (item == null) {
                 if (!Jenkins.get().hasPermission(Jenkins.ADMINISTER)) {
-                    return result.includeCurrentValue(credentialsId); // (2)
+                    return result.includeCurrentValue(TioCredentialsId); // (2)
                 }
             } else {
                 if (!item.hasPermission(Item.EXTENDED_READ) && !item.hasPermission(CredentialsProvider.USE_ITEM)) {
-                    return result.includeCurrentValue(credentialsId); // (2)
+                    return result.includeCurrentValue(TioCredentialsId); // (2)
                 }
             }
             return result
