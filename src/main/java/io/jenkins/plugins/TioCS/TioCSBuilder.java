@@ -789,10 +789,7 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
             return items;
         }
 
-        public ListBoxModel doFillTioCredentialsIdItems(
-            @AncestorInPath Item item,
-            @QueryParameter String credentialsId,
-        ) {
+        public ListBoxModel doFillTioCredentialsIdItems(@QueryParameter String credentialsId) {
             StandardListBoxModel result = new StandardListBoxModel();
             if (item == null) {
                 if (!Jenkins.get().hasPermission(Jenkins.ADMINISTER)) {
