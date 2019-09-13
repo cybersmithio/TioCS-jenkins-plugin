@@ -795,7 +795,7 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
             return items;
         }
 
-        public ListBoxModel doFillTioCredentialsIdItems(@QueryParameter String credentialsId) {
+        public ListBoxModel doFillTioCredentialsIdItems( @AncestorInPath Item item, @QueryParameter String credentialsId) {
             StandardListBoxModel result = new StandardListBoxModel();
             if (item == null) {
                 if (!Jenkins.get().hasPermission(Jenkins.ADMINISTER)) {
@@ -856,7 +856,8 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
         }
 
 
-        public FormValidation doCheckTioCredentialsId( @QueryParameter String value ) throws IOException, ServletException {
+        public FormValidation doCheckTioCredentialsId( @AncestorInPath Item item, @QueryParameter String value )
+        throws IOException, ServletException {
             if (item == null) {
                 if (!Jenkins.get().hasPermission(Jenkins.ADMINISTER)) {
                     return FormValidation.ok();
