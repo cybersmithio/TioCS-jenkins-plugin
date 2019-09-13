@@ -4,6 +4,7 @@ package io.jenkins.plugins.TioCS;
 import com.cloudbees.plugins.credentials.*;
 import com.cloudbees.plugins.credentials.common.StandardListBoxModel;
 import hudson.model.Item;
+import org.kohsuke.stapler.AncestorInPath;
 
 //Needed for Map class, when looking for all environment variables.
 import java.util.HashMap;
