@@ -811,8 +811,8 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
             }
             return result
             .includeEmptyValue()
-            .includeMatchingAs()
-            .includeCurrentValue(credentialsId);
+            .includeMatchingAs(item)
+            .includeCurrentValue(TioCredentialsId);
         }
 
         public FormValidation doCheckName(@QueryParameter String value, @QueryParameter String TioRepo,
