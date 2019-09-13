@@ -801,9 +801,9 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
                 }
             }
             return result
-            .includeEmptySelection() // (3)
-            .includeMatchingAs(...) // (4)
-            .includeCurrentValue(credentialsId); // (5)
+            .includeEmptySelection()
+            .includeMatchingAs()
+            .includeCurrentValue(credentialsId);
         }
 
         public FormValidation doCheckName(@QueryParameter String value, @QueryParameter String TioRepo,
