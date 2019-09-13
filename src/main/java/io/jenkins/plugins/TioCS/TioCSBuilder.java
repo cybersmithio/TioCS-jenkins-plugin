@@ -810,7 +810,7 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
                 }
             }
             return result
-            .includeEmptySelection()
+            .includeEmptyValue()
             .includeMatchingAs()
             .includeCurrentValue(credentialsId);
         }
