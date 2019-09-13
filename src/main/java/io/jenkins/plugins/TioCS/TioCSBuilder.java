@@ -12,6 +12,7 @@ import com.cloudbees.plugins.credentials.common.StandardCredentials;
 import com.cloudbees.plugins.credentials.domains.DomainRequirement;
 import hudson.security.ACL;
 import java.util.List;
+import static com.google.common.collect.Lists.newArrayList;
 
 //Needed for Map class, when looking for all environment variables.
 import java.util.HashMap;
