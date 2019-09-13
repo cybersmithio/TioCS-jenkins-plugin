@@ -1,5 +1,9 @@
 package io.jenkins.plugins.TioCS;
 
+//For Credentials plugin
+import com.cloudbees.plugins.credentials.common.StandardCredentials;
+import com.cloudbees.plugins.credentials.common.StandardListBoxModel;
+
 //Needed for Map class, when looking for all environment variables.
 import java.util.HashMap;
 import java.util.Map;
@@ -39,6 +43,8 @@ import java.io.IOException;
 import jenkins.tasks.SimpleBuildStep;
 import org.jenkinsci.Symbol;
 import org.kohsuke.stapler.DataBoundSetter;
+
+
 
 //TODO: Record the testing time duration
 public class TioCSBuilder extends Builder implements SimpleBuildStep {
