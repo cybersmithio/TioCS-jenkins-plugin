@@ -9,6 +9,8 @@ Results will be stored in the Jenkins output for the build, as well as a summary
 # Requirements
 If you need to test on-premise, make sure you have already downloaded time Tenable.io cs-scanner image for use.
 
+These needs the following Jenkins plugins to be installed:
+  CloudBees Credentials
 
 # References
 
