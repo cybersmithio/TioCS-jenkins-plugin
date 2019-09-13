@@ -824,7 +824,7 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
             return result
                 .withEmptySelection()
                 .withMatching(anyOf(
-                    CredentialsProvider.lookupCredentials(StandardCredentials.class, project)))
+                    CredentialsProvider.lookupCredentials(StandardCredentials.class, item)))
                 .withCurrentValue(TioCredentialsId);
         }
 
