@@ -804,13 +804,17 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
             StandardListBoxModel result = new StandardListBoxModel();
             if (item == null) {
                 if (!Jenkins.get().hasPermission(Jenkins.ADMINISTER)) {
+                    print("Don't have permissions for these credentials")
                     return result.includeCurrentValue(TioCredentialsId); // (2)
                 }
             } else {
                 if (!item.hasPermission(Item.EXTENDED_READ) && !item.hasPermission(CredentialsProvider.USE_ITEM)) {
+                    print("Don't have permissions for these credentials")
                     return result.includeCurrentValue(TioCredentialsId); // (2)
                 }
             }
+            print("Here are the credential options")
+
             return result
             .includeEmptyValue()
             .includeCurrentValue(TioCredentialsId);
