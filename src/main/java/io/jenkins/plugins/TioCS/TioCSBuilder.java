@@ -874,7 +874,7 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
             if (StringUtils.isBlank(value)) {
                 return FormValidation.ok();
             }
-            if (value.startWith("${") && value.endsWith("}")) {
+            if (value.startsWith("${") && value.endsWith("}")) {
                 return FormValidation.warning("Cannot validate expression based credentials");
             }
             if (CredentialsProvider.listCredentials( CredentialsMatchers.withId(value)).isEmpty()) {
