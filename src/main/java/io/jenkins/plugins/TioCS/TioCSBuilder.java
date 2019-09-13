@@ -789,6 +789,26 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
             return items;
         }
 
+        public ListBoxModel doFillTioCredentialsIdItems(
+            @AncestorInPath Item item,
+            @QueryParameter String credentialsId,
+        ) {
+            StandardListBoxModel result = new StandardListBoxModel();
+            if (item == null) {
+                if (!Jenkins.get().hasPermission(Jenkins.ADMINISTER)) {
+                    return result.includeCurrentValue(credentialsId); // (2)
+                }
+            } else {
+                if (!item.hasPermission(Item.EXTENDED_READ) && !item.hasPermission(CredentialsProvider.USE_ITEM)) {
+                    return result.includeCurrentValue(credentialsId); // (2)
+                }
+            }
+            return result
+            .includeEmptySelection() // (3)
+            .includeMatchingAs(...) // (4)
+            .includeCurrentValue(credentialsId); // (5)
+        }
+
         public FormValidation doCheckName(@QueryParameter String value, @QueryParameter String TioRepo,
             @QueryParameter String TioAccessKey, @QueryParameter String ImageTag,
             @QueryParameter String TioSecretKey, @QueryParameter boolean useOnPrem,
@@ -829,8 +849,28 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
                     return FormValidation.error(Messages.TioCSBuilder_DescriptorImpl_errors_includedWaitForScanFinishWhenTesting());
             }
 
+            return FormValidation.ok();
+        }
 
-
+        public FormValidation doCheckTioCredentialsId( @QueryParameter String value ) throws IOException, ServletException {
+            if (item == null) {
+                if (!Jenkins.get().hasPermission(Jenkins.ADMINISTER)) {
+                    return FormValidation.ok();
+                }
+            } else {
+                if (!item.hasPermission(Item.EXTENDED_READ) && !item.hasPermission(CredentialsProvider.USE_ITEM)) {
+                    return FormValidation.ok();
+                }
+            }
+            if (StringUtils.isBlank(value)) {
+                return FormValidation.ok();
+            }
+            if (value.startWith("${") && value.endsWith("}")) {
+                return FormValidation.warning("Cannot validate expression based credentials");
+            }
+            if (CredentialsProvider.listCredentials( CredentialsMatchers.withId(value)).isEmpty()) {
+                return FormValidation.error("Cannot find currently selected credentials");
+            }
             return FormValidation.ok();
         }
 

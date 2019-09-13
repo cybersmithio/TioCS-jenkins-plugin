@@ -20,6 +20,7 @@ https://wiki.jenkins.io/display/JENKINS/Basic+guide+to+Jelly+usage+in+Jenkins
 https://wiki.jenkins.io/display/JENKINS/Jelly+form+controls
 https://wiki.jenkins.io/display/JENKINS/Writing+a+foldable+section+controlled+by+a+checkbox
 https://github.com/jenkinsci/credentials-plugin
+https://github.com/jenkinsci/credentials-plugin/blob/master/docs/consumer.adoc
 https://docs.oracle.com/javase/7/docs/api/java/lang/ProcessBuilder.html
 https://stackoverflow.com/questions/21404252/post-request-send-json-data-java-httpurlconnection
 https://docs.oracle.com/javase/tutorial/networking/urls/readingWriting.html
