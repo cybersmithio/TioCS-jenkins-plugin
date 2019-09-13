@@ -802,22 +802,22 @@ public class TioCSBuilder extends Builder implements SimpleBuildStep {
 
         public ListBoxModel doFillTioCredentialsIdItems( @AncestorInPath Item item, @QueryParameter String TioCredentialsId) {
             StandardListBoxModel result = new StandardListBoxModel();
-            if (item == null) {
-                if (!Jenkins.get().hasPermission(Jenkins.ADMINISTER)) {
-                    System.out.println("Don't have permissions for these credentials");
-                    return result.includeCurrentValue(TioCredentialsId);
-                }
-            } else {
-                if (!item.hasPermission(Item.EXTENDED_READ) && !item.hasPermission(CredentialsProvider.USE_ITEM)) {
-                    System.out.println("Don't have permissions for these credentials");
-                    return result.includeCurrentValue(TioCredentialsId); // (2)
-                }
+
+            if (item == null && !Jenkins.get().hasPermission(Jenkins.ADMINISTER) ||
+                item != null && !context.hasPermission(Item.EXTENDED_READ)) {
+                System.out.println("Don't have permissions to change the credentials");
+                return result.includeCurrentValue(TioCredentialsId);
             }
             System.out.println("Here are the credential options");
 
             return result
-            .includeEmptyValue()
-            .includeCurrentValue(TioCredentialsId);
+                .includeEmptyValue()
+                .includeMatchingAs(CredentialsProvider.lookupCredentials(
+                                    StandardCredentials.class,
+                                    context,
+                                    ACL.SYSTEM,
+                                    domainRequirements))
+                .includeCurrentValue(TioCredentialsId);
         }
 
         public FormValidation doCheckName(@QueryParameter String value, @QueryParameter String TioRepo,
